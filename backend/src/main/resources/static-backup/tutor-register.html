@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Registration - ThinkAble</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --tutor-primary: #2c5aa0;
+            --tutor-secondary: #5a7cb8;
+            --tutor-accent: #ff7b7b;
+            --tutor-light: #f8f9fc;
+            --tutor-dark: #2c3e50;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--tutor-primary) 0%, var(--tutor-secondary) 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .register-container {
+            padding: 2rem 0;
+        }
+
+        .register-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--tutor-primary) 0%, var(--tutor-secondary) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .register-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .register-body {
+            padding: 2rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 1rem;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .step.active {
+            background: var(--tutor-primary);
+            color: white;
+        }
+
+        .step.completed {
+            background: var(--tutor-accent);
+            color: white;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 2rem;
+            height: 2px;
+            background: #e9ecef;
+            transform: translateY(-50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--tutor-primary);
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        }
+
+        .btn-tutor-primary {
+            background: linear-gradient(135deg, var(--tutor-primary) 0%, var(--tutor-secondary) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-tutor-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(44, 90, 160, 0.3);
+            color: white;
+        }
+
+        .btn-tutor-secondary {
+            background: #6c757d;
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .checkbox-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--tutor-primary);
+            border-color: var(--tutor-primary);
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .login-link a {
+            color: var(--tutor-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .student-portal-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .student-portal-link:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="/index.html" class="student-portal-link">
+        <i class="fas fa-arrow-left"></i> Student Portal
+    </a>
+
+    <div class="container register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <i class="fas fa-user-plus fa-2x mb-3"></i>
+                <h1>Join ThinkAble as a Tutor</h1>
+                <p>Help create an inclusive learning environment for neurodivergent students</p>
+            </div>
+            
+            <div class="register-body">
+                <div class="step-indicator">
+                    <div class="step active" id="step-1">1</div>
+                    <div class="step" id="step-2">2</div>
+                    <div class="step" id="step-3">3</div>
+                </div>
+                
+                <div id="alertContainer"></div>
+                
+                <form id="tutorRegisterForm">
+                    <!-- Step 1: Basic Information -->
+                    <div class="form-section active" id="section-1">
+                        <h4 class="mb-3">Basic Information</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="displayName" placeholder="Display Name" required>
+                                    <label for="displayName">Display Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                                    <label for="email">Email Address</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password" placeholder="Password" required minlength="6">
+                                    <label for="password">Password (min 6 characters)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                                    <label for="confirmPassword">Confirm Password</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Bio" id="bio" style="height: 100px" required></textarea>
+                            <label for="bio">Tell us about yourself and your teaching philosophy</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Professional Information -->
+                    <div class="form-section" id="section-2">
+                        <h4 class="mb-3">Professional Background</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="qualifications" placeholder="Qualifications" required>
+                                    <label for="qualifications">Qualifications & Certifications</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="teachingExperience" required>
+                                        <option value="">Select experience</option>
+                                        <option value="1">Less than 1 year</option>
+                                        <option value="2">1-2 years</option>
+                                        <option value="5">3-5 years</option>
+                                        <option value="10">6-10 years</option>
+                                        <option value="15">11+ years</option>
+                                    </select>
+                                    <label for="teachingExperience">Teaching Experience</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mt-3 mb-2">Subject Expertise (select all that apply):</h6>
+                        <div class="checkbox-list">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Math" id="subject-math">
+                                <label class="form-check-label" for="subject-math">Mathematics</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Science" id="subject-science">
+                                <label class="form-check-label" for="subject-science">Science</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="English" id="subject-english">
+                                <label class="form-check-label" for="subject-english">English</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="History" id="subject-history">
+                                <label class="form-check-label" for="subject-history">History</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Art" id="subject-art">
+                                <label class="form-check-label" for="subject-art">Arts</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Other" id="subject-other">
+                                <label class="form-check-label" for="subject-other">Other</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Accessibility Expertise -->
+                    <div class="form-section" id="section-3">
+                        <h4 class="mb-3">Accessibility & Neurodivergent Support</h4>
+                        
+                        <h6 class="mb-2">Neurodivergent Specializations:</h6>
+                        <div class="checkbox-list mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="ADHD" id="spec-adhd">
+                                <label class="form-check-label" for="spec-adhd">ADHD</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Autism" id="spec-autism">
+                                <label class="form-check-label" for="spec-autism">Autism</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Dyslexia" id="spec-dyslexia">
+                                <label class="form-check-label" for="spec-dyslexia">Dyslexia</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Sensory Processing" id="spec-sensory">
+                                <label class="form-check-label" for="spec-sensory">Sensory Processing</label>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-2">Teaching Styles:</h6>
+                        <div class="checkbox-list mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Visual Learning" id="style-visual">
+                                <label class="form-check-label" for="style-visual">Visual Learning</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Interactive" id="style-interactive">
+                                <label class="form-check-label" for="style-interactive">Interactive</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Structured" id="style-structured">
+                                <label class="form-check-label" for="style-structured">Structured</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Gamification" id="style-game">
+                                <label class="form-check-label" for="style-game">Gamification</label>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-2">Accessibility Expertise:</h6>
+                        <div class="checkbox-list">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Screen Readers" id="acc-screen">
+                                <label class="form-check-label" for="acc-screen">Screen Readers</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Large Text" id="acc-large">
+                                <label class="form-check-label" for="acc-large">Large Text</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Color Contrast" id="acc-contrast">
+                                <label class="form-check-label" for="acc-contrast">High Contrast</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Audio Description" id="acc-audio">
+                                <label class="form-check-label" for="acc-audio">Audio Description</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-tutor-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn btn-tutor-primary" id="nextBtn" onclick="changeStep(1)">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button type="submit" class="btn btn-tutor-primary" id="submitBtn" style="display: none;">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="login-link">
+                    <p>Already have an account? <a href="/tutor-login.html">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function changeStep(direction) {
+            if (direction === 1 && currentStep < totalSteps) {
+                // Validate current step before proceeding
+                if (!validateStep(currentStep)) {
+                    return;
+                }
+                currentStep++;
+            } else if (direction === -1 && currentStep > 1) {
+                currentStep--;
+            }
+
+            updateStepDisplay();
+        }
+
+        function validateStep(step) {
+            let isValid = true;
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = '';
+
+            if (step === 1) {
+                // Validate basic information
+                const requiredFields = ['displayName', 'email', 'password', 'confirmPassword', 'bio'];
+                for (let field of requiredFields) {
+                    const element = document.getElementById(field);
+                    if (!element.value.trim()) {
+                        isValid = false;
+                    }
+                }
+
+                // Check password confirmation
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (password !== confirmPassword) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> Passwords do not match.
+                        </div>`;
+                    isValid = false;
+                }
+            } else if (step === 2) {
+                // Validate professional information
+                const qualifications = document.getElementById('qualifications').value;
+                const experience = document.getElementById('teachingExperience').value;
+                const subjectChecked = document.querySelectorAll('input[id^="subject-"]:checked').length > 0;
+
+                if (!qualifications.trim() || !experience || !subjectChecked) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> Please complete all professional information fields.
+                        </div>`;
+                    isValid = false;
+                }
+            }
+
+            if (!isValid && step < 3) {
+                alertContainer.innerHTML = alertContainer.innerHTML || `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> Please complete all required fields.
+                    </div>`;
+            }
+
+            return isValid;
+        }
+
+        function updateStepDisplay() {
+            // Update step indicators
+            for (let i = 1; i <= totalSteps; i++) {
+                const step = document.getElementById(`step-${i}`);
+                const section = document.getElementById(`section-${i}`);
+
+                step.classList.remove('active', 'completed');
+                section.classList.remove('active');
+
+                if (i < currentStep) {
+                    step.classList.add('completed');
+                } else if (i === currentStep) {
+                    step.classList.add('active');
+                    section.classList.add('active');
+                }
+            }
+
+            // Update buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+
+            prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+            nextBtn.style.display = currentStep < totalSteps ? 'block' : 'none';
+            submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+        }
+
+        function getCheckedValues(selector) {
+            return Array.from(document.querySelectorAll(selector + ':checked')).map(cb => cb.value);
+        }
+
+        document.getElementById('tutorRegisterForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateStep(currentStep)) {
+                return;
+            }
+
+            const alertContainer = document.getElementById('alertContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Clear previous alerts
+            alertContainer.innerHTML = '';
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+            
+            try {
+                // Collect all form data
+                const formData = {
+                    // Basic info
+                    displayName: document.getElementById('displayName').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                    bio: document.getElementById('bio').value,
+                    role: 'TUTOR',
+                    
+                    // Professional info
+                    qualifications: document.getElementById('qualifications').value,
+                    teachingExperienceYears: parseInt(document.getElementById('teachingExperience').value),
+                    subjectExpertise: JSON.stringify(getCheckedValues('input[id^="subject-"]')),
+                    
+                    // Accessibility info
+                    neurodivergentSpecialization: JSON.stringify(getCheckedValues('input[id^="spec-"]')),
+                    teachingStyles: JSON.stringify(getCheckedValues('input[id^="style-"]')),
+                    accessibilityExpertise: JSON.stringify(getCheckedValues('input[id^="acc-"]'))
+                };
+
+                const response = await fetch('http://localhost:8081/api/auth/register/tutor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> Account created successfully! Redirecting to login...
+                        </div>`;
+                    
+                    // Redirect to login
+                    setTimeout(() => {
+                        window.location.href = '/tutor-login.html';
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alertContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> ${error.message}
+                    </div>`;
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+            }
+        });
+
+        // Initialize display
+        updateStepDisplay();
+    </script>
+</body>
+</html>

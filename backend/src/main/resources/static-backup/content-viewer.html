@@ -1,0 +1,2070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Viewer - ThinkAble</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="custom-modals.js"></script>
+    <!-- OpenDyslexic font for dyslexia support -->
+    <style>
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('/fonts/OpenDyslexicAlta-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('/fonts/OpenDyslexicAlta-Bold.otf') format('opentype');
+            font-weight: bold;
+            font-style: normal;
+        }
+    </style>
+    <style>
+        .content-viewer-container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .viewer-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .viewer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .viewer-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .viewer-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .viewer-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .viewer-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .content-frame {
+            flex: 1;
+            border: none;
+            width: 100%;
+            background: white;
+        }
+
+        .loading-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8f9fc;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8f9fc;
+            color: #666;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            opacity: 0.5;
+        }
+
+        .error-message {
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .content-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Accessibility support */
+        .dyslexia-friendly {
+            font-family: 'OpenDyslexic', Arial, sans-serif;
+        }
+
+        .high-contrast {
+            filter: contrast(150%);
+        }
+
+        .large-text {
+            font-size: 120%;
+        }
+
+        /* Accessibility Panel Styles */
+        .accessibility-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .accessibility-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-panel {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .close-panel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .setting-group {
+            margin-bottom: 30px;
+        }
+
+        .setting-group h4 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+
+        .setting-item {
+            margin-bottom: 20px;
+        }
+
+        .setting-item label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .setting-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .setting-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 5px 0 0 28px;
+            line-height: 1.4;
+        }
+
+        .font-size-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .size-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .size-btn:hover {
+            background: #5a6fcf;
+        }
+
+        #fontSizeDisplay {
+            font-weight: bold;
+            color: #333;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .setting-item input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        #speedDisplay {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Text Overlay Styles */
+        .text-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-overlay-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-overlay-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-text-mode {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .close-text-mode:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .text-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .loading-text {
+            text-align: center;
+            color: #666;
+            padding: 50px;
+        }
+
+        /* Focus Mode Styles */
+        .focus-mode {
+            position: relative;
+        }
+
+        .focus-mode::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 998;
+            pointer-events: none;
+        }
+
+        .focus-mode .content-viewer-container {
+            position: relative;
+            z-index: 999;
+        }
+
+        .exit-focus-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .exit-focus-btn:hover {
+            background: #5a6fcf;
+            transform: translateY(-2px);
+        }
+
+        /* Word Highlighting for Read Aloud */
+        .highlight-word {
+            background: #ffeb3b;
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        /* Enhanced Dyslexia Support */
+        .dyslexia-friendly * {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif !important;
+            letter-spacing: 0.1em !important;
+            word-spacing: 0.16em !important;
+        }
+
+        /* High Contrast Mode */
+        .high-contrast {
+            filter: contrast(150%) brightness(1.2);
+        }
+
+        .high-contrast .accessibility-panel {
+            background: #000;
+            color: #fff;
+        }
+
+        .high-contrast .panel-content {
+            background: #000;
+        }
+
+        .high-contrast .setting-item label {
+            color: #fff;
+        }
+
+        .high-contrast .setting-description {
+            color: #ccc;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .viewer-header {
+                padding: 10px 15px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .viewer-title {
+                font-size: 1rem;
+            }
+
+            .viewer-actions {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .viewer-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .accessibility-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .text-overlay-header {
+                padding: 10px 15px;
+            }
+
+            .text-content {
+                padding: 20px;
+            }
+
+            .font-size-controls {
+                gap: 10px;
+            }
+
+            .exit-focus-btn {
+                top: 10px;
+                right: 10px;
+                padding: 10px 16px;
+            }
+        }
+
+        /* Neurodivergent-Friendly Text Styles */
+        .text-controls {
+            background: #f8f9fc;
+            padding: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .text-settings h4 {
+            margin: 0 0 15px 0;
+            color: #4a5568;
+            font-size: 16px;
+        }
+
+        .settings-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 150px;
+        }
+
+        .setting-group label {
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .setting-group select,
+        .setting-group input[type="range"] {
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .accessible-text-container {
+            padding: 20px;
+            line-height: 1.6;
+            font-size: 16px;
+            background: white;
+            border-radius: 8px;
+            max-width: none;
+        }
+
+        /* Font Styles */
+        .font-opendyslexic {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', cursive;
+            letter-spacing: 0.05em;
+            word-spacing: 0.16em;
+        }
+
+        .font-opensans {
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .font-arial {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 400;
+        }
+
+        .font-system {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* Background Themes */
+        .bg-cream {
+            background-color: #fefcf0 !important;
+            color: #2d3748 !important;
+        }
+
+        .bg-light-blue {
+            background-color: #f0f8ff !important;
+            color: #2d3748 !important;
+        }
+
+        .bg-dark {
+            background-color: #2d3748 !important;
+            color: #f7fafc !important;
+        }
+
+        .bg-white {
+            background-color: white !important;
+            color: #2d3748 !important;
+        }
+
+        /* ADHD-Friendly Chunking */
+        .text-chunk {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-left: 4px solid #667eea;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .text-chunk.current-chunk {
+            background: rgba(102, 126, 234, 0.1);
+            border-left-color: #4c51bf;
+        }
+
+        /* Sentence Highlighting */
+        .highlighted-sentence {
+            background: rgba(255, 235, 59, 0.3);
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Reading Progress */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .settings-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .setting-group {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content-viewer-container">
+        <header class="viewer-header">
+            <div>
+                <h1 class="viewer-title" id="contentTitle">Loading Content...</h1>
+                <div class="content-info" id="contentInfo" style="display: none;">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="contentDetails"></span>
+                </div>
+            </div>
+            <div class="viewer-actions">
+                <button class="viewer-btn" onclick="openAccessibilityPanel()" title="Open accessibility settings">
+                    <i class="fas fa-universal-access"></i>
+                    Accessibility
+                </button>
+                <button class="viewer-btn" id="readAloudBtn" onclick="toggleReadAloud()" title="Read content aloud">
+                    <i class="fas fa-volume-up"></i>
+                    Read Aloud
+                </button>
+                <button class="viewer-btn" id="textModeBtn" onclick="toggleTextMode()" title="Switch to text-only mode">
+                    <i class="fas fa-font"></i>
+                    Text Mode
+                </button>
+                <button class="viewer-btn" id="focusModeBtn" onclick="toggleFocusMode()" title="Enter focus mode">
+                    <i class="fas fa-eye"></i>
+                    Focus
+                </button>
+                <button class="viewer-btn" onclick="downloadContent()" title="Download content">
+                    <i class="fas fa-download"></i>
+                    Download
+                </button>
+                <a href="javascript:history.back()" class="viewer-btn" title="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </a>
+            </div>
+        </header>
+
+        <!-- Loading state -->
+        <div id="loadingContainer" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading content...</p>
+        </div>
+
+        <!-- Error state -->
+        <div id="errorContainer" class="error-container" style="display: none;">
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <div class="error-message" id="errorMessage">
+                Failed to load content. Please try again.
+            </div>
+            <button class="viewer-btn" onclick="retryLoad()">
+                <i class="fas fa-refresh"></i>
+                Retry
+            </button>
+        </div>
+
+        <!-- Content display area -->
+        <div id="contentDisplay" style="flex: 1; display: none;">
+            <!-- PDF Viewer -->
+            <iframe id="pdfFrame" class="content-frame" style="display: none;"></iframe>
+            
+            <!-- Image Viewer -->
+            <div id="imageContainer" style="display: none; flex: 1; padding: 20px; text-align: center; overflow: auto; background: #f8f9fc;">
+                <img id="imageViewer" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Content Image">
+            </div>
+            
+            <!-- Video Player -->
+            <div id="videoContainer" style="display: none; flex: 1; padding: 20px; background: #000;">
+                <video id="videoPlayer" controls style="width: 100%; height: 100%;">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
+            <!-- Audio Player -->
+            <div id="audioContainer" style="display: none; flex: 1; display: flex; align-items: center; justify-content: center; background: #f8f9fc;">
+                <div style="text-align: center;">
+                    <i class="fas fa-music" style="font-size: 4rem; color: #667eea; margin-bottom: 20px;"></i>
+                    <audio id="audioPlayer" controls style="width: 100%; max-width: 500px;">
+                        Your browser does not support the audio tag.
+                    </audio>
+                </div>
+            </div>
+            
+            <!-- Document Viewer (fallback) -->
+            <div id="documentContainer" style="display: none; flex: 1; padding: 20px; text-align: center; background: #f8f9fc;">
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <i class="fas fa-file-alt" style="font-size: 4rem; color: #667eea; margin-bottom: 20px;"></i>
+                    <h3>Document Content</h3>
+                    <p>This document type requires a specialized viewer or download to view properly.</p>
+                    <button class="viewer-btn" onclick="downloadContent()" style="margin-top: 20px; background: #667eea; border: none;">
+                        <i class="fas fa-download"></i>
+                        Download to View
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessibility Panel -->
+        <div id="accessibilityPanel" class="accessibility-panel">
+            <div class="panel-header">
+                <h3><i class="fas fa-universal-access"></i> Accessibility Settings</h3>
+                <button class="close-panel" onclick="closeAccessibilityPanel()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="setting-group">
+                    <h4>Visual Settings</h4>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="dyslexiaMode" onchange="toggleDyslexiaMode()">
+                            <span>Dyslexia-Friendly Font</span>
+                        </label>
+                        <p class="setting-description">Uses OpenDyslexic font with enhanced spacing</p>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="highContrastMode" onchange="toggleHighContrast()">
+                            <span>High Contrast Mode</span>
+                        </label>
+                        <p class="setting-description">Increases color contrast for better visibility</p>
+                    </div>
+                    <div class="setting-item">
+                        <label>Font Size</label>
+                        <div class="font-size-controls">
+                            <button class="size-btn" onclick="adjustFontSize(-2)">A-</button>
+                            <span id="fontSizeDisplay">100%</span>
+                            <button class="size-btn" onclick="adjustFontSize(2)">A+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h4>Reading Settings</h4>
+                    <div class="setting-item">
+                        <label>Reading Speed</label>
+                        <input type="range" id="readingSpeed" min="0.5" max="2" step="0.1" value="1" onchange="updateReadingSpeed()">
+                        <span id="speedDisplay">1.0x</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="wordHighlight" onchange="toggleWordHighlight()">
+                            <span>Word-by-Word Highlighting</span>
+                        </label>
+                        <p class="setting-description">Highlights words as they are read aloud</p>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h4>Focus Settings</h4>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="autoPauseReading" onchange="toggleAutoPause()">
+                            <span>Auto-pause on Focus Loss</span>
+                        </label>
+                        <p class="setting-description">Automatically pauses reading when window loses focus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Extraction Overlay for Text Mode -->
+        <div id="textOverlay" class="text-overlay" style="display: none;">
+            <div class="text-overlay-header">
+                <h3>Text Mode - <span id="textModeTitle">Loading...</span></h3>
+                <button class="close-text-mode" onclick="toggleTextMode()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="text-content" id="extractedText">
+                <div class="text-controls" id="textControls" style="display: none;">
+                    <div class="text-settings">
+                        <h4><i class="fas fa-cog"></i> Text Accessibility Settings</h4>
+                        <div class="settings-row">
+                            <div class="setting-group">
+                                <label for="fontSelector">Font:</label>
+                                <select id="fontSelector" onchange="changeTextFont()">
+                                    <option value="system">System Font</option>
+                                    <option value="opendyslexic">OpenDyslexic (Dyslexia-Friendly)</option>
+                                    <option value="opensans">Open Sans (Clean & Simple)</option>
+                                    <option value="arial">Arial (High Clarity)</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label for="fontSizeSlider">Text Size:</label>
+                                <input type="range" id="fontSizeSlider" min="12" max="24" value="16" onchange="changeTextSize()">
+                                <span id="fontSizeDisplay">16px</span>
+                            </div>
+                            <div class="setting-group">
+                                <label for="lineSpacingSlider">Line Spacing:</label>
+                                <input type="range" id="lineSpacingSlider" min="1.2" max="2.5" step="0.1" value="1.6" onchange="changeLineSpacing()">
+                                <span id="lineSpacingDisplay">1.6</span>
+                            </div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="setting-group">
+                                <label for="backgroundSelector">Background:</label>
+                                <select id="backgroundSelector" onchange="changeBackground()">
+                                    <option value="white">White</option>
+                                    <option value="cream">Cream (Dyslexia-Friendly)</option>
+                                    <option value="light-blue">Light Blue (ADHD-Friendly)</option>
+                                    <option value="dark">Dark Mode</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label>
+                                    <input type="checkbox" id="chunkingMode" onchange="toggleChunking()">
+                                    Break into chunks (ADHD-Friendly)
+                                </label>
+                            </div>
+                            <div class="setting-group">
+                                <label>
+                                    <input type="checkbox" id="highlightMode" onchange="toggleSentenceHighlight()">
+                                    Highlight current sentence
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accessible-text-container" id="accessibleTextContainer">
+                    <div class="loading-text">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Extracting text content...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Focus Mode Exit Button -->
+        <button id="exitFocusBtn" class="exit-focus-btn" onclick="toggleFocusMode()" style="display: none;">
+            <i class="fas fa-times"></i>
+            Exit Focus Mode
+        </button>
+    </div>
+
+    <script src="/auth.js"></script>
+    <script>
+        let currentContentId = null;
+        let currentContent = null;
+        let accessibilityMode = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, starting content viewer initialization');
+            
+            if (!isAuthenticated || !isAuthenticated()) {
+                console.log('User not authenticated, redirecting');
+                window.location.href = '/index.html';
+                return;
+            }
+
+            // Get content ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            currentContentId = urlParams.get('contentId');
+            console.log('Content ID from URL:', currentContentId);
+
+            if (!currentContentId) {
+                console.log('No content ID provided');
+                showError('No content ID provided');
+                return;
+            }
+
+            loadContent();
+        });
+
+        async function loadContent() {
+            try {
+                console.log('Starting content load for ID:', currentContentId);
+                showLoading();
+
+                // First, get content metadata
+                const metadataUrl = `http://localhost:8081/api/student/content/${currentContentId}`;
+                console.log('Fetching metadata from:', metadataUrl);
+                
+                const metadataResponse = await authenticatedFetch(metadataUrl);
+                
+                if (!metadataResponse.ok) {
+                    console.error('Metadata response not OK:', metadataResponse.status, metadataResponse.statusText);
+                    throw new Error(`Failed to load content metadata: ${metadataResponse.status}`);
+                }
+
+                currentContent = await metadataResponse.json();
+                console.log('Content metadata loaded:', currentContent);
+                console.log('File path:', currentContent.filePath);
+                console.log('File name:', currentContent.fileName);
+                
+                // Update header with content information
+                updateContentHeader(currentContent);
+
+                // Load the actual content file based on type
+                const contentUrl = `http://localhost:8081/api/tutor/content/view/${currentContentId}`;
+                console.log('Content URL:', contentUrl);
+                
+                // Determine how to display content based on type and filename
+                displayContentByType(currentContent, contentUrl);
+
+            } catch (error) {
+                console.error('Error loading content:', error);
+                showError(error.message || 'Failed to load content');
+            }
+        }
+
+        function updateContentHeader(content) {
+            const contentTitle = document.getElementById('contentTitle');
+            const contentInfo = document.getElementById('contentInfo');
+            const contentDetails = document.getElementById('contentDetails');
+            
+            if (contentTitle) {
+                contentTitle.textContent = content.title || 'Untitled Content';
+            }
+            
+            if (contentInfo && contentDetails) {
+                let details = [];
+                if (content.contentType) details.push(content.contentType.toUpperCase());
+                if (content.estimatedDurationMinutes) details.push(`${content.estimatedDurationMinutes} min`);
+                if (content.subjectArea) details.push(content.subjectArea);
+                
+                if (details.length > 0) {
+                    contentDetails.textContent = details.join(' • ');
+                    contentInfo.style.display = 'flex';
+                }
+            }
+
+            // Set page title
+            document.title = `${content.title || 'Content'} - ThinkAble`;
+        }
+
+        function showLoading() {
+            const loadingContainer = document.getElementById('loadingContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            const contentDisplay = document.getElementById('contentDisplay');
+            
+            if (loadingContainer) loadingContainer.style.display = 'flex';
+            if (errorContainer) errorContainer.style.display = 'none';
+            if (contentDisplay) contentDisplay.style.display = 'none';
+        }
+
+        function hideLoading() {
+            const loadingContainer = document.getElementById('loadingContainer');
+            if (loadingContainer) loadingContainer.style.display = 'none';
+        }
+
+        function displayContentByType(content, contentUrl) {
+            const contentType = content.contentType?.toLowerCase() || '';
+            const fileName = content.fileName || '';
+            const fileExtension = fileName.split('.').pop()?.toLowerCase() || '';
+
+            // Hide all content containers
+            hideAllContentContainers();
+
+            // Determine display method based on file type
+            if (contentType === 'document' || fileExtension === 'pdf') {
+                displayPDF(contentUrl);
+            } else if (contentType === 'image' || ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(fileExtension)) {
+                displayImage(contentUrl);
+            } else if (contentType === 'video' || ['mp4', 'webm', 'ogv', 'avi', 'mov'].includes(fileExtension)) {
+                displayVideo(contentUrl);
+            } else if (contentType === 'audio' || ['mp3', 'wav', 'ogg', 'm4a', 'flac'].includes(fileExtension)) {
+                displayAudio(contentUrl);
+            } else {
+                displayDocument(contentUrl);
+            }
+        }
+
+        function hideAllContentContainers() {
+            const elements = ['pdfFrame', 'imageContainer', 'videoContainer', 'audioContainer', 'documentContainer'];
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.style.display = 'none';
+            });
+        }
+
+        function displayPDF(url) {
+            const pdfFrame = document.getElementById('pdfFrame');
+            if (!pdfFrame) {
+                showError('PDF viewer not available');
+                return;
+            }
+            
+            console.log('Setting PDF iframe source to:', url);
+            
+            // Set up load handlers
+            pdfFrame.onload = function() {
+                console.log('PDF iframe loaded successfully');
+                hideLoading();
+                showContentDisplay();
+                recordInteraction('view');
+            };
+            
+            pdfFrame.onerror = function() {
+                console.error('PDF iframe failed to load');
+                showError('Failed to load PDF file');
+            };
+            
+            // For PDFs, we need to ensure the browser treats it as inline content
+            // Try using PDF.js if available, otherwise fall back to iframe
+            if (navigator.pdfViewerEnabled !== false) {
+                pdfFrame.src = url;
+            } else {
+                // Fallback: try to use PDF.js or show download option
+                showDocumentFallback(url);
+                return;
+            }
+            
+            pdfFrame.style.display = 'block';
+            
+            // Add a timeout to detect if PDF doesn't load
+            setTimeout(function() {
+                if (pdfFrame.style.display === 'block' && document.getElementById('loadingContainer').style.display !== 'none') {
+                    console.log('PDF load timeout, showing fallback');
+                    showDocumentFallback(url);
+                }
+            }, 10000); // 10 second timeout
+        }
+        
+        function showDocumentFallback(url) {
+            hideLoading();
+            showContentDisplay();
+            document.getElementById('documentContainer').style.display = 'flex';
+            
+            // Update the download button in document container to point to the correct URL
+            const documentContainer = document.getElementById('documentContainer');
+            const downloadBtn = documentContainer.querySelector('.viewer-btn');
+            if (downloadBtn) {
+                downloadBtn.onclick = function() {
+                    window.open(url, '_blank');
+                };
+            }
+            
+            recordInteraction('view');
+        }
+
+        function displayImage(url) {
+            const imageViewer = document.getElementById('imageViewer');
+            const imageContainer = document.getElementById('imageContainer');
+            
+            if (!imageViewer || !imageContainer) {
+                showError('Image viewer not available');
+                return;
+            }
+            
+            imageViewer.onload = function() {
+                hideLoading();
+                showContentDisplay();
+                recordInteraction('view');
+            };
+            imageViewer.onerror = function() {
+                showError('Failed to load image file');
+            };
+            imageViewer.src = url;
+            imageContainer.style.display = 'flex';
+        }
+
+        function displayVideo(url) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoContainer = document.getElementById('videoContainer');
+            
+            if (!videoPlayer || !videoContainer) {
+                showError('Video player not available');
+                return;
+            }
+            
+            videoPlayer.onloadeddata = function() {
+                hideLoading();
+                showContentDisplay();
+                recordInteraction('view');
+            };
+            videoPlayer.onerror = function() {
+                showError('Failed to load video file');
+            };
+            videoPlayer.src = url;
+            videoContainer.style.display = 'flex';
+        }
+
+        function displayAudio(url) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const audioContainer = document.getElementById('audioContainer');
+            
+            if (!audioPlayer || !audioContainer) {
+                showError('Audio player not available');
+                return;
+            }
+            
+            audioPlayer.onloadeddata = function() {
+                hideLoading();
+                showContentDisplay();
+                recordInteraction('view');
+            };
+            audioPlayer.onerror = function() {
+                showError('Failed to load audio file');
+            };
+            audioPlayer.src = url;
+            audioContainer.style.display = 'flex';
+        }
+
+        function displayDocument(url) {
+            const documentContainer = document.getElementById('documentContainer');
+            
+            if (!documentContainer) {
+                showError('Document viewer not available');
+                return;
+            }
+            
+            // For other document types, show the fallback interface
+            hideLoading();
+            showContentDisplay();
+            documentContainer.style.display = 'flex';
+            recordInteraction('view');
+        }
+
+        function showContentDisplay() {
+            const contentDisplay = document.getElementById('contentDisplay');
+            const errorContainer = document.getElementById('errorContainer');
+            
+            if (contentDisplay) contentDisplay.style.display = 'flex';
+            if (errorContainer) errorContainer.style.display = 'none';
+        }
+
+        function showError(message) {
+            const loadingContainer = document.getElementById('loadingContainer');
+            const contentDisplay = document.getElementById('contentDisplay');
+            const errorContainer = document.getElementById('errorContainer');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (loadingContainer) loadingContainer.style.display = 'none';
+            if (contentDisplay) contentDisplay.style.display = 'none';
+            if (errorContainer) errorContainer.style.display = 'flex';
+            if (errorMessage) errorMessage.textContent = message;
+        }
+
+        function retryLoad() {
+            loadContent();
+        }
+
+        function toggleAccessibility() {
+            accessibilityMode = !accessibilityMode;
+            const body = document.body;
+            
+            if (accessibilityMode) {
+                body.classList.add('dyslexia-friendly', 'high-contrast', 'large-text');
+            } else {
+                body.classList.remove('dyslexia-friendly', 'high-contrast', 'large-text');
+            }
+        }
+
+        async function downloadContent() {
+            if (!currentContentId) return;
+            
+            try {
+                // Use the dedicated download endpoint that forces attachment
+                const downloadUrl = `http://localhost:8081/api/tutor/content/download/${currentContentId}`;
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = currentContent?.fileName || `content-${currentContentId}`;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                recordInteraction('download');
+            } catch (error) {
+                console.error('Error downloading content:', error);
+                customAlert('Failed to download content. Please try again.', 'danger', 'Download Failed');
+            }
+        }
+
+        async function recordInteraction(interactionType) {
+            if (!currentContentId) return;
+
+            try {
+                const userId = getUserId();
+                const interactionData = {
+                    interactionType: interactionType,
+                    energyLevelBefore: 7,
+                    deviceType: 'desktop'
+                };
+
+                await authenticatedFetch(`http://localhost:8081/api/student/content/${currentContentId}/interact?studentId=${userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(interactionData)
+                });
+            } catch (error) {
+                console.error('Error recording interaction:', error);
+            }
+        }
+
+        function getUserId() {
+            // For now, use a simple method to get user ID
+            // In a real app, this would be from the JWT token or user profile
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                // Simple hash-like conversion of email to a consistent number
+                let hash = 0;
+                for (let i = 0; i < userEmail.length; i++) {
+                    hash = ((hash << 5) - hash + userEmail.charCodeAt(i)) & 0xffffffff;
+                }
+                return Math.abs(hash % 1000) + 1; // Return a number between 1-1000
+            }
+            return 1; // Default fallback
+        }
+
+        // Accessibility Features
+        let readAloudActive = false;
+        let textModeActive = false;
+        let focusModeActive = false;
+        let speechSynthesis = null;
+        let currentUtterance = null;
+        let currentFontSize = 100;
+        let readingSpeed = 1.0;
+        let wordHighlightActive = false;
+        let autoPauseActive = false;
+        let currentExtractedText = null; // Store extracted text for Read Aloud
+
+        // Initialize Web Speech API
+        if ('speechSynthesis' in window) {
+            speechSynthesis = window.speechSynthesis;
+        }
+
+        // Accessibility Panel Functions
+        function openAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityPanel');
+            if (panel) {
+                panel.classList.add('open');
+                recordInteraction('accessibility_panel_open');
+            }
+        }
+
+        function closeAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityPanel');
+            if (panel) {
+                panel.classList.remove('open');
+            }
+        }
+
+        // Read Aloud Functionality
+        function toggleReadAloud() {
+            const btn = document.getElementById('readAloudBtn');
+            
+            if (!speechSynthesis) {
+                customAlert('Text-to-speech is not supported in your browser.', 'warning', 'Feature Not Supported');
+                return;
+            }
+
+            if (readAloudActive) {
+                stopReadAloud();
+            } else {
+                startReadAloud();
+            }
+            
+            updateReadAloudButton();
+        }
+
+        async function startReadAloud() {
+            // Stop any existing speech synthesis
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+
+            readAloudActive = true;
+            updateReadAloudButton();
+
+            try {
+                // Try to get extracted text first
+                let textContent = await getTextForReadAloud();
+                
+                if (!textContent) {
+                    customAlert('No text content available to read.', 'info', 'No Content');
+                    readAloudActive = false;
+                    updateReadAloudButton();
+                    return;
+                }
+
+                console.log('Starting Read Aloud with text length:', textContent.length);
+                
+                // Check if speech synthesis is available
+                if (!('speechSynthesis' in window)) {
+                    customAlert('Speech synthesis is not supported in your browser.', 'warning', 'Feature Not Supported');
+                    readAloudActive = false;
+                    updateReadAloudButton();
+                    return;
+                }
+
+                // Cancel any existing speech
+                speechSynthesis.cancel();
+                
+                // Wait for voices to be loaded
+                const startSpeech = () => {
+                    // Create utterance with full text
+                    currentUtterance = new SpeechSynthesisUtterance(textContent);
+                    currentUtterance.rate = readingSpeed;
+                    currentUtterance.volume = 1;
+                    currentUtterance.pitch = 1;
+
+                    // Get available voices
+                    const voices = speechSynthesis.getVoices();
+                    console.log('Available voices:', voices.length);
+                    if (voices.length > 0) {
+                        // Use the first English voice if available
+                        const englishVoice = voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+                        currentUtterance.voice = englishVoice;
+                        console.log('Using voice:', englishVoice.name);
+                    }
+
+                    // Set up event listeners
+                    currentUtterance.onstart = function() {
+                        console.log('Read aloud started successfully');
+                        recordInteraction('read_aloud_start');
+                    };
+
+                    currentUtterance.onend = function() {
+                        readAloudActive = false;
+                        updateReadAloudButton();
+                        console.log('Read aloud ended');
+                    };
+
+                    currentUtterance.onerror = function(event) {
+                        console.error('Speech synthesis error:', event.error, event);
+                        readAloudActive = false;
+                        updateReadAloudButton();
+                        customAlert('Speech synthesis failed: ' + event.error, 'danger', 'Speech Error');
+                    };
+
+                    // Word highlighting if enabled
+                    if (wordHighlightActive) {
+                        setupWordHighlighting(textContent);
+                    }
+
+                    console.log('About to speak...');
+                    speechSynthesis.speak(currentUtterance);
+                };
+
+                // Check if voices are loaded
+                if (speechSynthesis.getVoices().length > 0) {
+                    startSpeech();
+                } else {
+                    // Wait for voices to load
+                    speechSynthesis.onvoiceschanged = function() {
+                        console.log('Voices loaded, starting speech...');
+                        startSpeech();
+                    };
+                }
+
+            } catch (error) {
+                console.error('Error starting Read Aloud:', error);
+                readAloudActive = false;
+                updateReadAloudButton();
+                customAlert('Failed to prepare text for reading. Please try again.', 'danger', 'Reading Error');
+            }
+        }
+
+        function stopReadAloud() {
+            if (speechSynthesis && currentUtterance) {
+                speechSynthesis.cancel();
+                readAloudActive = false;
+                removeWordHighlighting();
+            }
+        }
+
+        function updateReadAloudButton() {
+            const btn = document.getElementById('readAloudBtn');
+            
+            if (readAloudActive) {
+                btn.innerHTML = '<i class="fas fa-stop"></i> Stop Reading';
+                btn.classList.add('active');
+            } else {
+                // Show different text based on whether we have extracted text
+                if (currentExtractedText) {
+                    btn.innerHTML = '<i class="fas fa-volume-up"></i> Read Document';
+                    btn.title = 'Read the full document content aloud';
+                    btn.style.background = 'rgba(46, 204, 113, 0.2)'; // Subtle green hint
+                } else {
+                    btn.innerHTML = '<i class="fas fa-volume-up"></i> Read Aloud';
+                    btn.title = 'Read content information aloud (use Text Mode first for full document reading)';
+                    btn.style.background = ''; // Default background
+                }
+                btn.classList.remove('active');
+            }
+        }
+
+        async function getTextForReadAloud() {
+            console.log('Getting text for Read Aloud...');
+            
+            // If we already have extracted text, use it
+            if (currentExtractedText) {
+                console.log('Using cached extracted text, length:', currentExtractedText.length);
+                return currentExtractedText;
+            }
+            
+            // Try to extract text if we haven't already
+            if (currentContentId && currentContent) {
+                try {
+                    console.log('Attempting to extract text for Read Aloud...');
+                    const result = await extractTextForReadAloud();
+                    
+                    if (result && result.success && result.extractedText) {
+                        currentExtractedText = result.extractedText;
+                        console.log('Successfully extracted text for Read Aloud, length:', currentExtractedText.length);
+                        return currentExtractedText;
+                    } else {
+                        console.log('Text extraction not available, using metadata');
+                    }
+                } catch (error) {
+                    console.error('Error extracting text for Read Aloud:', error);
+                }
+            }
+            
+            // Fall back to metadata and basic content info
+            return extractTextFromContent();
+        }
+
+        function extractTextFromContent() {
+            console.log('Using metadata for Read Aloud');
+            
+            if (currentContent) {
+                let text = '';
+                if (currentContent.title) text += currentContent.title + '. ';
+                if (currentContent.description) text += currentContent.description + '. ';
+                
+                // Add content type information
+                if (currentContent.contentType) {
+                    text += `This is a ${currentContent.contentType} file. `;
+                }
+                
+                if (currentContent.subjectArea) {
+                    text += `Subject area: ${currentContent.subjectArea}. `;
+                }
+                
+                if (text.trim()) return text;
+            }
+            
+            // Fallback text
+            return "This content is now being displayed. Use the accessibility features to enhance your learning experience.";
+        }
+
+        async function extractTextForReadAloud() {
+            if (!currentContentId) {
+                throw new Error('No content ID available');
+            }
+
+            const extractUrl = `http://localhost:8081/api/tutor/content/extract-text/${currentContentId}`;
+            const response = await authenticatedFetch(extractUrl);
+            
+            if (!response.ok) {
+                throw new Error(`Text extraction failed: ${response.status}`);
+            }
+
+            return await response.json();
+        }
+
+        function setupWordHighlighting(text) {
+            // This is a simplified version - in a full implementation,
+            // you'd need to sync with speech synthesis events
+            const words = text.split(' ');
+            let currentWordIndex = 0;
+            
+            const interval = setInterval(() => {
+                if (currentWordIndex >= words.length || !readAloudActive) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                // Highlight current word (simplified)
+                console.log(`Highlighting word: ${words[currentWordIndex]}`);
+                currentWordIndex++;
+            }, 500); // Adjust timing based on reading speed
+        }
+
+        function removeWordHighlighting() {
+            // Remove any existing highlights
+            document.querySelectorAll('.highlight-word').forEach(el => {
+                el.classList.remove('highlight-word');
+            });
+        }
+
+        // Text Mode Functionality
+        function toggleTextMode() {
+            textModeActive = !textModeActive;
+            const overlay = document.getElementById('textOverlay');
+            const btn = document.getElementById('textModeBtn');
+            
+            if (textModeActive) {
+                showTextMode();
+                btn.innerHTML = '<i class="fas fa-eye"></i> View Mode';
+                btn.classList.add('active');
+                recordInteraction('text_mode_on');
+            } else {
+                hideTextMode();
+                btn.innerHTML = '<i class="fas fa-font"></i> Text Mode';
+                btn.classList.remove('active');
+                recordInteraction('text_mode_off');
+            }
+        }
+
+        function showTextMode() {
+            const overlay = document.getElementById('textOverlay');
+            const titleSpan = document.getElementById('textModeTitle');
+            const contentDiv = document.getElementById('extractedText');
+            
+            if (overlay) {
+                overlay.style.display = 'flex';
+                
+                // Update title
+                if (titleSpan && currentContent?.title) {
+                    titleSpan.textContent = currentContent.title;
+                }
+                
+                // Extract and show text content
+                if (contentDiv) {
+                    contentDiv.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Extracting text content...</div>';
+                    
+                    // Call the backend text extraction API
+                    extractTextFromBackend(contentDiv);
+                }
+            }
+        }
+
+        function hideTextMode() {
+            const overlay = document.getElementById('textOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function generateTextContent() {
+            if (!currentContent) return "No content available.";
+            
+            let text = '';
+            
+            // Add title
+            if (currentContent.title) {
+                text += `# ${currentContent.title}\n\n`;
+            }
+            
+            // Add metadata
+            if (currentContent.subjectArea) text += `**Subject:** ${currentContent.subjectArea}\n`;
+            if (currentContent.difficultyLevel) text += `**Difficulty:** ${currentContent.difficultyLevel}\n`;
+            if (currentContent.estimatedDurationMinutes) text += `**Duration:** ${currentContent.estimatedDurationMinutes} minutes\n\n`;
+            
+            // Add description
+            if (currentContent.description) {
+                text += `## Description\n${currentContent.description}\n\n`;
+            }
+            
+            // Add accessibility information
+            const accessibilityFeatures = [];
+            if (currentContent.dyslexiaFriendly) accessibilityFeatures.push('Dyslexia-friendly');
+            if (currentContent.adhdFriendly) accessibilityFeatures.push('ADHD-friendly');
+            if (currentContent.autismFriendly) accessibilityFeatures.push('Autism-friendly');
+            if (currentContent.visualImpairmentFriendly) accessibilityFeatures.push('Visual impairment-friendly');
+            if (currentContent.hearingImpairmentFriendly) accessibilityFeatures.push('Hearing impairment-friendly');
+            
+            if (accessibilityFeatures.length > 0) {
+                text += `## Accessibility Features\nThis content includes support for: ${accessibilityFeatures.join(', ')}\n\n`;
+            }
+            
+            // Add content type specific information
+            if (currentContent.contentType === 'document') {
+                text += `## Document Content\nThis is a ${currentContent.fileName} file. For full content access, please view the document directly or download it.\n\n`;
+                text += `The document may contain:\n- Text content\n- Images and diagrams\n- Structured information\n- Interactive elements\n\n`;
+                text += `Use the accessibility features in this viewer to enhance your reading experience.`;
+            } else if (currentContent.contentType === 'video') {
+                text += `## Video Content\nThis is a video file (${currentContent.fileName}).\n\n`;
+                if (currentContent.hasSubtitles) text += '• Subtitles are available\n';
+                if (currentContent.hasAudioDescription) text += '• Audio description is available\n';
+                text += '\nFor the full video experience, please play the video directly.';
+            } else if (currentContent.contentType === 'audio') {
+                text += `## Audio Content\nThis is an audio file (${currentContent.fileName}).\n\n`;
+                text += 'For the full audio experience, please play the audio file directly.';
+            } else if (currentContent.contentType === 'image') {
+                text += `## Image Content\nThis is an image file (${currentContent.fileName}).\n\n`;
+                text += 'The image may contain visual information that supports the learning objectives. Please view the image directly for full details.';
+            }
+            
+            return text;
+        }
+
+        async function extractTextFromBackend(contentDiv) {
+            try {
+                if (!currentContentId) {
+                    throw new Error('No content ID available');
+                }
+
+                console.log('Calling text extraction API for content ID:', currentContentId);
+                
+                const extractUrl = `http://localhost:8081/api/tutor/content/extract-text/${currentContentId}`;
+                const response = await authenticatedFetch(extractUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Text extraction failed: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Text extraction result:', result);
+                
+                if (result.success) {
+                    // Store the extracted text globally for accessibility features
+                    currentExtractedText = result.extractedText;
+                    
+                    // Clear the content div and display accessible text
+                    contentDiv.innerHTML = '';
+                    
+                    // Create the text controls and accessible container structure
+                    contentDiv.innerHTML = `
+                        <div class="text-controls" id="textControls">
+                            <div class="text-settings">
+                                <h4><i class="fas fa-cog"></i> Text Accessibility Settings</h4>
+                                <div class="settings-row">
+                                    <div class="setting-group">
+                                        <label for="fontSelector">Font:</label>
+                                        <select id="fontSelector" onchange="changeTextFont()">
+                                            <option value="system">System Font</option>
+                                            <option value="opendyslexic">OpenDyslexic (Dyslexia-Friendly)</option>
+                                            <option value="opensans">Open Sans (Clean & Simple)</option>
+                                            <option value="arial">Arial (High Clarity)</option>
+                                        </select>
+                                    </div>
+                                    <div class="setting-group">
+                                        <label for="fontSizeSlider">Text Size:</label>
+                                        <input type="range" id="fontSizeSlider" min="12" max="24" value="16" onchange="changeTextSize()">
+                                        <span id="fontSizeDisplay">16px</span>
+                                    </div>
+                                    <div class="setting-group">
+                                        <label for="lineSpacingSlider">Line Spacing:</label>
+                                        <input type="range" id="lineSpacingSlider" min="1.2" max="2.5" step="0.1" value="1.6" onchange="changeLineSpacing()">
+                                        <span id="lineSpacingDisplay">1.6</span>
+                                    </div>
+                                </div>
+                                <div class="settings-row">
+                                    <div class="setting-group">
+                                        <label for="backgroundSelector">Background:</label>
+                                        <select id="backgroundSelector" onchange="changeBackground()">
+                                            <option value="white">White</option>
+                                            <option value="cream">Cream (Dyslexia-Friendly)</option>
+                                            <option value="light-blue">Light Blue (ADHD-Friendly)</option>
+                                            <option value="dark">Dark Mode</option>
+                                        </select>
+                                    </div>
+                                    <div class="setting-group">
+                                        <label>
+                                            <input type="checkbox" id="chunkingMode" onchange="toggleChunking()">
+                                            Break into chunks (ADHD-Friendly)
+                                        </label>
+                                    </div>
+                                    <div class="setting-group">
+                                        <label>
+                                            <input type="checkbox" id="highlightMode" onchange="toggleSentenceHighlight()">
+                                            Highlight current sentence
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accessible-text-container" id="accessibleTextContainer">
+                            ${formatTextForDisplay(result.extractedText)}
+                        </div>
+                    `;
+                    
+                    // Apply initial text settings
+                    applyTextSettings();
+                    
+                    // Update read aloud to use the extracted text
+                    updateReadAloudWithExtractedText();
+                    
+                } else {
+                    // Handle unsupported file types or errors
+                    const errorMessage = result.message || 'Text extraction failed';
+                    contentDiv.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3>Text Extraction Not Available</h3>
+                            <p>${errorMessage}</p>
+                            ${result.supportedFormats ? `<p><strong>Supported formats:</strong> ${result.supportedFormats}</p>` : ''}
+                            <p style="margin-top: 20px;">You can still view the document using the regular viewer mode.</p>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error extracting text:', error);
+                contentDiv.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 20px; color: #e74c3c; opacity: 0.7;"></i>
+                        <h3>Text Extraction Failed</h3>
+                        <p>Unable to extract text from this document.</p>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p style="margin-top: 20px;">Please try viewing the document in regular mode or contact support if this issue persists.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateReadAloudWithExtractedText() {
+            // This function is called when text is successfully extracted
+            // It enables better read aloud functionality with the actual document text
+            console.log('Read Aloud updated with extracted text, length:', currentExtractedText?.length);
+            
+            // Update the button to show that full document reading is now available
+            updateReadAloudButton();
+            
+            // If Read Aloud is currently active and using metadata, we could restart it with the extracted text
+            // But to avoid interrupting users, we'll just log that better text is now available
+            if (readAloudActive) {
+                console.log('Note: Extracted text is now available for Read Aloud. Stop and restart to use the full document text.');
+            }
+        }
+
+        // Focus Mode Functionality
+        function toggleFocusMode() {
+            focusModeActive = !focusModeActive;
+            const body = document.body;
+            const btn = document.getElementById('focusModeBtn');
+            const exitBtn = document.getElementById('exitFocusBtn');
+            
+            if (focusModeActive) {
+                body.classList.add('focus-mode');
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Exit Focus';
+                btn.classList.add('active');
+                if (exitBtn) exitBtn.style.display = 'flex';
+                recordInteraction('focus_mode_on');
+                
+                // Auto-pause reading if enabled
+                if (autoPauseActive && readAloudActive) {
+                    // Will be handled by window focus events
+                }
+            } else {
+                body.classList.remove('focus-mode');
+                btn.innerHTML = '<i class="fas fa-eye"></i> Focus';
+                btn.classList.remove('active');
+                if (exitBtn) exitBtn.style.display = 'none';
+                recordInteraction('focus_mode_off');
+            }
+        }
+
+        // Font and Visual Settings
+        function toggleDyslexiaMode() {
+            const checkbox = document.getElementById('dyslexiaMode');
+            const body = document.body;
+            
+            if (checkbox?.checked) {
+                body.classList.add('dyslexia-friendly');
+                recordInteraction('dyslexia_mode_on');
+            } else {
+                body.classList.remove('dyslexia-friendly');
+                recordInteraction('dyslexia_mode_off');
+            }
+        }
+
+        function toggleHighContrast() {
+            const checkbox = document.getElementById('highContrastMode');
+            const body = document.body;
+            
+            if (checkbox?.checked) {
+                body.classList.add('high-contrast');
+                recordInteraction('high_contrast_on');
+            } else {
+                body.classList.remove('high-contrast');
+                recordInteraction('high_contrast_off');
+            }
+        }
+
+        function adjustFontSize(change) {
+            currentFontSize += change;
+            currentFontSize = Math.max(50, Math.min(200, currentFontSize)); // Limit between 50% and 200%
+            
+            const display = document.getElementById('fontSizeDisplay');
+            if (display) display.textContent = `${currentFontSize}%`;
+            
+            // Apply font size to content areas
+            const contentAreas = document.querySelectorAll('.text-content, .content-frame, .text-overlay');
+            contentAreas.forEach(area => {
+                area.style.fontSize = `${currentFontSize}%`;
+            });
+            
+            recordInteraction('font_size_change');
+        }
+
+        function updateReadingSpeed() {
+            const slider = document.getElementById('readingSpeed');
+            const display = document.getElementById('speedDisplay');
+            
+            if (slider) {
+                readingSpeed = parseFloat(slider.value);
+                if (display) display.textContent = `${readingSpeed}x`;
+                
+                // Update current utterance if speaking
+                if (currentUtterance && readAloudActive) {
+                    currentUtterance.rate = readingSpeed;
+                }
+            }
+        }
+
+        function toggleWordHighlight() {
+            const checkbox = document.getElementById('wordHighlight');
+            wordHighlightActive = checkbox?.checked || false;
+        }
+
+        function toggleAutoPause() {
+            const checkbox = document.getElementById('autoPauseReading');
+            autoPauseActive = checkbox?.checked || false;
+            
+            if (autoPauseActive) {
+                setupAutoPause();
+            } else {
+                removeAutoPause();
+            }
+        }
+
+        function setupAutoPause() {
+            window.addEventListener('blur', pauseOnFocusLoss);
+            window.addEventListener('focus', resumeOnFocus);
+        }
+
+        function removeAutoPause() {
+            window.removeEventListener('blur', pauseOnFocusLoss);
+            window.removeEventListener('focus', resumeOnFocus);
+        }
+
+        function pauseOnFocusLoss() {
+            if (readAloudActive && speechSynthesis) {
+                speechSynthesis.pause();
+            }
+        }
+
+        function resumeOnFocus() {
+            if (readAloudActive && speechSynthesis) {
+                speechSynthesis.resume();
+            }
+        }
+
+        // Close panels when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('accessibilityPanel');
+            const accessibilityBtn = document.querySelector('button[onclick="openAccessibilityPanel()"]');
+            
+            if (panel && panel.classList.contains('open') && 
+                !panel.contains(event.target) && 
+                !accessibilityBtn.contains(event.target)) {
+                closeAccessibilityPanel();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Alt + A: Toggle accessibility panel
+            if (event.altKey && event.key === 'a') {
+                event.preventDefault();
+                const panel = document.getElementById('accessibilityPanel');
+                if (panel?.classList.contains('open')) {
+                    closeAccessibilityPanel();
+                } else {
+                    openAccessibilityPanel();
+                }
+            }
+            
+            // Alt + R: Toggle read aloud
+            if (event.altKey && event.key === 'r') {
+                event.preventDefault();
+                toggleReadAloud();
+            }
+            
+            // Alt + T: Toggle text mode
+            if (event.altKey && event.key === 't') {
+                event.preventDefault();
+                toggleTextMode();
+            }
+            
+            // Alt + F: Toggle focus mode
+            if (event.altKey && event.key === 'f') {
+                event.preventDefault();
+                toggleFocusMode();
+            }
+            
+            // Escape: Close overlays
+            if (event.key === 'Escape') {
+                if (textModeActive) {
+                    toggleTextMode();
+                } else if (focusModeActive) {
+                    toggleFocusMode();
+                } else {
+                    closeAccessibilityPanel();
+                }
+            }
+        });
+
+        // Neurodivergent-Friendly Text Features
+        let currentTextSettings = {
+            font: 'system',
+            fontSize: 16,
+            lineSpacing: 1.6,
+            background: 'white',
+            chunking: false,
+            highlighting: false
+        };
+
+        function changeTextFont() {
+            const selector = document.getElementById('fontSelector');
+            currentTextSettings.font = selector.value;
+            applyTextSettings();
+        }
+
+        function changeTextSize() {
+            const slider = document.getElementById('fontSizeSlider');
+            const display = document.getElementById('fontSizeDisplay');
+            currentTextSettings.fontSize = slider.value;
+            display.textContent = slider.value + 'px';
+            applyTextSettings();
+        }
+
+        function changeLineSpacing() {
+            const slider = document.getElementById('lineSpacingSlider');
+            const display = document.getElementById('lineSpacingDisplay');
+            currentTextSettings.lineSpacing = parseFloat(slider.value);
+            display.textContent = slider.value;
+            applyTextSettings();
+        }
+
+        function changeBackground() {
+            const selector = document.getElementById('backgroundSelector');
+            currentTextSettings.background = selector.value;
+            applyTextSettings();
+        }
+
+        function toggleChunking() {
+            const checkbox = document.getElementById('chunkingMode');
+            currentTextSettings.chunking = checkbox.checked;
+            if (currentExtractedText) {
+                displayAccessibleText(currentExtractedText);
+            }
+        }
+
+        function toggleSentenceHighlight() {
+            const checkbox = document.getElementById('highlightMode');
+            currentTextSettings.highlighting = checkbox.checked;
+            if (currentExtractedText) {
+                displayAccessibleText(currentExtractedText);
+            }
+        }
+
+        function applyTextSettings() {
+            const container = document.getElementById('accessibleTextContainer');
+            if (!container) return;
+
+            // Remove existing font classes
+            container.classList.remove('font-system', 'font-opendyslexic', 'font-opensans', 'font-arial');
+            container.classList.remove('bg-white', 'bg-cream', 'bg-light-blue', 'bg-dark');
+
+            // Apply new font class
+            container.classList.add('font-' + currentTextSettings.font);
+            container.classList.add('bg-' + currentTextSettings.background);
+
+            // Apply font size and line spacing
+            container.style.fontSize = currentTextSettings.fontSize + 'px';
+            container.style.lineHeight = currentTextSettings.lineSpacing;
+        }
+
+        function displayAccessibleText(text) {
+            const container = document.getElementById('accessibleTextContainer');
+            const controls = document.getElementById('textControls');
+            
+            if (!container) return;
+
+            // Show controls when text is displayed
+            if (controls) {
+                controls.style.display = 'block';
+            }
+
+            if (currentTextSettings.chunking) {
+                // Break text into chunks for ADHD-friendly reading
+                const chunks = breakTextIntoChunks(text);
+                container.innerHTML = chunks.map((chunk, index) => 
+                    `<div class="text-chunk" data-chunk-index="${index}">${chunk}</div>`
+                ).join('');
+            } else if (currentTextSettings.highlighting) {
+                // Break text into sentences for highlighting
+                const sentences = breakTextIntoSentences(text);
+                container.innerHTML = sentences.map((sentence, index) =>
+                    `<span class="sentence" data-sentence-index="${index}">${sentence}</span>`
+                ).join(' ');
+                
+                // Add click handlers for sentence highlighting
+                container.querySelectorAll('.sentence').forEach(sentence => {
+                    sentence.addEventListener('click', function() {
+                        // Remove previous highlights
+                        container.querySelectorAll('.highlighted-sentence').forEach(s => 
+                            s.classList.remove('highlighted-sentence'));
+                        // Highlight clicked sentence
+                        this.classList.add('highlighted-sentence');
+                    });
+                });
+            } else {
+                // Regular text display with basic formatting
+                container.innerHTML = formatTextForDisplay(text);
+            }
+
+            // Apply current settings
+            applyTextSettings();
+        }
+
+        function breakTextIntoChunks(text) {
+            // Break text into paragraphs first
+            const paragraphs = text.split(/\n\s*\n/);
+            const chunks = [];
+            
+            paragraphs.forEach(paragraph => {
+                if (paragraph.trim().length === 0) return;
+                
+                // If paragraph is too long, break it further
+                if (paragraph.length > 300) {
+                    const sentences = paragraph.split(/[.!?]+/);
+                    let currentChunk = '';
+                    
+                    sentences.forEach(sentence => {
+                        if (sentence.trim().length === 0) return;
+                        
+                        if (currentChunk.length + sentence.length > 200) {
+                            if (currentChunk) {
+                                chunks.push(currentChunk.trim());
+                                currentChunk = '';
+                            }
+                        }
+                        currentChunk += sentence + '. ';
+                    });
+                    
+                    if (currentChunk.trim()) {
+                        chunks.push(currentChunk.trim());
+                    }
+                } else {
+                    chunks.push(paragraph.trim());
+                }
+            });
+            
+            return chunks;
+        }
+
+        function breakTextIntoSentences(text) {
+            return text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
+        }
+
+        function formatTextForDisplay(text) {
+            return text
+                .replace(/\n\s*\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/^/, '<p>')
+                .replace(/$/, '</p>');
+        }
+    </script>
+</body>
+</html>

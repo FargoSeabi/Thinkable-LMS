@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Dashboard - ThinkAble</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="adaptive-styles.css" rel="stylesheet">
+    <style>
+        :root {
+            --tutor-primary: #2c5aa0;
+            --tutor-secondary: #5a7cb8;
+            --tutor-accent: #ff7b7b;
+            --tutor-success: #4caf50;
+            --tutor-warning: #ff9800;
+            --tutor-light: #f8f9fc;
+            --tutor-dark: #2c3e50;
+        }
+
+        body {
+            background-color: var(--tutor-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--tutor-primary) 0%, var(--tutor-secondary) 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .sidebar {
+            background: white;
+            min-height: calc(100vh - 76px);
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            padding: 1.5rem 0;
+        }
+
+        .sidebar .nav-link {
+            color: var(--tutor-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0 25px 25px 0;
+            margin: 0.25rem 0;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: var(--tutor-primary);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .stats-icon.content { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stats-icon.views { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stats-icon.messages { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stats-icon.rating { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--tutor-primary);
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .message-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--tutor-success);
+        }
+
+        .unread {
+            border-left-color: var(--tutor-accent);
+            background: #fff8f0;
+        }
+
+        .btn-primary {
+            background: var(--tutor-primary);
+            border-color: var(--tutor-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--tutor-secondary);
+            border-color: var(--tutor-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .stats-card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Custom Modal Styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+        }
+
+        .custom-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .custom-modal.show .custom-modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header .modal-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .modal-header .modal-icon.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .modal-header .modal-icon.warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .modal-header .modal-icon.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .modal-header .modal-icon.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn.primary {
+            background-color: var(--tutor-primary);
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background-color: var(--tutor-secondary);
+        }
+
+        .modal-btn.danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .modal-btn.danger:hover {
+            background-color: #c82333;
+        }
+
+        .modal-btn.secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .modal-btn.secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chalkboard-teacher"></i> ThinkAble Tutor Portal
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#" onclick="showProfile()">
+                    <i class="fas fa-user-circle"></i> Profile
+                </a>
+                <a class="nav-link logout-btn" href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" onclick="showDashboard()">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a class="nav-link" href="#" onclick="showContent()">
+                        <i class="fas fa-file-alt"></i> My Content
+                    </a>
+                    <a class="nav-link" href="#" onclick="showUpload()">
+                        <i class="fas fa-upload"></i> Upload Content
+                    </a>
+                    <a class="nav-link" href="#" onclick="showMessages()">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                    <a class="nav-link" href="#" onclick="showAnalytics()">
+                        <i class="fas fa-chart-bar"></i> Analytics
+                    </a>
+                    <a class="nav-link" href="#" onclick="showProfile()">
+                        <i class="fas fa-user-cog"></i> Profile Settings
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div id="dashboard-content">
+                    <!-- Dashboard Overview -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2>Welcome to Your Tutor Dashboard</h2>
+                            <p class="text-muted">Manage your content, connect with students, and track your impact</p>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row mb-4" id="stats-cards">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon content">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <h3 id="total-content">--</h3>
+                                <p class="text-muted mb-0">Published Content</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon views">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <h3 id="total-views">--</h3>
+                                <p class="text-muted mb-0">Total Views</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon messages">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <h3 id="unread-messages">--</h3>
+                                <p class="text-muted mb-0">New Messages</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon rating">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h3 id="average-rating">--</h3>
+                                <p class="text-muted mb-0">Average Rating</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5>Quick Actions</h5>
+                            <div class="d-flex gap-3">
+                                <button class="btn btn-primary" onclick="showUpload()">
+                                    <i class="fas fa-plus"></i> Upload New Content
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="showMessages()">
+                                    <i class="fas fa-envelope"></i> Check Messages
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="showProfile()">
+                                    <i class="fas fa-user-edit"></i> Edit Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-clock"></i> Recent Content Activity</h5>
+                            <div id="recent-content">
+                                <div class="content-card">
+                                    <h6>Algebra Basics with Visual Aids</h6>
+                                    <p class="text-muted mb-1">Published 2 days ago</p>
+                                    <small class="text-success">45 views • 4.8★ rating</small>
+                                </div>
+                                <div class="content-card">
+                                    <h6>Chemistry Experiments for ADHD Students</h6>
+                                    <p class="text-muted mb-1">Published 1 week ago</p>
+                                    <small class="text-success">123 views • 4.6★ rating</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-envelope"></i> Recent Messages</h5>
+                            <div id="recent-messages">
+                                <div class="message-card unread">
+                                    <h6>Sarah M.</h6>
+                                    <p class="mb-1">Hi! I found your algebra content really helpful. Could you help me with quadratic equations?</p>
+                                    <small class="text-muted">2 hours ago</small>
+                                </div>
+                                <div class="message-card">
+                                    <h6>Alex K.</h6>
+                                    <p class="mb-1">Thank you for the chemistry experiments! My daughter loved them.</p>
+                                    <small class="text-muted">1 day ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Management Section -->
+                <div id="content-section" style="display: none;">
+                    <h2>My Content</h2>
+                    <p class="text-muted">Manage your published learning materials</p>
+                    
+                    <div id="content-list">
+                        <div class="empty-state">
+                            <i class="fas fa-file-alt"></i>
+                            <h4>Loading your content...</h4>
+                            <p>Please wait while we fetch your published materials.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div id="upload-section" style="display: none;">
+                    <h2>Upload New Content</h2>
+                    <p class="text-muted">Share your educational materials with students who need accessible learning</p>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form id="content-upload-form" class="content-card">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="content-title" class="form-label">Content Title *</label>
+                                        <input type="text" class="form-control" id="content-title" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="subject-area" class="form-label">Subject Area *</label>
+                                        <select class="form-control" id="subject-area" required>
+                                            <option value="">Select Subject</option>
+                                            <option value="Math">Mathematics</option>
+                                            <option value="Science">Science</option>
+                                            <option value="English">English Language Arts</option>
+                                            <option value="History">History</option>
+                                            <option value="Art">Art</option>
+                                            <option value="Music">Music</option>
+                                            <option value="Technology">Technology</option>
+                                            <option value="Life Skills">Life Skills</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="content-description" class="form-label">Description *</label>
+                                    <textarea class="form-control" id="content-description" rows="3" required 
+                                            placeholder="Describe what this content teaches and how it helps students..."></textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="difficulty-level" class="form-label">Difficulty Level</label>
+                                        <select class="form-control" id="difficulty-level">
+                                            <option value="Beginner">Beginner</option>
+                                            <option value="Intermediate">Intermediate</option>
+                                            <option value="Advanced">Advanced</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="target-age-min" class="form-label">Min Age</label>
+                                        <input type="number" class="form-control" id="target-age-min" min="5" max="18">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="target-age-max" class="form-label">Max Age</label>
+                                        <input type="number" class="form-control" id="target-age-max" min="5" max="18">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="content-file" class="form-label">Upload File *</label>
+                                    <input type="file" class="form-control" id="content-file" required 
+                                           accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mp3,.zip">
+                                    <small class="text-muted">Supported formats: PDF, Word docs, PowerPoint, videos (MP4), audio (MP3), ZIP files</small>
+                                </div>
+                                
+                                <h6>Accessibility Features</h6>
+                                <p class="text-muted">Check all that apply to help students find content that works for them:</p>
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="dyslexia-friendly">
+                                            <label class="form-check-label" for="dyslexia-friendly">
+                                                Dyslexia-friendly
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="adhd-friendly">
+                                            <label class="form-check-label" for="adhd-friendly">
+                                                ADHD-friendly
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="autism-friendly">
+                                            <label class="form-check-label" for="autism-friendly">
+                                                Autism-friendly
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="visual-impairment-friendly">
+                                            <label class="form-check-label" for="visual-impairment-friendly">
+                                                Visual impairment support
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="hearing-impairment-friendly">
+                                            <label class="form-check-label" for="hearing-impairment-friendly">
+                                                Hearing impairment support
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="motor-impairment-friendly">
+                                            <label class="form-check-label" for="motor-impairment-friendly">
+                                                Motor impairment support
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-upload"></i> Upload Content
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetUploadForm()">
+                                        <i class="fas fa-times"></i> Clear Form
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="content-card">
+                                <h6><i class="fas fa-lightbulb"></i> Upload Tips</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success"></i> Use clear, descriptive titles</li>
+                                    <li><i class="fas fa-check text-success"></i> Include detailed descriptions</li>
+                                    <li><i class="fas fa-check text-success"></i> Tag accessibility features accurately</li>
+                                    <li><i class="fas fa-check text-success"></i> Keep file sizes under 50MB</li>
+                                    <li><i class="fas fa-check text-success"></i> Test content with students first</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="content-card">
+                                <h6><i class="fas fa-universal-access"></i> Accessibility Guidelines</h6>
+                                <p><strong>Dyslexia-friendly:</strong> Simple fonts, clear spacing, shorter paragraphs</p>
+                                <p><strong>ADHD-friendly:</strong> Clear structure, visual breaks, interactive elements</p>
+                                <p><strong>Autism-friendly:</strong> Predictable layout, clear instructions, sensory considerations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Section -->
+                <div id="messages-section" style="display: none;">
+                    <h2>Messages</h2>
+                    <p class="text-muted">Communication with students (only when they contact you first)</p>
+                    
+                    <div id="messages-list">
+                        <div class="empty-state">
+                            <i class="fas fa-envelope"></i>
+                            <h4>No Messages Yet</h4>
+                            <p>When students find your content helpful, they can send you messages here.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div id="analytics-section" style="display: none;">
+                    <h2>Content Analytics</h2>
+                    <p class="text-muted">Track how your content is performing and helping students</p>
+                    
+                    <div class="empty-state">
+                        <i class="fas fa-chart-bar"></i>
+                        <h4>Analytics Dashboard</h4>
+                        <p>Detailed analytics will be shown here.</p>
+                    </div>
+                </div>
+
+                <!-- Quiz Management Section -->
+                <div id="quiz-section" style="display: none;">
+                    <h2 id="quiz-section-title">Quiz Management</h2>
+                    <p class="text-muted" id="quiz-section-subtitle">Create and manage quizzes for your content</p>
+                    
+                    <div id="quiz-content">
+                        <!-- Quiz management content will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profile-section" style="display: none;">
+                    <h2>Tutor Profile</h2>
+                    <p class="text-muted">Manage your public tutor profile and qualifications</p>
+                    
+                    <div class="empty-state">
+                        <i class="fas fa-user-cog"></i>
+                        <h4>Profile Management</h4>
+                        <p>Profile editing functionality will be implemented here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div id="customModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <div class="modal-header">
+                <div id="modalIcon" class="modal-icon">
+                    <i id="modalIconSymbol" class="fas fa-info-circle"></i>
+                </div>
+                <h5 id="modalTitle" class="modal-title">Notification</h5>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <!-- Message content will be inserted here -->
+            </div>
+            <div id="modalFooter" class="modal-footer">
+                <!-- Buttons will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Updated: 2025-08-15 20:40 - Using tutor ID 21
+        
+        // Custom Modal Functions
+        function showCustomModal(type, title, message, buttons) {
+            const modal = document.getElementById('customModal');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalIconSymbol = document.getElementById('modalIconSymbol');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalFooter = document.getElementById('modalFooter');
+
+            // Set icon and style based on type
+            modalIcon.className = `modal-icon ${type}`;
+            switch(type) {
+                case 'success':
+                    modalIconSymbol.className = 'fas fa-check-circle';
+                    break;
+                case 'warning':
+                    modalIconSymbol.className = 'fas fa-exclamation-triangle';
+                    break;
+                case 'danger':
+                    modalIconSymbol.className = 'fas fa-times-circle';
+                    break;
+                case 'info':
+                default:
+                    modalIconSymbol.className = 'fas fa-info-circle';
+                    break;
+            }
+
+            modalTitle.textContent = title;
+            modalBody.innerHTML = message;
+            
+            // Clear and add buttons
+            modalFooter.innerHTML = '';
+            buttons.forEach(button => {
+                const btn = document.createElement('button');
+                btn.className = `modal-btn ${button.class || 'secondary'}`;
+                btn.textContent = button.text;
+                btn.onclick = () => {
+                    hideCustomModal();
+                    if (button.action) button.action();
+                };
+                modalFooter.appendChild(btn);
+            });
+
+            modal.classList.add('show');
+            
+            // Close modal when clicking outside
+            modal.onclick = (e) => {
+                if (e.target === modal) hideCustomModal();
+            };
+        }
+
+        function hideCustomModal() {
+            const modal = document.getElementById('customModal');
+            modal.classList.remove('show');
+        }
+
+        // Custom alert function
+        function customAlert(message, type = 'info', title = 'Notification') {
+            showCustomModal(type, title, message, [
+                { text: 'OK', class: 'primary' }
+            ]);
+        }
+
+        // Custom confirm function
+        function customConfirm(message, onConfirm, type = 'warning', title = 'Confirm Action') {
+            showCustomModal(type, title, message, [
+                { text: 'Cancel', class: 'secondary' },
+                { text: 'Confirm', class: 'danger', action: onConfirm }
+            ]);
+        }
+
+        // Tutor logout function
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('tokenExpiry');
+            window.location.href = '/tutor-login.html';
+        }
+        
+        // Navigation functions
+        function showDashboard() {
+            hideAllSections();
+            document.getElementById('dashboard-content').style.display = 'block';
+            setActiveNav(0);
+        }
+
+        function showContent() {
+            hideAllSections();
+            document.getElementById('content-section').style.display = 'block';
+            setActiveNav(1);
+            loadTutorContent();
+        }
+
+        function showUpload() {
+            hideAllSections();
+            document.getElementById('upload-section').style.display = 'block';
+            setActiveNav(2);
+        }
+
+        function showMessages() {
+            hideAllSections();
+            document.getElementById('messages-section').style.display = 'block';
+            setActiveNav(3);
+            loadMessages();
+        }
+
+        function showAnalytics() {
+            hideAllSections();
+            document.getElementById('analytics-section').style.display = 'block';
+            setActiveNav(4);
+        }
+
+        function showProfile() {
+            hideAllSections();
+            document.getElementById('profile-section').style.display = 'block';
+            setActiveNav(5);
+        }
+
+        function hideAllSections() {
+            document.getElementById('dashboard-content').style.display = 'none';
+            document.getElementById('content-section').style.display = 'none';
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('messages-section').style.display = 'none';
+            document.getElementById('analytics-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('profile-section').style.display = 'none';
+        }
+
+        function setActiveNav(index) {
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            navLinks.forEach((link, i) => {
+                if (i === index) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // Cache the current tutor's user ID
+        let currentTutorUserId = null;
+
+        // Get current tutor user ID from cache or fetch it
+        function getCurrentTutorId() {
+            return currentTutorUserId;
+        }
+
+        // Initialize and cache the tutor user ID
+        async function initializeTutorId() {
+            const userEmail = localStorage.getItem('userEmail');
+            console.log('Initializing tutor ID for email:', userEmail);
+            
+            if (!userEmail) {
+                console.log('No email found in localStorage');
+                return null;
+            }
+            
+            try {
+                // Get user profile to find the user ID
+                const response = await fetch(`http://localhost:8081/api/auth/profile?email=${userEmail}`, {
+                    headers: getAuthHeaders()
+                });
+                
+                if (response.ok) {
+                    const profile = await response.json();
+                    console.log('Retrieved tutor profile:', profile);
+                    currentTutorUserId = profile.id;
+                    return currentTutorUserId;
+                } else {
+                    console.error('Failed to get tutor profile:', response.status);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error getting tutor ID:', error);
+                return null;
+            }
+        }
+
+        // Load tutor's content
+        async function loadTutorContent() {
+            const tutorId = getCurrentTutorId();
+            console.log('loadTutorContent called with tutorId:', tutorId);
+            if (!tutorId) {
+                document.getElementById('content-list').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>Authentication Error</h4>
+                        <p>Unable to identify tutor user. Please log in again.</p>
+                    </div>`;
+                return;
+            }
+
+            try {
+                const url = `http://localhost:8081/api/tutor/content/tutor/${tutorId}`;
+                console.log('Fetching from URL:', url);
+                const response = await fetch(url, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch content');
+                }
+
+                const data = await response.json();
+                displayTutorContent(data.content);
+            } catch (error) {
+                console.error('Error loading content:', error);
+                document.getElementById('content-list').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>Error Loading Content</h4>
+                        <p>There was an error loading your content. Please try again.</p>
+                    </div>`;
+            }
+        }
+
+        function displayTutorContent(content) {
+            const contentList = document.getElementById('content-list');
+            
+            if (!content || content.length === 0) {
+                contentList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <h4>No Content Yet</h4>
+                        <p>You haven't uploaded any content yet. Click "Upload Content" to get started!</p>
+                    </div>`;
+                return;
+            }
+
+            contentList.innerHTML = content.map(item => `
+                <div class="content-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6>${item.title || 'Untitled Content'}</h6>
+                            <p class="text-muted mb-1">${item.description || 'No description available'}</p>
+                            <small class="text-info">
+                                Subject: ${item.subjectArea || 'General'} • 
+                                Status: ${item.status || 'Draft'} • 
+                                ${item.publishedAt ? 'Published: ' + new Date(item.publishedAt).toLocaleDateString() : 'Not published'}
+                            </small>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            ${item.status === 'draft' || item.status === 'DRAFT' ? 
+                                `<button class="btn btn-outline-success btn-sm" onclick="publishContent(${item.id})">
+                                    <i class="fas fa-paper-plane"></i> Publish
+                                </button>` : ''
+                            }
+                            <button class="btn btn-outline-info btn-sm" onclick="manageQuizzes(${item.id}, '${item.title || 'this content'}', '${item.fileName || ''}')">
+                                <i class="fas fa-question-circle"></i> Quizzes
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="viewAnalytics(${item.id})">
+                                <i class="fas fa-chart-line"></i> Analytics
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteContent(${item.id}, '${item.title || 'this content'}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Publish content
+        async function publishContent(contentId) {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) return;
+
+            try {
+                const response = await fetch(`http://localhost:8081/api/tutor/content/${contentId}/publish?tutorUserId=${tutorId}`, {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to publish content');
+                }
+
+                customAlert('Content published successfully!', 'success', 'Published!');
+                loadTutorContent(); // Refresh the content list
+                loadDashboardStats(); // Refresh stats
+            } catch (error) {
+                console.error('Error publishing content:', error);
+                customAlert('Failed to publish content. Please try again.', 'danger', 'Publish Failed');
+            }
+        }
+
+        // View content analytics
+        async function viewAnalytics(contentId) {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) return;
+
+            try {
+                const response = await fetch(`http://localhost:8081/api/tutor/content/${contentId}/analytics?tutorUserId=${tutorId}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch analytics');
+                }
+
+                const analytics = await response.json();
+                displayAnalytics(analytics);
+                showAnalytics(); // Switch to analytics view
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                customAlert('Failed to load analytics. Please try again.', 'danger', 'Analytics Error');
+            }
+        }
+
+        // Delete content
+        async function deleteContent(contentId, contentTitle) {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) {
+                customAlert('Authentication error. Please log in again.', 'danger', 'Authentication Error');
+                return;
+            }
+
+            // Confirm deletion
+            const confirmMessage = `Are you sure you want to delete "<strong>${contentTitle}</strong>"?<br><br>This action cannot be undone and will:<br>• Remove the content from the database<br>• Delete the associated file from storage<br>• Remove all student interactions and ratings`;
+            
+            customConfirm(confirmMessage, async () => {
+                try {
+                    const response = await fetch(`http://localhost:8081/api/tutor/content/${contentId}?tutorUserId=${tutorId}`, {
+                        method: 'DELETE',
+                        headers: getAuthHeaders()
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Failed to delete content');
+                    }
+
+                    const result = await response.json();
+                    customAlert(result.message || 'Content deleted successfully!', 'success', 'Deleted!');
+                    
+                    // Refresh the content list and dashboard stats
+                    loadTutorContent();
+                    loadDashboardStats();
+                    
+                } catch (error) {
+                    console.error('Error deleting content:', error);
+                    if (error.message.includes('Not authorized')) {
+                        customAlert('You are not authorized to delete this content.', 'danger', 'Access Denied');
+                    } else if (error.message.includes('Content not found')) {
+                        customAlert('Content not found. It may have already been deleted.', 'warning', 'Not Found');
+                    } else {
+                        customAlert('Failed to delete content: ' + error.message, 'danger', 'Delete Failed');
+                    }
+                }
+            }, 'danger', 'Delete Content?');
+        }
+
+        function displayAnalytics(analytics) {
+            const analyticsSection = document.getElementById('analytics-section');
+            analyticsSection.innerHTML = `
+                <h2>Content Analytics</h2>
+                <p class="text-muted">Detailed performance metrics for your content</p>
+                
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h4>${analytics.totalViews || 0}</h4>
+                            <p class="text-muted mb-0">Total Views</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h4>${analytics.averageRating || 'N/A'}</h4>
+                            <p class="text-muted mb-0">Average Rating</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h4>${analytics.completionRate || 0}%</h4>
+                            <p class="text-muted mb-0">Completion Rate</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h4>${analytics.bookmarks || 0}</h4>
+                            <p class="text-muted mb-0">Bookmarked</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <h6>Accessibility Impact</h6>
+                    <p>Your content has helped students with various learning needs:</p>
+                    <ul>
+                        <li>Dyslexia-friendly features: ${analytics.dyslexiaHelpful || 0} positive reviews</li>
+                        <li>ADHD-friendly features: ${analytics.adhdHelpful || 0} positive reviews</li>
+                        <li>Autism-friendly features: ${analytics.autismHelpful || 0} positive reviews</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Load messages from students
+        async function loadMessages() {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) {
+                document.getElementById('messages-list').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>Authentication Error</h4>
+                        <p>Unable to identify tutor user. Please log in again.</p>
+                    </div>`;
+                return;
+            }
+
+            try {
+                // For now, show placeholder since messaging isn't implemented yet
+                document.getElementById('messages-list').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-envelope"></i>
+                        <h4>No Messages Yet</h4>
+                        <p>When students find your content helpful, they can send you messages here.</p>
+                        <p><small class="text-muted">Privacy-first: Students must contact you first before you can communicate.</small></p>
+                    </div>`;
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                document.getElementById('messages-list').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>Error Loading Messages</h4>
+                        <p>There was an error loading your messages. Please try again.</p>
+                    </div>`;
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug: Log all localStorage values
+            console.log('localStorage contents:', {
+                authToken: localStorage.getItem('authToken'),
+                userRole: localStorage.getItem('userRole'),
+                userEmail: localStorage.getItem('userEmail'),
+                tokenExpiry: localStorage.getItem('tokenExpiry')
+            });
+            
+            // Check if user is properly authenticated as tutor
+            const userRole = localStorage.getItem('userRole');
+            const userEmail = localStorage.getItem('userEmail');
+            
+            if (userRole !== 'TUTOR') {
+                console.warn('Invalid authentication, redirecting to login');
+                customAlert('Authentication error. Please log in again as a tutor.', 'danger', 'Authentication Error');
+                window.location.href = '/tutor-login.html';
+                return;
+            }
+            
+            // Initialize tutor ID and then load dashboard
+            initializeTutorId().then(() => {
+                loadDashboardStats();
+            });
+        });
+
+        async function loadDashboardStats() {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) {
+                document.getElementById('total-content').textContent = '--';
+                document.getElementById('total-views').textContent = '--';
+                document.getElementById('unread-messages').textContent = '--';
+                document.getElementById('average-rating').textContent = '--';
+                return;
+            }
+
+            try {
+                // Load tutor content to get stats
+                const response = await fetch(`http://localhost:8081/api/tutor/content/tutor/${tutorId}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const content = data.content || [];
+                    
+                    // Calculate stats from content
+                    const publishedContent = content.filter(item => item.status === 'PUBLISHED');
+                    const totalViews = content.reduce((sum, item) => sum + (item.viewCount || 0), 0);
+                    const totalRatings = content.reduce((sum, item) => sum + (item.averageRating || 0), 0);
+                    const averageRating = content.length > 0 ? (totalRatings / content.length).toFixed(1) : '0.0';
+
+                    document.getElementById('total-content').textContent = publishedContent.length.toString();
+                    document.getElementById('total-views').textContent = totalViews.toString();
+                    document.getElementById('unread-messages').textContent = '0'; // Placeholder for messaging
+                    document.getElementById('average-rating').textContent = averageRating;
+                } else {
+                    // Use placeholder values if API fails
+                    document.getElementById('total-content').textContent = '0';
+                    document.getElementById('total-views').textContent = '0';
+                    document.getElementById('unread-messages').textContent = '0';
+                    document.getElementById('average-rating').textContent = '0.0';
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                // Use placeholder values if there's an error
+                document.getElementById('total-content').textContent = '0';
+                document.getElementById('total-views').textContent = '0';
+                document.getElementById('unread-messages').textContent = '0';
+                document.getElementById('average-rating').textContent = '0.0';
+            }
+        }
+
+        // Upload form functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadForm = document.getElementById('content-upload-form');
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', handleContentUpload);
+            }
+        });
+
+        async function handleContentUpload(event) {
+            event.preventDefault();
+            
+            const tutorId = getCurrentTutorId();
+            console.log('handleContentUpload called with tutorId:', tutorId);
+            if (!tutorId) {
+                customAlert('Authentication error. Please log in again.', 'danger', 'Authentication Error');
+                return;
+            }
+
+            const form = event.target;
+            const formData = new FormData();
+            
+            // Get form values
+            const file = document.getElementById('content-file').files[0];
+            const title = document.getElementById('content-title').value.trim();
+            const description = document.getElementById('content-description').value.trim();
+            const subjectArea = document.getElementById('subject-area').value;
+            const difficultyLevel = document.getElementById('difficulty-level').value;
+            const targetAgeMin = document.getElementById('target-age-min').value;
+            const targetAgeMax = document.getElementById('target-age-max').value;
+            
+            // Validation
+            if (!file || !title || !description || !subjectArea) {
+                customAlert('Please fill in all required fields and select a file.', 'warning', 'Missing Information');
+                return;
+            }
+            
+            if (file.size > 50 * 1024 * 1024) { // 50MB limit
+                customAlert('File size must be under 50MB.', 'warning', 'File Too Large');
+                return;
+            }
+
+            // Build form data
+            formData.append('file', file);
+            formData.append('tutorUserId', tutorId);
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('subjectArea', subjectArea);
+            formData.append('difficultyLevel', difficultyLevel);
+            
+            if (targetAgeMin) formData.append('targetAgeMin', targetAgeMin);
+            if (targetAgeMax) formData.append('targetAgeMax', targetAgeMax);
+            
+            // Accessibility features
+            formData.append('dyslexiaFriendly', document.getElementById('dyslexia-friendly').checked);
+            formData.append('adhdFriendly', document.getElementById('adhd-friendly').checked);
+            formData.append('autismFriendly', document.getElementById('autism-friendly').checked);
+            formData.append('visualImpairmentFriendly', document.getElementById('visual-impairment-friendly').checked);
+            formData.append('hearingImpairmentFriendly', document.getElementById('hearing-impairment-friendly').checked);
+            formData.append('motorImpairmentFriendly', document.getElementById('motor-impairment-friendly').checked);
+
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
+            try {
+                // Show loading state
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                
+                const response = await fetch('http://localhost:8081/api/tutor/content/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Upload failed');
+                }
+
+                const result = await response.json();
+                customAlert('Content uploaded successfully! You can now publish it from the "My Content" section.', 'success', 'Upload Successful!');
+                
+                // Reset form and refresh dashboard
+                resetUploadForm();
+                loadDashboardStats();
+                
+                // Switch to content view to show the new upload
+                showContent();
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                customAlert('Upload failed: ' + error.message, 'danger', 'Upload Failed');
+            } finally {
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+            }
+        }
+
+        function resetUploadForm() {
+            const form = document.getElementById('content-upload-form');
+            if (form) {
+                form.reset();
+            }
+        }
+
+        // Auth utilities (reused from script.js)
+        function getAuthHeaders() {
+            const token = localStorage.getItem('authToken');
+            return token ? {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            } : {
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // Debug function - call clearAuthAndRelogin() in console if needed
+        function clearAuthAndRelogin() {
+            console.log('Clearing all authentication data...');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('tokenExpiry');
+            customAlert('Authentication cleared. Please log in again.', 'info', 'Logged Out');
+            window.location.href = '/index.html';
+        }
+        
+        // Quiz Management Functions
+        
+        // Show quiz management for specific content
+        async function manageQuizzes(contentId, contentTitle, fileName) {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) {
+                customAlert('Authentication error. Please log in again.', 'danger', 'Authentication Error');
+                return;
+            }
+
+            // Switch to quiz section
+            hideAllSections();
+            document.getElementById('quiz-section').style.display = 'block';
+            document.getElementById('quiz-section-title').textContent = `Quizzes for: ${contentTitle}`;
+            document.getElementById('quiz-section-subtitle').textContent = 'Create and manage quizzes for this content';
+
+            // Load existing quizzes
+            await loadContentQuizzes(contentId, contentTitle, fileName);
+        }
+
+        // Load quizzes for specific content
+        async function loadContentQuizzes(contentId, contentTitle, fileName) {
+            const tutorId = getCurrentTutorId();
+            const quizContent = document.getElementById('quiz-content');
+            
+            try {
+                const response = await fetch(`http://localhost:8081/api/tutor/content/${contentId}/quizzes?tutorUserId=${tutorId}`, {
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch quizzes');
+                }
+
+                const data = await response.json();
+                const quizzes = data.quizzes || [];
+
+                displayQuizManagement(contentId, contentTitle, fileName, quizzes);
+
+            } catch (error) {
+                console.error('Error loading quizzes:', error);
+                quizContent.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>Error Loading Quizzes</h4>
+                        <p>There was an error loading quizzes for this content.</p>
+                    </div>`;
+            }
+        }
+
+        function displayQuizManagement(contentId, contentTitle, fileName, quizzes) {
+            const quizContent = document.getElementById('quiz-content');
+            const isPDF = fileName.toLowerCase().endsWith('.pdf');
+            
+            let content = `
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex gap-3">
+                            <button class="btn btn-primary" onclick="showCreateManualQuizForm(${contentId}, '${contentTitle}')">
+                                <i class="fas fa-plus"></i> Create Manual Quiz
+                            </button>`;
+            
+            if (isPDF) {
+                content += `
+                            <button class="btn btn-outline-primary" onclick="generateAIQuiz(${contentId}, '${contentTitle}')">
+                                <i class="fas fa-robot"></i> Generate AI Quiz (PDF)
+                            </button>`;
+            }
+            
+            content += `
+                            <button class="btn btn-outline-secondary" onclick="showContent()">
+                                <i class="fas fa-arrow-left"></i> Back to Content
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+
+            if (quizzes.length === 0) {
+                content += `
+                    <div class="empty-state">
+                        <i class="fas fa-question-circle"></i>
+                        <h4>No Quizzes Created Yet</h4>
+                        <p>Create quizzes to help students test their understanding of your content.</p>
+                        ${isPDF ? '<p><small class="text-muted">PDF content supports AI-generated quizzes!</small></p>' : ''}
+                    </div>`;
+            } else {
+                content += `<div class="row">`;
+                quizzes.forEach(quiz => {
+                    content += `
+                        <div class="col-md-6 mb-3">
+                            <div class="content-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6>${quiz.title}</h6>
+                                        <p class="text-muted mb-1">
+                                            ${quiz.questions ? quiz.questions.length : 0} questions
+                                            ${quiz.aiGenerated ? ' • AI Generated' : ' • Manual'}
+                                        </p>
+                                        <small class="text-info">
+                                            Created: ${quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : 'Unknown'}
+                                        </small>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="viewQuizDetails(${quiz.id})">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="deleteQuiz(${quiz.id}, '${quiz.title}')">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                content += `</div>`;
+            }
+
+            quizContent.innerHTML = content;
+        }
+
+        // Generate AI quiz for content
+        async function generateAIQuiz(contentId, contentTitle) {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) return;
+
+            const generateButton = event.target;
+            const originalText = generateButton.innerHTML;
+            
+            try {
+                generateButton.disabled = true;
+                generateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+                
+                const response = await fetch(`http://localhost:8081/api/tutor/content/${contentId}/generate-quiz?tutorUserId=${tutorId}`, {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to generate quiz');
+                }
+
+                const result = await response.json();
+                customAlert(`AI quiz generated successfully! Created ${result.questionCount} questions.`, 'success', 'Quiz Generated!');
+                
+                // Reload the quiz section
+                manageQuizzes(contentId, contentTitle, 'file.pdf'); // Assume PDF for AI generation
+                
+            } catch (error) {
+                console.error('Error generating AI quiz:', error);
+                customAlert('Failed to generate AI quiz: ' + error.message, 'danger', 'Generation Failed');
+            } finally {
+                generateButton.disabled = false;
+                generateButton.innerHTML = originalText;
+            }
+        }
+
+        // Show create manual quiz form
+        function showCreateManualQuizForm(contentId, contentTitle) {
+            const quizContent = document.getElementById('quiz-content');
+            quizContent.innerHTML = `
+                <div class="content-card">
+                    <h5>Create Manual Quiz for: ${contentTitle}</h5>
+                    <form id="manual-quiz-form">
+                        <div class="mb-3">
+                            <label for="quiz-title" class="form-label">Quiz Title *</label>
+                            <input type="text" class="form-control" id="quiz-title" required placeholder="Enter quiz title...">
+                        </div>
+                        
+                        <div id="questions-container">
+                            <h6>Questions</h6>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mb-3">
+                            <button type="button" class="btn btn-outline-primary" onclick="addQuizQuestion()">
+                                <i class="fas fa-plus"></i> Add Question
+                            </button>
+                        </div>
+                        
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Quiz
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="manageQuizzes(${contentId}, '${contentTitle}', '')">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>`;
+
+            // Add first question by default
+            addQuizQuestion();
+
+            // Set up form submission
+            document.getElementById('manual-quiz-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                createManualQuiz(contentId, contentTitle);
+            });
+        }
+
+        let questionCounter = 0;
+
+        function addQuizQuestion() {
+            questionCounter++;
+            const questionsContainer = document.getElementById('questions-container');
+            
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-block mb-4';
+            questionDiv.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6>Question ${questionCounter}</h6>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeQuestion(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Question Text *</label>
+                            <textarea class="form-control question-text" rows="2" required placeholder="Enter your question..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Answer Options *</label>
+                            <div class="options-container">
+                                <div class="option-row mb-2">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct-${questionCounter}" value="0" required>
+                                        </div>
+                                        <input type="text" class="form-control option-text" placeholder="Option A" required>
+                                    </div>
+                                </div>
+                                <div class="option-row mb-2">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct-${questionCounter}" value="1" required>
+                                        </div>
+                                        <input type="text" class="form-control option-text" placeholder="Option B" required>
+                                    </div>
+                                </div>
+                                <div class="option-row mb-2">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct-${questionCounter}" value="2">
+                                        </div>
+                                        <input type="text" class="form-control option-text" placeholder="Option C (optional)">
+                                    </div>
+                                </div>
+                                <div class="option-row mb-2">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct-${questionCounter}" value="3">
+                                        </div>
+                                        <input type="text" class="form-control option-text" placeholder="Option D (optional)">
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="text-muted">Select the correct answer by clicking its radio button</small>
+                        </div>
+                    </div>
+                </div>`;
+            
+            questionsContainer.appendChild(questionDiv);
+        }
+
+        function removeQuestion(button) {
+            const questionBlock = button.closest('.question-block');
+            questionBlock.remove();
+            
+            // Renumber remaining questions
+            const remainingQuestions = document.querySelectorAll('.question-block h6');
+            remainingQuestions.forEach((header, index) => {
+                header.textContent = `Question ${index + 1}`;
+            });
+        }
+
+        // Create manual quiz
+        async function createManualQuiz(contentId, contentTitle) {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) return;
+
+            const title = document.getElementById('quiz-title').value.trim();
+            const questionBlocks = document.querySelectorAll('.question-block');
+            
+            if (!title) {
+                customAlert('Please enter a quiz title.', 'warning', 'Missing Title');
+                return;
+            }
+            
+            if (questionBlocks.length === 0) {
+                customAlert('Please add at least one question.', 'warning', 'No Questions');
+                return;
+            }
+
+            const questions = [];
+            
+            // Validate and collect questions
+            for (let i = 0; i < questionBlocks.length; i++) {
+                const block = questionBlocks[i];
+                const questionText = block.querySelector('.question-text').value.trim();
+                const optionInputs = block.querySelectorAll('.option-text');
+                const correctRadios = block.querySelectorAll('input[type="radio"]');
+                
+                if (!questionText) {
+                    customAlert(`Please enter text for Question ${i + 1}.`, 'warning', 'Missing Question Text');
+                    return;
+                }
+                
+                const options = [];
+                let correctAnswer = -1;
+                let nonEmptyOptions = 0;
+                
+                // Collect options and find correct answer
+                optionInputs.forEach((input, index) => {
+                    const text = input.value.trim();
+                    if (text) {
+                        options.push(text);
+                        nonEmptyOptions++;
+                    } else {
+                        options.push('');
+                    }
+                    
+                    if (correctRadios[index].checked) {
+                        correctAnswer = index;
+                    }
+                });
+                
+                if (nonEmptyOptions < 2) {
+                    customAlert(`Question ${i + 1} must have at least 2 answer options.`, 'warning', 'Insufficient Options');
+                    return;
+                }
+                
+                if (correctAnswer === -1) {
+                    customAlert(`Please select the correct answer for Question ${i + 1}.`, 'warning', 'No Correct Answer');
+                    return;
+                }
+                
+                if (!options[correctAnswer]) {
+                    customAlert(`The selected correct answer for Question ${i + 1} cannot be empty.`, 'warning', 'Invalid Correct Answer');
+                    return;
+                }
+                
+                // Filter out empty options and adjust correct answer index
+                const filteredOptions = options.filter(opt => opt !== '');
+                const adjustedCorrectAnswer = options.slice(0, correctAnswer + 1).filter(opt => opt !== '').length - 1;
+                
+                questions.push({
+                    question: questionText,
+                    options: filteredOptions,
+                    correctOption: adjustedCorrectAnswer
+                });
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8081/api/tutor/content/${contentId}/create-quiz?tutorUserId=${tutorId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        questions: questions
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to create quiz');
+                }
+
+                const result = await response.json();
+                customAlert(`Manual quiz "${title}" created successfully with ${result.questionCount} questions!`, 'success', 'Quiz Created!');
+                
+                // Return to quiz management
+                manageQuizzes(contentId, contentTitle, '');
+                
+            } catch (error) {
+                console.error('Error creating manual quiz:', error);
+                customAlert('Failed to create quiz: ' + error.message, 'danger', 'Creation Failed');
+            }
+        }
+
+        // View quiz details
+        function viewQuizDetails(quizId) {
+            customAlert('Quiz details view will be implemented soon.', 'info', 'Coming Soon');
+        }
+
+        // Delete quiz
+        async function deleteQuiz(quizId, quizTitle) {
+            const tutorId = getCurrentTutorId();
+            if (!tutorId) return;
+
+            customConfirm(
+                `Are you sure you want to delete the quiz "${quizTitle}"? This action cannot be undone.`,
+                async () => {
+                    try {
+                        const response = await fetch(`http://localhost:8081/api/tutor/content/quiz/${quizId}?tutorUserId=${tutorId}`, {
+                            method: 'DELETE',
+                            headers: getAuthHeaders()
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to delete quiz');
+                        }
+
+                        customAlert('Quiz deleted successfully!', 'success', 'Deleted!');
+                        
+                        // Reload current quiz section by clicking quizzes button again
+                        // This is a workaround - in a real app you'd track the current content ID
+                        showContent();
+                        
+                    } catch (error) {
+                        console.error('Error deleting quiz:', error);
+                        customAlert('Failed to delete quiz: ' + error.message, 'danger', 'Delete Failed');
+                    }
+                },
+                'danger',
+                'Delete Quiz?'
+            );
+        }
+        
+        // Make debug function globally available
+        window.clearAuthAndRelogin = clearAuthAndRelogin;
+    </script>
+</body>
+</html>

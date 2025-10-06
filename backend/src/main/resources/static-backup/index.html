@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>ThinkAble - Login</title>
+    <link rel="stylesheet" href="/styles-login.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>ThinkAble</h1>
+                <p>Accessible Learning Platform</p>
+            </div>
+
+            <!-- Accessibility Controls -->
+            <div class="accessibility-controls">
+                <button id="dyslexiaToggle" class="acc-btn" title="Toggle dyslexia-friendly mode">
+                    <i class="fas fa-eye"></i> Dyslexia Mode
+                </button>
+                <button id="readPage" class="acc-btn" title="Read page aloud">
+                    <i class="fas fa-volume-up"></i> Read Aloud
+                </button>
+                <button id="highContrastToggle" class="acc-btn" title="Toggle high contrast">
+                    <i class="fas fa-adjust"></i> High Contrast
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="login-form">
+                <h2>Sign In</h2>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required>
+                        <button type="button" id="passwordToggle" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <span class="btn-text">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </span>
+                    <span class="btn-loading" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Signing In...
+                    </span>
+                </button>
+
+                <div class="form-messages">
+                    <p id="errorMessage" class="error-message"></p>
+                    <p id="settingsMessage" class="success-message"></p>
+                </div>
+            </form>
+
+            <!-- Registration Section -->
+            <div class="register-section">
+                <div class="divider">
+                    <span>New to ThinkAble?</span>
+                </div>
+                <a href="/register.html" class="register-link">
+                    <i class="fas fa-user-plus"></i> Create Student Account
+                </a>
+            </div>
+            
+            <!-- Tutor Portal Link -->
+            <div class="tutor-portal-section">
+                <div class="divider">
+                    <span>Are you an educator?</span>
+                </div>
+                <a href="/tutor-login.html" class="tutor-portal-link">
+                    <i class="fas fa-graduation-cap"></i> Tutor Portal
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load accessibility preferences
+            const dyslexiaMode = localStorage.getItem('dyslexiaMode') === 'true';
+            const highContrastMode = localStorage.getItem('highContrastMode') === 'true';
+            
+            if (dyslexiaMode) {
+                document.body.classList.add('dyslexia-mode');
+                document.getElementById('dyslexiaToggle').classList.add('active');
+            }
+            if (highContrastMode) {
+                document.body.classList.add('high-contrast');
+                document.getElementById('highContrastToggle').classList.add('active');
+            }
+
+            // Password toggle
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordInput = document.getElementById('password');
+            
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                const icon = passwordToggle.querySelector('i');
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+
+            // Form submission
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = loginForm.querySelector('.login-btn');
+            const btnText = loginBtn.querySelector('.btn-text');
+            const btnLoading = loginBtn.querySelector('.btn-loading');
+            
+            loginForm.addEventListener('submit', function(e) {
+                loginBtn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+</html>

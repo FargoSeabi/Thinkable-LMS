@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkAble Learning Assessment</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="custom-modals.js"></script>
+    <style>
+        .assessment-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+
+        .assessment-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .assessment-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .assessment-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            margin: 30px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-container {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 20px;
+        }
+
+        .step-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 20px;
+        }
+
+        .font-test-container {
+            margin: 25px 0;
+        }
+
+        .font-sample {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .font-sample:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .font-sample.selected {
+            border-color: var(--primary-color);
+            background: #e3f2fd;
+        }
+
+        .font-sample-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            min-height: 120px;
+        }
+
+        /* Ensure font differences are visible */
+        .font-sample[data-font="Arial"] .font-sample-text {
+            font-family: Arial, sans-serif !important;
+        }
+
+        .font-sample[data-font="Times New Roman"] .font-sample-text {
+            font-family: "Times New Roman", serif !important;
+        }
+
+        .font-sample[data-font="Comic Neue"] .font-sample-text {
+            font-family: "Comic Neue", cursive !important;
+        }
+
+        .font-sample[data-font="OpenDyslexic"] .font-sample-text {
+            font-family: "OpenDyslexic", sans-serif !important;
+        }
+
+        .font-sample[data-font="Verdana"] .font-sample-text {
+            font-family: Verdana, sans-serif !important;
+        }
+
+        .font-rating {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .star.active, .star:hover {
+            color: #ffc107;
+        }
+
+        .symptoms-check {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .symptom-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .symptom-item:hover {
+            background: #e3f2fd;
+        }
+
+        .symptom-item input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .question-container {
+            margin: 25px 0;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .question h4 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .scale-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px 10px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .scale-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .scale-option.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .results-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .results-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            margin: 0 auto 30px;
+        }
+
+        .preset-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .preset-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .recommendation-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .recommendation-card h4 {
+            margin: 0 0 15px 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .recommendation-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .recommendation-card li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .assessment-container {
+                padding: 10px;
+            }
+            
+            .step-container {
+                padding: 20px;
+            }
+            
+            .likert-scale {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .scale-option {
+                padding: 12px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+            }
+            
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="assessment-container">
+        <header class="student-header">
+            <h1><i class="fas fa-brain"></i> Learning Assessment</h1>
+            <div class="header-actions">
+                <button class="back-btn" onclick="window.location.href='student-home.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </header>
+
+        <div class="assessment-header">
+            <h1><i class="fas fa-clipboard-check"></i> Personalized Learning Assessment</h1>
+            <p>Help us understand your learning style to create the perfect experience for you!</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="d-flex justify-content-between align-items-center">
+                <span><strong>Progress:</strong></span>
+                <span id="progressText">Step 1 of 4</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Step 1: Welcome and Instructions -->
+        <div class="step-container active" id="step1">
+            <div class="step-header">
+                <div class="step-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div>
+                    <h2>Welcome to Your Learning Assessment</h2>
+                    <p>This assessment helps us personalize ThinkAble for your unique learning needs.</p>
+                </div>
+            </div>
+            
+            <div class="content">
+                <h3>What to Expect:</h3>
+                <ul style="line-height: 1.8; font-size: 1.1rem;">
+                    <li><strong>Font Readability Test:</strong> Find fonts that work best for you</li>
+                    <li><strong>Learning Style Questions:</strong> Help us understand how you learn best</li>
+                    <li><strong>Personalized Setup:</strong> Get a customized learning environment</li>
+                    <li><strong>Time Required:</strong> About 5-7 minutes</li>
+                </ul>
+                
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 25px 0;">
+                    <h4><i class="fas fa-shield-alt"></i> Your Privacy Matters</h4>
+                    <p>All information collected is used only to improve your learning experience. Your responses are confidential and secure.</p>
+                </div>
+                
+                <div style="background: #f3e5f5; padding: 20px; border-radius: 10px; margin: 25px 0;">
+                    <h4><i class="fas fa-heart"></i> No Right or Wrong Answers</h4>
+                    <p>This isn't a test! Answer honestly about how you experience learning. Every learning style is valuable and supported here.</p>
+                </div>
+            </div>
+            
+            <div class="navigation-buttons">
+                <div></div>
+                <button class="btn btn-primary" onclick="nextStep()">
+                    Start Assessment <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Font Readability Testing -->
+        <div class="step-container" id="step2">
+            <div class="step-header">
+                <div class="step-icon">
+                    <i class="fas fa-font"></i>
+                </div>
+                <div>
+                    <h2>Font Readability Test</h2>
+                    <p>Let's find the fonts that are most comfortable for you to read.</p>
+                </div>
+            </div>
+            
+            <div class="font-test-container" id="fontTestContainer">
+                <!-- Font samples will be loaded here -->
+            </div>
+            
+            <div class="navigation-buttons">
+                <button class="btn btn-secondary" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="btn btn-primary" onclick="nextStep()" id="fontTestNext" disabled>
+                    Next Step <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Learning Style Assessment -->
+        <div class="step-container" id="step3">
+            <div class="step-header">
+                <div class="step-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h2>Learning Style Assessment</h2>
+                    <p>Help us understand how you learn and process information best.</p>
+                </div>
+            </div>
+            
+            <div class="question-container" id="questionContainer">
+                <!-- Questions will be loaded here -->
+            </div>
+            
+            <div class="navigation-buttons">
+                <button class="btn btn-secondary" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button class="btn btn-primary" onclick="submitAssessment()" id="submitBtn" disabled>
+                    <span id="submitText">Complete Assessment</span>
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Results and Recommendations -->
+        <div class="step-container" id="step4">
+            <div class="results-container">
+                <div class="results-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h2>Your Personalized Learning Profile</h2>
+                <p>We've created a customized learning environment just for you!</p>
+                
+                <div id="resultsContent">
+                    <!-- Results will be loaded here -->
+                </div>
+                
+                <div class="navigation-buttons" style="justify-content: center; margin-top: 40px;">
+                    <button class="btn btn-primary" onclick="applySettingsAndContinue()">
+                        <i class="fas fa-magic"></i> Apply My Settings & Continue Learning
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/auth.js"></script>
+    <script src="adaptive-ui.js"></script>
+    <script src="individual-profile.js"></script>
+    <script src="adaptive-tool-ecosystem.js"></script>
+    <script src="personal-pattern-recognition.js"></script>
+    <script src="neurodivergent-support.js"></script>
+    <script src="/timer.js"></script>
+    <script>
+        // Initialize assessment on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!isAuthenticated()) {
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            // Initialize assessment system
+            initializeAssessment();
+        });
+
+        let currentStep = 1;
+        const totalSteps = 4;
+        let assessmentData = {
+            userId: null,
+            fontTests: [],
+            responses: {},
+            startTime: Date.now()
+        };
+
+        function initializeAssessment() {
+            // Get user ID from auth
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                // For now, use email as identifier - in production, get actual user ID
+                assessmentData.userId = userEmail;
+            }
+            
+            updateProgress();
+            loadFontTests();
+            loadAssessmentQuestions();
+        }
+
+        function updateProgress() {
+            const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            if (progressBar) {
+                progressBar.style.width = progressPercent + '%';
+            }
+            if (progressText) {
+                progressText.textContent = `Step ${currentStep} of ${totalSteps}`;
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                updateProgress();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                currentStep--;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                updateProgress();
+            }
+        }
+
+        async function loadFontTests() {
+            const container = document.getElementById('fontTestContainer');
+            
+            // Default font samples for testing
+            const fontSamples = [
+                {
+                    name: 'Arial',
+                    family: 'Arial, sans-serif',
+                    text: 'The quick brown fox jumps over the lazy dog. Reading should be comfortable and effortless for effective learning.'
+                },
+                {
+                    name: 'Times New Roman',
+                    family: '"Times New Roman", serif',
+                    text: 'The quick brown fox jumps over the lazy dog. Reading should be comfortable and effortless for effective learning.'
+                },
+                {
+                    name: 'Comic Neue',
+                    family: '"Comic Neue", cursive',
+                    text: 'The quick brown fox jumps over the lazy dog. Reading should be comfortable and effortless for effective learning.'
+                },
+                {
+                    name: 'OpenDyslexic',
+                    family: 'OpenDyslexic, sans-serif',
+                    text: 'The quick brown fox jumps over the lazy dog. Reading should be comfortable and effortless for effective learning.'
+                },
+                {
+                    name: 'Verdana',
+                    family: 'Verdana, sans-serif',
+                    text: 'The quick brown fox jumps over the lazy dog. Reading should be comfortable and effortless for effective learning.'
+                }
+            ];
+
+            let html = '<p style="margin-bottom: 25px; font-size: 1.1rem;">Rate each font based on how easy it is to read. Click on the font sample and rate it from 1 (very difficult) to 5 (very easy).</p>';
+
+            fontSamples.forEach((font, index) => {
+                html += `
+                    <div class="font-sample" data-font="${font.name}" onclick="selectFont('${font.name}', ${index})">
+                        <div class="font-sample-text">
+                            <strong style="font-size: 22px; color: #333; display: block; margin-bottom: 15px;">${font.name} Font Sample</strong>
+                            <div style="font-size: 18px; color: #444; margin-bottom: 10px;">${font.text}</div>
+                            <div style="font-size: 16px; color: #666; font-style: italic;">Does this font feel comfortable and easy to read?</div>
+                        </div>
+                        <div class="font-rating">
+                            <span>Readability:</span>
+                            <div class="rating-stars" id="rating-${index}">
+                                ${[1,2,3,4,5].map(star => 
+                                    `<span class="star" data-rating="${star}" onclick="rateFontReadability('${font.name}', ${star}, ${index}, event)">★</span>`
+                                ).join('')}
+                            </div>
+                            <span id="rating-text-${index}">Click to rate</span>
+                        </div>
+                        <div class="symptoms-check" id="symptoms-${index}" style="display: none;">
+                            <h5>Did you experience any of these while reading this font?</h5>
+                            <div class="symptom-item">
+                                <input type="checkbox" id="letters-move-${index}" value="lettersMove">
+                                <label for="letters-move-${index}">Letters appear to move or jump around</label>
+                            </div>
+                            <div class="symptom-item">
+                                <input type="checkbox" id="eye-strain-${index}" value="eyeStrain">
+                                <label for="eye-strain-${index}">Eye strain or fatigue</label>
+                            </div>
+                            <div class="symptom-item">
+                                <input type="checkbox" id="slow-reading-${index}" value="slowReading">
+                                <label for="slow-reading-${index}">Slower than usual reading</label>
+                            </div>
+                            <div class="symptom-item">
+                                <input type="checkbox" id="hard-focus-${index}" value="hardFocus">
+                                <label for="hard-focus-${index}">Difficulty focusing on the text</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            
+            // Load fonts and enhance styling for better visibility
+            if (!document.querySelector('style[data-font="enhanced-fonts"]')) {
+                const style = document.createElement('style');
+                style.setAttribute('data-font', 'enhanced-fonts');
+                style.textContent = `
+                    @font-face {
+                        font-family: 'OpenDyslexic';
+                        src: url('/fonts/OpenDyslexicAlta-Regular.otf') format('opentype');
+                        font-weight: normal;
+                        font-style: normal;
+                        font-display: swap;
+                    }
+                    
+                    /* Enhanced font sample styling */
+                    .font-sample[data-font="Arial"] .font-sample-text {
+                        font-family: Arial, sans-serif !important;
+                        font-size: 18px !important;
+                        line-height: 1.5 !important;
+                    }
+                    
+                    .font-sample[data-font="Times New Roman"] .font-sample-text {
+                        font-family: "Times New Roman", serif !important;
+                        font-size: 18px !important;
+                        line-height: 1.6 !important;
+                    }
+                    
+                    .font-sample[data-font="Comic Neue"] .font-sample-text {
+                        font-family: "Comic Neue", cursive !important;
+                        font-size: 19px !important;
+                        line-height: 1.7 !important;
+                        font-weight: 400 !important;
+                    }
+                    
+                    .font-sample[data-font="OpenDyslexic"] .font-sample-text {
+                        font-family: "OpenDyslexic", sans-serif !important;
+                        font-size: 19px !important;
+                        line-height: 1.8 !important;
+                        font-weight: normal !important;
+                        letter-spacing: 0.5px !important;
+                    }
+                    
+                    .font-sample[data-font="Verdana"] .font-sample-text {
+                        font-family: Verdana, sans-serif !important;
+                        font-size: 17px !important;
+                        line-height: 1.6 !important;
+                        font-weight: normal !important;
+                    }
+                    
+                    /* Ensure font samples have distinct styling */
+                    .font-sample {
+                        border: 2px solid #e0e0e0 !important;
+                        margin-bottom: 20px !important;
+                        padding: 20px !important;
+                        background: #fafafa !important;
+                        border-radius: 8px !important;
+                    }
+                    
+                    .font-sample:hover {
+                        border-color: #007bff !important;
+                        background: #f8f9ff !important;
+                    }
+                    
+                    .font-sample.selected {
+                        border-color: #28a745 !important;
+                        background: #f0fff4 !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        function selectFont(fontName, index) {
+            // Remove previous selections
+            document.querySelectorAll('.font-sample').forEach(sample => {
+                sample.classList.remove('selected');
+            });
+            
+            // Select current font
+            document.querySelector(`[data-font="${fontName}"]`).classList.add('selected');
+        }
+
+        function rateFontReadability(fontName, rating, index, event) {
+            event.stopPropagation();
+            
+            // Update visual rating
+            const stars = document.querySelectorAll(`#rating-${index} .star`);
+            stars.forEach((star, starIndex) => {
+                star.classList.toggle('active', starIndex < rating);
+            });
+            
+            // Update rating text
+            const ratingTexts = ['', 'Very Difficult', 'Difficult', 'Neutral', 'Easy', 'Very Easy'];
+            document.getElementById(`rating-text-${index}`).textContent = ratingTexts[rating];
+            
+            // Show symptoms check
+            document.getElementById(`symptoms-${index}`).style.display = 'block';
+            
+            // Store font test data
+            const existingIndex = assessmentData.fontTests.findIndex(test => test.fontName === fontName);
+            const fontTest = {
+                fontName: fontName,
+                readabilityRating: rating,
+                difficultyReported: rating <= 2 ? 'hard' : rating >= 4 ? 'easy' : 'medium',
+                symptomsReported: {},
+                testDate: new Date().toISOString()
+            };
+            
+            if (existingIndex >= 0) {
+                assessmentData.fontTests[existingIndex] = fontTest;
+            } else {
+                assessmentData.fontTests.push(fontTest);
+            }
+            
+            checkFontTestCompletion();
+        }
+
+        function checkFontTestCompletion() {
+            // Check if at least 3 fonts have been rated
+            const completedTests = assessmentData.fontTests.filter(test => test.readabilityRating > 0);
+            const nextButton = document.getElementById('fontTestNext');
+            
+            if (completedTests.length >= 3) {
+                nextButton.disabled = false;
+                
+                // Collect symptoms for completed tests
+                completedTests.forEach((test, testIndex) => {
+                    const symptoms = {};
+                    const fontIndex = ['Arial', 'Times New Roman', 'Comic Neue', 'OpenDyslexic', 'Verdana'].indexOf(test.fontName);
+                    if (fontIndex >= 0) {
+                        ['lettersMove', 'eyeStrain', 'slowReading', 'hardFocus'].forEach(symptom => {
+                            const checkbox = document.getElementById(`${symptom.replace(/([A-Z])/g, '-$1').toLowerCase()}-${fontIndex}`);
+                            symptoms[symptom] = checkbox ? checkbox.checked : false;
+                        });
+                        test.symptomsReported = symptoms;
+                    }
+                });
+            } else {
+                nextButton.disabled = true;
+            }
+        }
+
+        async function loadAssessmentQuestions() {
+            const container = document.getElementById('questionContainer');
+            
+            // Assessment questions for different neurodivergent traits
+            const questions = [
+                {
+                    id: 'attention1',
+                    category: 'attention',
+                    text: 'I have trouble staying focused on tasks or activities for long periods.',
+                    subcategory: 'focus'
+                },
+                {
+                    id: 'attention2', 
+                    category: 'attention',
+                    text: 'I often get distracted by sounds, movements, or other things around me.',
+                    subcategory: 'distractibility'
+                },
+                {
+                    id: 'attention3',
+                    category: 'attention', 
+                    text: 'I find it hard to organize tasks and activities.',
+                    subcategory: 'organization'
+                },
+                {
+                    id: 'reading1',
+                    category: 'reading',
+                    text: 'I sometimes confuse letters that look similar (like b and d).',
+                    subcategory: 'letter_confusion'
+                },
+                {
+                    id: 'reading2',
+                    category: 'reading',
+                    text: 'Reading aloud is much harder for me than reading silently.',
+                    subcategory: 'reading_fluency'
+                },
+                {
+                    id: 'reading3',
+                    category: 'reading',
+                    text: 'I need to read things multiple times to understand them.',
+                    subcategory: 'comprehension'
+                },
+                {
+                    id: 'social1',
+                    category: 'social',
+                    text: 'I prefer clear, step-by-step instructions rather than general directions.',
+                    subcategory: 'instruction_preference'
+                },
+                {
+                    id: 'social2',
+                    category: 'social',
+                    text: 'I like routines and find it stressful when things change unexpectedly.',
+                    subcategory: 'routine'
+                },
+                {
+                    id: 'social3',
+                    category: 'social',
+                    text: 'I sometimes have trouble understanding when people are joking or being sarcastic.',
+                    subcategory: 'communication'
+                },
+                {
+                    id: 'sensory1',
+                    category: 'sensory',
+                    text: 'Bright lights or busy visual environments can be overwhelming for me.',
+                    subcategory: 'visual'
+                },
+                {
+                    id: 'sensory2',
+                    category: 'sensory',
+                    text: 'Background noise makes it hard for me to concentrate.',
+                    subcategory: 'auditory'
+                },
+                {
+                    id: 'sensory3',
+                    category: 'sensory',
+                    text: 'I am sensitive to certain textures, fabrics, or materials.',
+                    subcategory: 'tactile'
+                }
+            ];
+
+            let html = '<p style="margin-bottom: 30px; font-size: 1.1rem;">For each statement, select how much it describes you. There are no right or wrong answers - just answer honestly.</p>';
+
+            questions.forEach((question, index) => {
+                html += `
+                    <div class="question" data-question-id="${question.id}">
+                        <h4>${question.text}</h4>
+                        <div class="likert-scale">
+                            <div class="scale-option" data-value="1" onclick="selectAnswer('${question.id}', 1, ${index})">
+                                <strong>1</strong><br>Never
+                            </div>
+                            <div class="scale-option" data-value="2" onclick="selectAnswer('${question.id}', 2, ${index})">
+                                <strong>2</strong><br>Rarely
+                            </div>
+                            <div class="scale-option" data-value="3" onclick="selectAnswer('${question.id}', 3, ${index})">
+                                <strong>3</strong><br>Sometimes
+                            </div>
+                            <div class="scale-option" data-value="4" onclick="selectAnswer('${question.id}', 4, ${index})">
+                                <strong>4</strong><br>Often
+                            </div>
+                            <div class="scale-option" data-value="5" onclick="selectAnswer('${question.id}', 5, ${index})">
+                                <strong>5</strong><br>Always
+                            </div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>Doesn't describe me</span>
+                            <span>Describes me perfectly</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function selectAnswer(questionId, value, questionIndex) {
+            // Remove previous selection for this question
+            const question = document.querySelector(`[data-question-id="${questionId}"]`);
+            question.querySelectorAll('.scale-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Select current option
+            question.querySelector(`[data-value="${value}"]`).classList.add('selected');
+            
+            // Store response
+            assessmentData.responses[questionId] = value;
+            
+            // Check if all questions are answered
+            checkAssessmentCompletion();
+        }
+
+        function checkAssessmentCompletion() {
+            const totalQuestions = 12; // We have 12 questions
+            const answeredQuestions = Object.keys(assessmentData.responses).length;
+            const submitButton = document.getElementById('submitBtn');
+            
+            if (answeredQuestions >= totalQuestions) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+
+        async function submitAssessment() {
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.innerHTML = '<span class="loading-spinner"></span> Processing...';
+            
+            try {
+                // Collect final symptom data for font tests
+                assessmentData.fontTests.forEach((test, testIndex) => {
+                    const symptoms = {};
+                    const fontIndex = ['Arial', 'Times New Roman', 'Comic Neue', 'OpenDyslexic', 'Verdana'].indexOf(test.fontName);
+                    if (fontIndex >= 0) {
+                        ['lettersMove', 'eyeStrain', 'slowReading', 'hardFocus'].forEach(symptom => {
+                            const checkbox = document.getElementById(`${symptom.replace(/([A-Z])/g, '-$1').toLowerCase()}-${fontIndex}`);
+                            symptoms[symptom] = checkbox ? checkbox.checked : false;
+                        });
+                        test.symptomsReported = symptoms;
+                    }
+                });
+
+                // Process assessment locally instead of API call
+                const results = processAssessmentLocally(assessmentData);
+                
+                // Save assessment data to localStorage
+                localStorage.setItem('assessmentData', JSON.stringify(assessmentData));
+                localStorage.setItem('assessmentResults', JSON.stringify(results));
+                
+                displayResults(results);
+                nextStep(); // Move to results step
+                
+            } catch (error) {
+                console.error('Error submitting assessment:', error);
+                customAlert('There was an error processing your assessment. Please try again.', 'danger', 'Assessment Error');
+                submitBtn.disabled = false;
+                submitText.innerHTML = 'Complete Assessment <i class="fas fa-check"></i>';
+            }
+        }
+
+        function processAssessmentLocally(data) {
+            // Calculate trait scores based on responses
+            const scores = {
+                attention: 0,
+                reading: 0,
+                social: 0,
+                sensory: 0
+            };
+
+            // Process questionnaire responses
+            for (const [questionId, value] of Object.entries(data.responses)) {
+                if (questionId.startsWith('attention')) {
+                    scores.attention += value;
+                } else if (questionId.startsWith('reading')) {
+                    scores.reading += value;
+                } else if (questionId.startsWith('social')) {
+                    scores.social += value;
+                } else if (questionId.startsWith('sensory')) {
+                    scores.sensory += value;
+                }
+            }
+
+            // Process font test results for additional insights
+            let dyslexiaIndicators = 0;
+            let readingDifficulties = 0;
+            
+            data.fontTests.forEach(test => {
+                if (test.symptomsReported) {
+                    if (test.symptomsReported.lettersMove || test.symptomsReported.slowReading) {
+                        dyslexiaIndicators++;
+                    }
+                    if (test.symptomsReported.eyeStrain || test.symptomsReported.hardFocus) {
+                        readingDifficulties++;
+                    }
+                }
+                
+                // Check font preferences for dyslexia indicators
+                if ((test.fontName === 'Comic Neue' || test.fontName === 'OpenDyslexic') && 
+                    test.readabilityRating >= 4) {
+                    scores.reading += 2;
+                }
+                
+                if ((test.fontName === 'Times New Roman') && test.readabilityRating <= 2) {
+                    scores.reading += 2;
+                }
+            });
+
+            // Add font test insights to scores
+            scores.reading += dyslexiaIndicators + readingDifficulties;
+
+            // Determine recommended preset based on scores
+            let recommendedPreset = 'standard';
+            const maxScore = Math.max(scores.attention, scores.reading, scores.social, scores.sensory);
+            
+            if (maxScore >= 12) {
+                if (scores.attention === maxScore && scores.reading >= 10) {
+                    recommendedPreset = 'dyslexia-adhd';
+                } else if (scores.attention === maxScore) {
+                    recommendedPreset = 'adhd';
+                } else if (scores.reading === maxScore) {
+                    recommendedPreset = 'dyslexia';
+                } else if (scores.social === maxScore) {
+                    recommendedPreset = 'autism';
+                } else if (scores.sensory === maxScore) {
+                    recommendedPreset = 'sensory';
+                }
+            } else if (maxScore >= 8) {
+                if (scores.reading === maxScore) {
+                    recommendedPreset = 'dyslexia';
+                } else if (scores.attention === maxScore) {
+                    recommendedPreset = 'adhd';
+                }
+            }
+
+            // Generate recommendations
+            const results = {
+                userId: data.userId,
+                scores: scores,
+                recommendedPreset: recommendedPreset,
+                assessmentDate: new Date().toISOString(),
+                recommendations: generateRecommendations(scores, recommendedPreset, data.fontTests)
+            };
+
+            return results;
+        }
+
+        function generateRecommendations(scores, preset, fontTests) {
+            const recommendations = {
+                fonts: [],
+                timerSettings: { sessionLength: 25, breakLength: 5 },
+                accommodations: []
+            };
+
+            // Font recommendations based on test results
+            const bestFonts = fontTests
+                .filter(test => test.readabilityRating >= 4)
+                .sort((a, b) => b.readabilityRating - a.readabilityRating)
+                .slice(0, 2)
+                .map(test => test.fontName);
+            
+            if (bestFonts.length === 0) {
+                recommendations.fonts = ['Arial', 'Verdana'];
+            } else {
+                recommendations.fonts = bestFonts;
+            }
+
+            // Timer settings based on attention needs
+            if (scores.attention >= 9) {
+                recommendations.timerSettings = { sessionLength: 15, breakLength: 5 };
+            } else if (scores.attention >= 6) {
+                recommendations.timerSettings = { sessionLength: 20, breakLength: 5 };
+            }
+
+            // Accommodations based on scores
+            if (scores.attention >= 9) {
+                recommendations.accommodations.push('Take frequent short breaks');
+                recommendations.accommodations.push('Minimize distractions');
+                recommendations.accommodations.push('Use timers and reminders');
+            }
+
+            if (scores.reading >= 9) {
+                recommendations.accommodations.push('Use dyslexia-friendly fonts');
+                recommendations.accommodations.push('Increase text size and spacing');
+                recommendations.accommodations.push('Use text-to-speech when available');
+            }
+
+            if (scores.social >= 9) {
+                recommendations.accommodations.push('Prefer clear, structured instructions');
+                recommendations.accommodations.push('Use consistent routines');
+                recommendations.accommodations.push('Allow extra processing time');
+            }
+
+            if (scores.sensory >= 9) {
+                recommendations.accommodations.push('Reduce visual clutter');
+                recommendations.accommodations.push('Use calm colors and layouts');
+                recommendations.accommodations.push('Minimize animations');
+            }
+
+            return recommendations;
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('resultsContent');
+
+            const presetDescriptions = {
+                'standard': { name: 'Standard', description: 'Balanced learning environment for general use' },
+                'adhd': { name: 'ADHD Support', description: 'Optimized for attention and focus with shorter sessions' },
+                'dyslexia': { name: 'Dyslexia Support', description: 'Enhanced readability with specialized fonts and spacing' },
+                'autism': { name: 'Autism Support', description: 'Structured and predictable interface with clear navigation' },
+                'sensory': { name: 'Sensory-Friendly', description: 'Reduced visual stimulation with calm colors and layouts' },
+                'dyslexia-adhd': { name: 'Combined Support', description: 'ADHD + Dyslexia optimizations for comprehensive support' }
+            };
+
+            const preset = presetDescriptions[results.recommendedPreset] || presetDescriptions['standard'];
+
+            let html = `
+                <div class="preset-card">
+                    <h3><i class="fas fa-magic"></i> Your Personalized Mode: ${preset.name}</h3>
+                    <p>${preset.description}</p>
+                </div>
+
+                <div class="recommendations-grid">
+                    <div class="recommendation-card">
+                        <h4><i class="fas fa-font"></i> Recommended Fonts</h4>
+                        <ul>
+                            ${results.recommendations.fonts.map(font => `<li>${font}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4><i class="fas fa-clock"></i> Study Timer Settings</h4>
+                        <ul>
+                            <li>Study sessions: ${results.recommendations.timerSettings.sessionLength} minutes</li>
+                            <li>Break duration: ${results.recommendations.timerSettings.breakLength} minutes</li>
+                        </ul>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4><i class="fas fa-lightbulb"></i> Learning Accommodations</h4>
+                        <ul>
+                            ${results.recommendations.accommodations.map(acc => `<li>${acc}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="recommendation-card">
+                        <h4><i class="fas fa-chart-bar"></i> Your Learning Profile</h4>
+                        <ul>
+                            <li>Attention Support: ${Math.round((results.scores.attention / 15) * 100)}%</li>
+                            <li>Reading Support: ${Math.round((results.scores.reading / 15) * 100)}%</li>
+                            <li>Social Support: ${Math.round((results.scores.social / 15) * 100)}%</li>
+                            <li>Sensory Support: ${Math.round((results.scores.sensory / 15) * 100)}%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="background: #e3f2fd; padding: 25px; border-radius: 12px; margin: 30px 0; text-align: left;">
+                    <h4><i class="fas fa-info-circle"></i> What Happens Next?</h4>
+                    <ul style="margin: 15px 0; line-height: 1.8;">
+                        <li>Your learning environment will automatically adapt to your preferences</li>
+                        <li>Fonts, colors, and layouts will be optimized for your needs</li>
+                        <li>Study timers will use your recommended session lengths</li>
+                        <li>You can always adjust these settings later in your profile</li>
+                    </ul>
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            // Store results in localStorage for immediate use
+            localStorage.setItem('assessmentCompleted', 'true');
+            localStorage.setItem('recommendedPreset', results.recommendedPreset);
+            localStorage.setItem('assessmentResults', JSON.stringify(results));
+        }
+
+        async function applySettingsAndContinue() {
+            try {
+                // Get the recommended preset
+                const preset = localStorage.getItem('recommendedPreset') || 'standard';
+                console.log('Applying recommended preset:', preset);
+                
+                // Initialize and apply the adaptive UI system
+                if (typeof AdaptiveUISystem !== 'undefined') {
+                    const adaptiveUI = new AdaptiveUISystem();
+                    await adaptiveUI.initialize();
+                    await adaptiveUI.applyPreset(preset);
+                    console.log('Successfully applied preset from assessment');
+                } else {
+                    console.log('AdaptiveUISystem not available, applying preset manually');
+                    // Fallback manual application
+                    applyPresetManually(preset);
+                }
+                
+                // Mark assessment as completed
+                localStorage.setItem('assessmentCompleted', 'true');
+                
+                // Redirect to student home with success message
+                localStorage.setItem('showAssessmentSuccess', 'true');
+                window.location.href = 'student-home.html';
+                
+            } catch (error) {
+                console.error('Error applying settings:', error);
+                // Still redirect even if there's an error
+                window.location.href = 'student-home.html';
+            }
+        }
+        
+        function applyPresetManually(preset) {
+            // Apply preset manually if adaptive UI system is not available
+            const root = document.documentElement;
+            
+            // Remove existing preset classes
+            document.body.classList.remove('preset-standard', 'preset-adhd', 'preset-dyslexia', 'preset-autism', 'preset-sensory', 'preset-dyslexia-adhd');
+            
+            // Add new preset class
+            document.body.classList.add('preset-' + preset);
+            
+            // Apply preset-specific CSS variables directly
+            switch(preset) {
+                case 'adhd':
+                    root.style.setProperty('--font-size-base', '18px');
+                    root.style.setProperty('--border-width', '2px');
+                    root.style.setProperty('--primary-color', '#0056b3');
+                    root.style.setProperty('--line-height-base', '1.6');
+                    break;
+                case 'dyslexia':
+                    root.style.setProperty('--font-family-primary', 'OpenDyslexic, Arial, sans-serif');
+                    root.style.setProperty('--font-size-base', '19px');
+                    root.style.setProperty('--line-height-base', '1.9');
+                    root.style.setProperty('--bg-primary', '#fffef7');
+                    root.style.setProperty('--text-primary', '#1a1a1a');
+                    root.style.setProperty('--spacing-md', '1.8rem');
+                    root.style.setProperty('--border-width', '3px');
+                    break;
+                case 'autism':
+                    root.style.setProperty('--primary-color', '#4a90a4');
+                    root.style.setProperty('--bg-primary', '#fdfdfd');
+                    root.style.setProperty('--font-family-primary', '"Arial", sans-serif');
+                    root.style.setProperty('--transition-base', '0.1s ease');
+                    break;
+                case 'sensory':
+                    root.style.setProperty('--primary-color', '#6c7b7f');
+                    root.style.setProperty('--bg-primary', '#fafafa');
+                    root.style.setProperty('--font-family-primary', '"Verdana", Arial, sans-serif');
+                    root.style.setProperty('--line-height-base', '1.7');
+                    break;
+                case 'dyslexia-adhd':
+                    root.style.setProperty('--font-family-primary', '"Comic Neue", Arial, sans-serif');
+                    root.style.setProperty('--font-size-base', '18px');
+                    root.style.setProperty('--line-height-base', '1.8');
+                    root.style.setProperty('--bg-primary', '#fffef7');
+                    root.style.setProperty('--border-width', '2px');
+                    root.style.setProperty('--primary-color', '#0056b3');
+                    break;
+                default:
+                    // Standard preset - reset to defaults
+                    root.style.setProperty('--font-family-primary', '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif');
+                    root.style.setProperty('--font-size-base', '16px');
+                    root.style.setProperty('--line-height-base', '1.5');
+                    root.style.setProperty('--bg-primary', '#ffffff');
+                    root.style.setProperty('--text-primary', '#212529');
+                    root.style.setProperty('--primary-color', '#007bff');
+                    root.style.setProperty('--border-width', '1px');
+                    break;
+            }
+            
+            console.log('Applied preset manually in assessment:', preset);
+        }
+    </script>
+</body>
+</html>

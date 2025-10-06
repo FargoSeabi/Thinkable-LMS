@@ -1,0 +1,65 @@
+# Spring Boot application properties
+backend/src/main/resources/application.properties
+
+# Google Cloud Service Account Keys (NEVER COMMIT THESE!)
+gcs-service-account.json
+*-service-account.json
+
+# Clade file
+CLAUDE.md
+
+# Read Me
+README.md
+
+# Build outputs
+target/
+*.jar
+*.war
+*.ear
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.eclipse/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules
+node_modules/
+frontend/node_modules/
+
+# Upload directories with large files
+uploads/
+backend/uploads/
+
+# Large video/media files
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.wmv
+
+# Environment files
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+
+# Frontend build files
+frontend/build/
+frontend/dist/
+
+# videos
+uploads/
+*.mp4

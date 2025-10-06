@@ -1,0 +1,7 @@
+/* 
+ * OpenDyslexic fonts are loaded dynamically by JavaScript
+ * See: frontend/src/utils/fontLoader.ts
+ * 
+ * This approach ensures fonts work in both development and production
+ * without hardcoded URLs or CSS conflicts.
+ */

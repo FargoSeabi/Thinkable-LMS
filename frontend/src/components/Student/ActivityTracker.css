@@ -1,0 +1,301 @@
+/* Activity Tracker Component */
+.activity-tracker {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.tracker-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.tracker-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.tracker-header p {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 15px 0;
+}
+
+.current-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  animation: streakPulse 2s ease-in-out infinite;
+}
+
+.streak-icon {
+  font-size: 1.5rem;
+  animation: flame 1.5s ease-in-out infinite alternate;
+}
+
+.streak-text {
+  font-size: 1.1rem;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.activity-button {
+  background: white;
+  border: 3px solid var(--activity-color, #667eea);
+  border-radius: 20px;
+  padding: 25px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.activity-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.activity-button:hover::before {
+  left: 100%;
+}
+
+.activity-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background: var(--activity-color);
+  color: white;
+}
+
+.activity-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.activity-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: block;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.activity-button h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: inherit;
+}
+
+.activity-button p {
+  font-size: 0.9rem;
+  margin: 0;
+  opacity: 0.8;
+  color: inherit;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  animation: spin 1s linear infinite;
+}
+
+.tracker-info {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 25px;
+  border-radius: 15px;
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.tracker-info h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.tracker-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.tracker-info li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.tracker-info strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes streakPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes flame {
+  0% { transform: rotate(-2deg) scale(1); }
+  100% { transform: rotate(2deg) scale(1.1); }
+}
+
+@keyframes spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .activity-tracker {
+    padding: 15px;
+  }
+  
+  .tracker-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .activity-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .activity-button {
+    padding: 20px 15px;
+    min-height: 140px;
+  }
+  
+  .activity-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .activity-button h3 {
+    font-size: 1rem;
+  }
+  
+  .activity-button p {
+    font-size: 0.8rem;
+  }
+  
+  .current-streak {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .streak-icon {
+    font-size: 1.2rem;
+  }
+  
+  .tracker-info {
+    padding: 20px;
+  }
+  
+  .tracker-info ul {
+    gap: 8px;
+  }
+  
+  .tracker-info li {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .activity-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .activity-button {
+    min-height: 120px;
+  }
+  
+  .current-streak {
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 18px;
+  }
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  .activity-tracker {
+    background: #ffffff;
+    border: 3px solid #000000;
+  }
+  
+  .activity-button {
+    border-width: 4px;
+    background: #ffffff;
+    color: #000000;
+  }
+  
+  .activity-button:hover {
+    background: #000000;
+    color: #ffffff;
+  }
+  
+  .tracker-info {
+    background: #ffffff;
+    border: 3px solid #000000;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .activity-button,
+  .current-streak,
+  .activity-button::before,
+  .streak-icon,
+  .loading-spinner {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .activity-button:hover {
+    transform: none !important;
+  }
+}

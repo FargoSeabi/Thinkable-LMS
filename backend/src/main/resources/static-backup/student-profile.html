@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkAble - Your Profile</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="custom-modals.js"></script>
+</head>
+<body>
+    <div class="student-home-container">
+        <h2>Your Profile Settings</h2>
+        
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Your name">
+            </div>
+            <div class="form-group">
+                <label for="font">Preferred Font</label>
+                <select id="font">
+                    <option value="Arial">Arial</option>
+                    <option value="OpenDyslexic">Open Dyslexic</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="contrast">High Contrast Mode</label>
+                <input type="checkbox" id="contrast">
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+        
+        <button onclick="window.location.href='/student-home.html'">Back to Dashboard</button>
+        <button onclick="readPage()">Listen to Page</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const email = localStorage.getItem('userEmail');
+            if (!email) {
+                window.location.href = '/index.html';
+            }
+
+            const profile = JSON.parse(localStorage.getItem(`${email}_profile`)) || {};
+            document.getElementById('name').value = profile.name || '';
+            document.getElementById('font').value = profile.font || 'Arial';
+            document.getElementById('contrast').checked = profile.contrast || false;
+
+            if (profile.font === 'OpenDyslexic') {
+                document.body.classList.add('dyslexia-mode');
+            }
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = localStorage.getItem('userEmail');
+            const newProfile = {
+                name: document.getElementById('name').value,
+                font: document.getElementById('font').value,
+                contrast: document.getElementById('contrast').checked
+            };
+            localStorage.setItem(`${email}_profile`, JSON.stringify(newProfile));
+            customAlert('Profile saved!', 'success', 'Profile Updated');
+            if (newProfile.font === 'OpenDyslexic') {
+                document.body.classList.add('dyslexia-mode');
+            } else {
+                document.body.classList.remove('dyslexia-mode');
+            }
+        });
+
+        function readPage() {
+            const text = document.body.innerText;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Apply Dyslexia Mode on Load
+        if (localStorage.getItem('dyslexiaMode') === 'true') {
+            document.body.classList.add('dyslexia-mode');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+/* Student Layout - Consistent page structure */
+.student-layout {
+  min-height: 100vh;
+  background: var(--background-color, #f8f9fa);
+  transition: all var(--animation-duration, 0.3s) ease;
+}
+
+.student-content {
+  padding-top: 20px;
+  padding-bottom: 80px; /* Space for mobile bottom nav */
+  min-height: calc(100vh - 70px);
+}
+
+/* Adaptive background based on presets */
+body.standard-adaptive .student-layout {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+body.focus-enhanced .student-layout {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+}
+
+body.focus-calm .student-layout {
+  background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+}
+
+body.reading-support .student-layout {
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+}
+
+body.social-simple .student-layout {
+  background: #f8f9fa;
+}
+
+body.sensory-calm .student-layout {
+  background: linear-gradient(135deg, #dda0dd 0%, #98d8c8 100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .student-content {
+    padding-bottom: 100px; /* More space for bottom nav on mobile */
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .student-layout {
+    transition: none;
+  }
+}
+
+/* Loading state */
+.student-layout.loading {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.student-layout.loading::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Focus Mode Styles - Maximize content viewing area */
+.student-layout.focus-mode {
+  background: #ffffff;
+}
+
+.student-content.focus-mode-content {
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: auto;
+}
+
+/* Focus mode button styling */
+.focus-mode-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.focus-mode-btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+.focus-mode-btn.active {
+  background: #28a745;
+}
+
+.focus-mode-btn.active:hover {
+  background: #1e7e34;
+}
+
+/* Override any preset backgrounds when in focus mode */
+body.standard-adaptive .student-layout.focus-mode,
+body.focus-enhanced .student-layout.focus-mode,
+body.focus-calm .student-layout.focus-mode,
+body.reading-support .student-layout.focus-mode,
+body.social-simple .student-layout.focus-mode,
+body.sensory-calm .student-layout.focus-mode {
+  background: #ffffff !important;
+}

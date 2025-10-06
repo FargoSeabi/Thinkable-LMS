@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Discovery - ThinkAble</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="custom-modals.js"></script>
+</head>
+<body>
+    <div class="content-discovery-container">
+        <header class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-search"></i> Discover Learning Content</h1>
+                <p>Find content tailored to your accessibility needs and learning style</p>
+            </div>
+            <nav class="header-nav">
+                <a href="student-home.html" class="nav-btn"><i class="fas fa-home"></i> Home</a>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </nav>
+        </header>
+
+        <!-- Accessibility Filters -->
+        <div class="filters-section">
+            <h2><i class="fas fa-filter"></i> Filter by Your Needs</h2>
+            
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <h3>Accessibility Support</h3>
+                    <div class="filter-checkboxes">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="dyslexiaFriendly" name="accessibility" value="dyslexia">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">
+                                <i class="fas fa-eye"></i> Dyslexia-Friendly
+                                <small>Special fonts, high contrast</small>
+                            </span>
+                        </label>
+                        
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="adhdFriendly" name="accessibility" value="adhd">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">
+                                <i class="fas fa-bolt"></i> ADHD-Friendly
+                                <small>Structured, short sessions</small>
+                            </span>
+                        </label>
+                        
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="autismFriendly" name="accessibility" value="autism">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">
+                                <i class="fas fa-puzzle-piece"></i> Autism-Friendly
+                                <small>Predictable, clear structure</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Subject Areas</h3>
+                    <select id="subjectFilter" class="filter-select">
+                        <option value="">All Subjects</option>
+                        <option value="mathematics">Mathematics</option>
+                        <option value="science">Science</option>
+                        <option value="english">English</option>
+                        <option value="history">History</option>
+                        <option value="chemistry">Chemistry</option>
+                        <option value="physics">Physics</option>
+                        <option value="biology">Biology</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Content Type</h3>
+                    <select id="contentTypeFilter" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="video">Videos</option>
+                        <option value="document">Documents</option>
+                        <option value="interactive">Interactive</option>
+                        <option value="audio">Audio</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Search</h3>
+                    <div class="search-container">
+                        <input type="text" id="searchQuery" placeholder="Search content..." class="search-input">
+                        <button onclick="searchContent()" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button onclick="searchContent()" class="filter-btn primary">
+                    <i class="fas fa-search"></i> Find Content
+                </button>
+                <button onclick="clearFilters()" class="filter-btn secondary">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+                <button onclick="loadPersonalizedContent()" class="filter-btn special">
+                    <i class="fas fa-magic"></i> Get AI Recommendations
+                </button>
+            </div>
+        </div>
+
+        <!-- AI Recommendations Section -->
+        <div id="aiRecommendationsSection" class="recommendations-section" style="display: none;">
+            <h2><i class="fas fa-brain"></i> AI-Powered Recommendations</h2>
+            <div id="aiRecommendationsGrid" class="content-grid">
+                <!-- AI recommendations will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="results-section">
+            <div class="results-header">
+                <h2 id="resultsTitle">Available Content</h2>
+                <div class="results-info">
+                    <span id="resultsCount">Loading...</span>
+                </div>
+            </div>
+            
+            <div id="contentGrid" class="content-grid">
+                <!-- Content cards will be loaded here -->
+            </div>
+            
+            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Loading content...
+            </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>No content found</h3>
+                <p>Try adjusting your filters or search terms</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .content-discovery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .header-content p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .filters-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .filters-section h2 {
+            margin: 0 0 25px 0;
+            color: #333;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .filter-group h3 {
+            margin: 0 0 15px 0;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background: #667eea;
+        }
+
+        .checkbox-container input:checked ~ .checkmark::after {
+            content: '\2713';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .checkbox-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .checkbox-text i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+
+        .checkbox-text small {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .filter-select, .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus, .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #5a67d8;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .filter-btn.primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.secondary {
+            background: #e0e0e0;
+            color: #555;
+        }
+
+        .filter-btn.secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .filter-btn.special {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            color: white;
+        }
+
+        .filter-btn.special:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #ff7979 100%);
+            transform: translateY(-2px);
+        }
+
+        .recommendations-section, .results-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .results-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .results-info {
+            color: #888;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .content-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .content-type-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .content-title {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .content-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .content-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .accessibility-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .accessibility-tag {
+            background: #e8f4f8;
+            color: #2d5aa0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .content-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #5a67d8;
+        }
+
+        .action-btn.quiz {
+            background: #f39c12;
+            color: white;
+        }
+
+        .action-btn.quiz:hover {
+            background: #e67e22;
+        }
+
+        .action-btn.secondary {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .action-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .no-results p {
+            margin: 0;
+        }
+
+        /* Quiz Modal Styles */
+        .quiz-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quiz-modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close-quiz {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .close-quiz:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .quiz-body {
+            padding: 30px;
+        }
+
+        .quiz-progress {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .quiz-question {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .quiz-question.active {
+            display: block;
+        }
+
+        .quiz-question h3 {
+            color: #333;
+            margin: 0 0 15px 0;
+            font-size: 1.3rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .option-label input[type="radio"]:checked + .option-text {
+            font-weight: 500;
+            color: #667eea;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .quiz-navigation button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #prevBtn, #nextBtn {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        #prevBtn:hover, #nextBtn:hover {
+            background: #e0e0e0;
+        }
+
+        #prevBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #submitBtn {
+            background: #27ae60;
+            color: white;
+        }
+
+        #submitBtn:hover {
+            background: #229954;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .quiz-modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+
+            .quiz-body {
+                padding: 20px;
+            }
+
+            .quiz-navigation {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .quiz-navigation button {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    </style>
+
+    <script src="/auth.js"></script>
+    <script>
+        let currentPage = 0;
+        const pageSize = 20;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isAuthenticated || !isAuthenticated()) {
+                window.location.href = '/index.html';
+                return;
+            }
+
+            loadContent();
+            
+            // Add search on enter
+            document.getElementById('searchQuery').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchContent();
+                }
+            });
+        });
+
+        async function loadContent() {
+            showLoading(true);
+            
+            try {
+                const response = await authenticatedFetch('http://localhost:8081/api/student/content/search');
+                const data = await response.json();
+                
+                displayContent(data.content || [], 'All Available Content');
+                document.getElementById('resultsCount').textContent = `${data.totalElements || data.content?.length || 0} items found`;
+                
+            } catch (error) {
+                console.error('Error loading content:', error);
+                showNoResults('Error loading content. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function searchContent() {
+            showLoading(true);
+            
+            const params = new URLSearchParams();
+            
+            // Get filters
+            const query = document.getElementById('searchQuery').value.trim();
+            const subject = document.getElementById('subjectFilter').value;
+            const contentType = document.getElementById('contentTypeFilter').value;
+            
+            if (query) params.append('query', query);
+            if (subject) params.append('subject', subject);
+            if (contentType) params.append('contentType', contentType);
+            
+            // Accessibility filters
+            if (document.getElementById('dyslexiaFriendly').checked) {
+                params.append('dyslexiaFriendly', 'true');
+            }
+            if (document.getElementById('adhdFriendly').checked) {
+                params.append('adhdFriendly', 'true');
+            }
+            if (document.getElementById('autismFriendly').checked) {
+                params.append('autismFriendly', 'true');
+            }
+            
+            try {
+                const response = await authenticatedFetch(`http://localhost:8081/api/student/content/search?${params.toString()}`);
+                const data = await response.json();
+                
+                const title = query ? `Search Results for "${query}"` : 'Filtered Content';
+                displayContent(data.content || [], title);
+                document.getElementById('resultsCount').textContent = `${data.totalElements || data.content?.length || 0} items found`;
+                
+            } catch (error) {
+                console.error('Error searching content:', error);
+                showNoResults('Error searching content. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function loadPersonalizedContent() {
+            showLoading(true);
+            
+            try {
+                // Get user ID from email (simplified for demo)
+                const userEmail = localStorage.getItem('userEmail');
+                const userId = userEmail ? userEmail.split('@')[0].length : 1; // Simple hash
+                
+                const response = await authenticatedFetch(`http://localhost:8081/api/student/content/recommendations/${userId}`);
+                const data = await response.json();
+                
+                displayContent(data.recommendations || [], 'AI-Powered Recommendations for You');
+                document.getElementById('resultsCount').textContent = `${data.count || 0} personalized recommendations`;
+                
+                // Also load AI recommendations in separate section
+                loadAIRecommendations(userId);
+                
+            } catch (error) {
+                console.error('Error loading personalized content:', error);
+                // Fallback to regular content
+                loadContent();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function loadAIRecommendations(userId) {
+            try {
+                const response = await authenticatedFetch(`http://localhost:8081/api/recommendations/student/${userId}/high-confidence`);
+                const data = await response.json();
+                
+                if (data.recommendations && data.recommendations.length > 0) {
+                    displayAIRecommendations(data.recommendations);
+                    document.getElementById('aiRecommendationsSection').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Error loading AI recommendations:', error);
+            }
+        }
+
+        function displayContent(content, title) {
+            document.getElementById('resultsTitle').textContent = title;
+            const contentGrid = document.getElementById('contentGrid');
+            
+            if (!content || content.length === 0) {
+                showNoResults();
+                return;
+            }
+            
+            let html = '';
+            
+            for (const item of content) {
+                const accessibilityTags = [];
+                if (item.dyslexiaFriendly) accessibilityTags.push('Dyslexia-Friendly');
+                if (item.adhdFriendly) accessibilityTags.push('ADHD-Friendly');
+                if (item.autismFriendly) accessibilityTags.push('Autism-Friendly');
+                if (item.hasSubtitles) accessibilityTags.push('Subtitles');
+                if (item.hasAudioDescription) accessibilityTags.push('Audio Description');
+                
+                html += `
+                    <div class="content-card" onclick="viewContent(${item.id})">
+                        <div class="content-header">
+                            <div class="content-type-badge">${item.contentType || 'Content'}</div>
+                            ${item.ratingAverage ? `<div class="rating">★ ${item.ratingAverage}</div>` : ''}
+                        </div>
+                        
+                        <h3 class="content-title">${escapeHtml(item.title)}</h3>
+                        <p class="content-description">${escapeHtml(item.description)}</p>
+                        
+                        <div class="content-meta">
+                            <span><i class="fas fa-book"></i> ${item.subjectArea || 'General'}</span>
+                            <span><i class="fas fa-clock"></i> ${item.estimatedDurationMinutes || '?'} min</span>
+                            <span><i class="fas fa-eye"></i> ${item.viewCount || 0} views</span>
+                        </div>
+                        
+                        ${accessibilityTags.length > 0 ? `
+                            <div class="accessibility-tags">
+                                ${accessibilityTags.map(tag => `<span class="accessibility-tag">${tag}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="content-actions">
+                            <button class="action-btn primary" onclick="event.stopPropagation(); startContent(${item.id})">
+                                <i class="fas fa-play"></i> Start Learning
+                            </button>
+                            <button class="action-btn quiz" onclick="event.stopPropagation(); checkAndTakeQuiz(${item.id})" style="display: none;" id="quiz-btn-${item.id}">
+                                <i class="fas fa-question-circle"></i> Take Quiz
+                            </button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); bookmarkContent(${item.id})">
+                                <i class="fas fa-bookmark"></i> Save
+                            </button>
+                        </div>
+                        
+                        ${item.tutor ? `
+                            <div style="margin-top: 15px; font-size: 0.8rem; color: #888;">
+                                <i class="fas fa-user-graduate"></i> By ${escapeHtml(item.tutor.displayName || 'Verified Tutor')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            contentGrid.innerHTML = html;
+            showNoResults(false);
+            
+            // Check for quizzes for each content item
+            for (const item of content) {
+                checkQuizAvailability(item.id);
+            }
+        }
+
+        function displayAIRecommendations(recommendations) {
+            const grid = document.getElementById('aiRecommendationsGrid');
+            
+            let html = '';
+            
+            for (const rec of recommendations.slice(0, 6)) { // Show top 6
+                const content = rec.content;
+                const confidencePercent = Math.round(rec.confidenceScore * 100);
+                
+                html += `
+                    <div class="content-card ai-recommendation" onclick="viewRecommendation(${rec.id})">
+                        <div class="content-header">
+                            <div class="content-type-badge">AI Pick</div>
+                            <div class="confidence-badge">${confidencePercent}% Match</div>
+                        </div>
+                        
+                        <h3 class="content-title">${escapeHtml(content.title)}</h3>
+                        <p class="content-description">${escapeHtml(rec.reasoning)}</p>
+                        
+                        <div class="recommendation-meta">
+                            <strong>Why this works for you:</strong>
+                            <p>${escapeHtml(rec.reasoning)}</p>
+                        </div>
+                        
+                        <div class="content-actions">
+                            <button class="action-btn primary" onclick="event.stopPropagation(); acceptRecommendation(${rec.id})">
+                                <i class="fas fa-thumbs-up"></i> Try This
+                            </button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); dismissRecommendation(${rec.id})">
+                                <i class="fas fa-times"></i> Not Now
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            grid.innerHTML = html;
+        }
+
+        async function startContent(contentId) {
+            try {
+                // Open content in new window/tab
+                const contentUrl = `content-viewer.html?contentId=${contentId}`;
+                window.open(contentUrl, '_blank');
+                
+            } catch (error) {
+                console.error('Error starting content:', error);
+                customAlert('Error starting content. Please try again.', 'danger', 'Access Error');
+            }
+        }
+
+        async function bookmarkContent(contentId) {
+            try {
+                const userId = getUserId();
+                
+                await authenticatedFetch(`http://localhost:8081/api/student/content/${contentId}/bookmark?studentId=${userId}`, {
+                    method: 'POST'
+                });
+                
+                customAlert('Content bookmarked! You can find it in your saved items.', 'success', 'Bookmarked!');
+                
+            } catch (error) {
+                console.error('Error bookmarking content:', error);
+                customAlert('Error saving content. Please try again.', 'danger', 'Bookmark Failed');
+            }
+        }
+
+        async function acceptRecommendation(recommendationId) {
+            try {
+                await authenticatedFetch(`http://localhost:8081/api/recommendations/${recommendationId}/respond?response=started`, {
+                    method: 'POST'
+                });
+                
+                customAlert('Great choice! This recommendation has been marked as accepted.', 'success', 'Recommendation Accepted');
+                
+            } catch (error) {
+                console.error('Error accepting recommendation:', error);
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('searchQuery').value = '';
+            document.getElementById('subjectFilter').value = '';
+            document.getElementById('contentTypeFilter').value = '';
+            document.getElementById('dyslexiaFriendly').checked = false;
+            document.getElementById('adhdFriendly').checked = false;
+            document.getElementById('autismFriendly').checked = false;
+            
+            loadContent();
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+            document.getElementById('contentGrid').style.display = show ? 'none' : 'grid';
+        }
+
+        function showNoResults(show = true, message = 'No content found matching your criteria.') {
+            const noResults = document.getElementById('noResults');
+            if (show) {
+                noResults.querySelector('p').textContent = message;
+                noResults.style.display = 'block';
+                document.getElementById('contentGrid').style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                document.getElementById('contentGrid').style.display = 'grid';
+            }
+        }
+
+        function getUserId() {
+            const userEmail = localStorage.getItem('userEmail');
+            return userEmail ? userEmail.split('@')[0].length : 1; // Simple hash for demo
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function checkQuizAvailability(contentId) {
+            try {
+                const userEmail = localStorage.getItem('userEmail');
+                const response = await authenticatedFetch(`http://localhost:8081/api/student/content/${contentId}/quiz?studentEmail=${encodeURIComponent(userEmail)}`);
+                
+                if (response.ok) {
+                    // Quiz is available, show the button
+                    const quizBtn = document.getElementById(`quiz-btn-${contentId}`);
+                    if (quizBtn) {
+                        quizBtn.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                // Quiz not available or error occurred, keep button hidden
+                console.log(`No quiz available for content ${contentId}`);
+            }
+        }
+
+        async function checkAndTakeQuiz(contentId) {
+            try {
+                const userEmail = localStorage.getItem('userEmail');
+                
+                // First check if user has already taken this quiz
+                const resultsResponse = await authenticatedFetch(`http://localhost:8081/api/student/content/${contentId}/quiz/results?studentEmail=${encodeURIComponent(userEmail)}`);
+                
+                if (resultsResponse.ok) {
+                    const resultsData = await resultsResponse.json();
+                    
+                    if (resultsData.hasAttempted) {
+                        const retake = await customConfirm(
+                            `You've already taken this quiz ${resultsData.attemptCount} time(s). Your best score is ${resultsData.bestScore}%. Would you like to retake it?`,
+                            'Quiz Already Taken'
+                        );
+                        
+                        if (!retake) {
+                            return;
+                        }
+                    }
+                }
+                
+                // Load and display the quiz
+                loadQuiz(contentId);
+                
+            } catch (error) {
+                console.error('Error checking quiz status:', error);
+                customAlert('Error loading quiz. Please try again.', 'danger', 'Quiz Error');
+            }
+        }
+
+        async function loadQuiz(contentId) {
+            try {
+                const userEmail = localStorage.getItem('userEmail');
+                const response = await authenticatedFetch(`http://localhost:8081/api/student/content/${contentId}/quiz?studentEmail=${encodeURIComponent(userEmail)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load quiz');
+                }
+                
+                const data = await response.json();
+                displayQuizModal(data.quiz, contentId);
+                
+            } catch (error) {
+                console.error('Error loading quiz:', error);
+                customAlert('Error loading quiz. Please try again.', 'danger', 'Quiz Error');
+            }
+        }
+
+        function displayQuizModal(quiz, contentId) {
+            const modalHtml = `
+                <div id="quizModal" class="quiz-modal">
+                    <div class="quiz-modal-content">
+                        <div class="quiz-header">
+                            <h2><i class="fas fa-question-circle"></i> ${escapeHtml(quiz.title)}</h2>
+                            <button class="close-quiz" onclick="closeQuizModal()">&times;</button>
+                        </div>
+                        
+                        <div class="quiz-body">
+                            <div class="quiz-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="quizProgress"></div>
+                                </div>
+                                <span id="progressText">Question 1 of ${quiz.questions.length}</span>
+                            </div>
+                            
+                            <div id="quizQuestions">
+                                ${quiz.questions.map((question, index) => `
+                                    <div class="quiz-question ${index === 0 ? 'active' : ''}" data-question="${index}">
+                                        <h3>Question ${index + 1}</h3>
+                                        <p class="question-text">${escapeHtml(question.question)}</p>
+                                        <div class="question-options">
+                                            ${question.options.map((option, optIndex) => `
+                                                <label class="option-label">
+                                                    <input type="radio" name="question_${index}" value="${optIndex + 1}">
+                                                    <span class="option-text">${escapeHtml(option)}</span>
+                                                </label>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="quiz-navigation">
+                                <button id="prevBtn" onclick="changeQuestion(-1)" disabled>
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button id="nextBtn" onclick="changeQuestion(1)">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                                <button id="submitBtn" onclick="handleQuizSubmit(${contentId})" style="display: none;">
+                                    <i class="fas fa-check"></i> Submit Quiz
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            currentQuestionIndex = 0;
+            totalQuestions = quiz.questions.length;
+            userAnswers = {};
+            
+            console.log('Quiz initialized:', {
+                currentQuestionIndex,
+                totalQuestions,
+                questionsFound: document.querySelectorAll('.quiz-question').length
+            });
+            
+            updateQuizProgress();
+            updateNavigationButtons();
+        }
+
+        let currentQuestionIndex = 0;
+        let totalQuestions = 0;
+        let userAnswers = {};
+
+        function changeQuestion(direction) {
+            const questions = document.querySelectorAll('.quiz-question');
+            
+            // Validate current question index
+            if (currentQuestionIndex < 0 || currentQuestionIndex >= questions.length) {
+                console.error('Invalid current question index:', currentQuestionIndex);
+                return;
+            }
+            
+            const currentQuestion = questions[currentQuestionIndex];
+            if (!currentQuestion) {
+                console.error('Current question not found at index:', currentQuestionIndex);
+                return;
+            }
+            
+            // Save current answer
+            const selectedOption = currentQuestion.querySelector('input[type="radio"]:checked');
+            if (selectedOption) {
+                userAnswers[currentQuestionIndex] = parseInt(selectedOption.value);
+            }
+            
+            // Hide current question
+            currentQuestion.classList.remove('active');
+            
+            // Update index
+            const newIndex = currentQuestionIndex + direction;
+            
+            // Validate new index before updating
+            if (newIndex < 0 || newIndex >= questions.length) {
+                console.error('Invalid new question index:', newIndex);
+                // Restore current question visibility
+                currentQuestion.classList.add('active');
+                return;
+            }
+            
+            currentQuestionIndex = newIndex;
+            
+            // Show new question
+            const newQuestion = questions[currentQuestionIndex];
+            if (!newQuestion) {
+                console.error('New question not found at index:', currentQuestionIndex);
+                return;
+            }
+            
+            newQuestion.classList.add('active');
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+            
+            // Update progress
+            updateQuizProgress();
+            
+            // Restore saved answer
+            if (userAnswers[currentQuestionIndex]) {
+                const optionToSelect = newQuestion.querySelector(`input[value="${userAnswers[currentQuestionIndex]}"]`);
+                if (optionToSelect) {
+                    optionToSelect.checked = true;
+                }
+            }
+        }
+
+        function updateQuizProgress() {
+            const progressFill = document.getElementById('quizProgress');
+            const progressText = document.getElementById('progressText');
+            
+            if (progressFill && totalQuestions > 0) {
+                const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+                progressFill.style.width = progress + '%';
+            }
+            
+            if (progressText && totalQuestions > 0) {
+                progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
+            }
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!prevBtn || !nextBtn || !submitBtn) {
+                console.error('Navigation buttons not found');
+                return;
+            }
+            
+            // Previous button: disabled on first question
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            // Next button: hidden on last question
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+            
+            console.log('Navigation updated:', {
+                currentQuestionIndex,
+                totalQuestions,
+                isLastQuestion: currentQuestionIndex === totalQuestions - 1,
+                prevDisabled: prevBtn.disabled,
+                nextVisible: nextBtn.style.display !== 'none',
+                submitVisible: submitBtn.style.display !== 'none'
+            });
+        }
+
+        async function handleQuizSubmit(contentId) {
+            console.log('Submit button clicked for content:', contentId);
+            
+            // Save current answer before submitting
+            const questions = document.querySelectorAll('.quiz-question');
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            if (currentQuestion) {
+                const selectedOption = currentQuestion.querySelector('input[type="radio"]:checked');
+                if (selectedOption) {
+                    userAnswers[currentQuestionIndex] = parseInt(selectedOption.value);
+                }
+            }
+            
+            // Call the actual submit function
+            await submitQuiz(contentId);
+        }
+
+        async function submitQuiz(contentId) {
+            try {
+                console.log('Submitting quiz with answers:', userAnswers);
+                
+                // Check if all questions are answered
+                const unansweredQuestions = [];
+                for (let i = 0; i < totalQuestions; i++) {
+                    if (!userAnswers[i]) {
+                        unansweredQuestions.push(i + 1);
+                    }
+                }
+                
+                if (unansweredQuestions.length > 0) {
+                    customAlert(`Please answer all questions. Missing: ${unansweredQuestions.join(', ')}`, 'warning', 'Incomplete Quiz');
+                    return;
+                }
+                
+                const userEmail = localStorage.getItem('userEmail');
+                const response = await authenticatedFetch(`http://localhost:8081/api/student/content/${contentId}/quiz/submit?studentEmail=${encodeURIComponent(userEmail)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        answers: userAnswers
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to submit quiz');
+                }
+                
+                const result = await response.json();
+                closeQuizModal();
+                
+                // Show results
+                displayQuizResults(result);
+                
+            } catch (error) {
+                console.error('Error submitting quiz:', error);
+                customAlert('Error submitting quiz. Please try again.', 'danger', 'Submission Error');
+            }
+        }
+
+        function displayQuizResults(result) {
+            const passed = result.passed;
+            const statusIcon = passed ? 'fas fa-check-circle' : 'fas fa-times-circle';
+            const statusColor = passed ? '#27ae60' : '#e74c3c';
+            
+            customAlert(
+                `<div style="text-align: center;">
+                    <div style="font-size: 3rem; color: ${statusColor}; margin-bottom: 20px;">
+                        <i class="${statusIcon}"></i>
+                    </div>
+                    <h3>${passed ? 'Congratulations!' : 'Good Effort!'}</h3>
+                    <p><strong>Your Score: ${result.score.toFixed(1)}%</strong></p>
+                    <p>Correct Answers: ${result.correctAnswers} / ${result.totalQuestions}</p>
+                    <p style="margin-top: 20px; color: #666;">${result.message}</p>
+                </div>`,
+                passed ? 'success' : 'info',
+                'Quiz Results'
+            );
+        }
+
+        function closeQuizModal() {
+            const modal = document.getElementById('quizModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userEmail');
+                window.location.href = '/index.html';
+            }
+        }
+    </script>
+</body>
+</html>

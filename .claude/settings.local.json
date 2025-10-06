@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn:*)",
+      "Bash(powershell:*)",
+      "Bash(rm:*)",
+      "Bash(taskkill:*)",
+      "Bash(curl:*)",
+      "Bash(Stop-Process -Name \"java\" -Force)",
+      "Bash(Start-Sleep -Seconds 2)",
+      "Bash(cmd /c:*)",
+      "Bash(jps:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx create-react-app:*)",
+      "Bash(npm install:*)",
+      "Bash(npm start)",
+      "Bash(PORT=3000 npm start)",
+      "Bash(find frontend/src/components -name \"*.tsx\" -exec grep -l \"className.*\\\\.*\"\"\" {} ;)",
+      "Bash(find:*)",
+      "Bash(set PORT=3000)",
+      "Bash(timeout 5 sleep 5)",
+      "Bash(timeout 8 sleep 8)",
+      "Bash(timeout:*)",
+      "Bash(psql:*)",
+      "Bash(git rm:*)",
+      "Bash(git filter-branch:*)"
+    ],
+    "deny": []
+  }
+}

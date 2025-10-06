@@ -1,0 +1,214 @@
+/* Tutor Navigation Styles - Based on StudentNavigation */
+.tutor-navigation {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  min-height: 70px;
+}
+
+.nav-header {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+}
+
+.nav-brand {
+  margin-right: 2rem;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: opacity 0.2s ease;
+}
+
+.brand-link:hover {
+  opacity: 0.8;
+  color: white;
+}
+
+.brand-link i {
+  margin-right: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.current-page {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.role-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 2rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  text-decoration: none;
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-weight: 600;
+}
+
+.nav-item i {
+  font-size: 0.9rem;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.user-greeting {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.nav-logout {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.nav-logout:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .tutor-navigation {
+    padding: 0.6rem 1rem;
+    flex-wrap: wrap;
+    min-height: auto;
+  }
+
+  .nav-header {
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-status {
+    gap: 0.5rem;
+  }
+
+  .current-page {
+    font-size: 1rem;
+  }
+
+  .nav-items {
+    margin: 0;
+    gap: 0.3rem;
+  }
+
+  .nav-item {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutor-navigation {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.8rem;
+  }
+
+  .nav-header {
+    margin-right: 0;
+    margin-bottom: 0.8rem;
+    justify-content: space-between;
+  }
+
+  .nav-status {
+    order: 2;
+  }
+
+  .nav-items {
+    margin: 0.5rem 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-user {
+    margin-left: 0;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
+
+  .role-indicator {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 0.5rem;
+    min-width: 40px;
+    justify-content: center;
+  }
+
+  .nav-items {
+    gap: 0.2rem;
+  }
+}

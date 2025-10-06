@@ -1,0 +1,33 @@
+package com.thinkable.backend.controller;
+
+import com.thinkable.backend.model.User;
+import com.thinkable.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping("/register")
+    public ResponseEntity<? User user) {
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+        user.setCreatedAt(java.time.LocalDateTime.now());
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<? User loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail());
+        if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid email or password");
+        }
+        return ResponseEntity.ok("Login successful");
+    }
+}

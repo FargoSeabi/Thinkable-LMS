@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkAble Settings</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="custom-modals.js"></script>
+</head>
+<body>
+    <div class="student-home-container">
+        <header class="student-header">
+            <h1><i class="fas fa-cog"></i> Settings</h1>
+            <div class="header-actions">
+                <button class="back-btn" onclick="window.location.href='student-home.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </header>
+
+        <div class="settings-container">
+            <!-- Assessment Status Section -->
+            <div class="settings-section">
+                <h2><i class="fas fa-brain"></i> Learning Profile</h2>
+                <div id="assessmentStatus" class="assessment-status-card">
+                    <!-- Assessment status will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Adaptive UI Settings Section -->
+            <div class="settings-section">
+                <h2><i class="fas fa-palette"></i> Adaptive Interface</h2>
+                <div class="setting-group">
+                    <label for="uiPreset">Learning Mode:</label>
+                    <select id="uiPreset" onchange="changeUIPreset(this.value)" class="preset-selector">
+                        <option value="standard">Standard Mode</option>
+                        <option value="adhd">ADHD Support Mode</option>
+                        <option value="dyslexia">Dyslexia Support Mode</option>
+                        <option value="autism">Autism Support Mode</option>
+                        <option value="sensory">Sensory-Friendly Mode</option>
+                        <option value="dyslexia-adhd">Combined Support Mode</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="fontSize">Font Size:</label>
+                    <input type="range" id="fontSize" min="12" max="24" value="16" onchange="updateFontSize(this.value)" class="slider">
+                    <span id="fontSizeValue">16px</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="fontFamily">Font Family:</label>
+                    <select id="fontFamily" onchange="updateFontFamily(this.value)" class="font-selector">
+                        <option value='"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'>Segoe UI (Default)</option>
+                        <option value='"Comic Neue", cursive'>Comic Neue (Dyslexia-friendly)</option>
+                        <option value='OpenDyslexic, sans-serif'>OpenDyslexic (Specialized)</option>
+                        <option value='Arial, sans-serif'>Arial</option>
+                        <option value='"Times New Roman", serif'>Times New Roman</option>
+                        <option value='Verdana, sans-serif'>Verdana</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Legacy Accessibility Settings -->
+            <div class="settings-section">
+                <h2><i class="fas fa-universal-access"></i> Quick Accessibility</h2>
+                <div class="setting-option">
+                    <label for="dyslexiaMode">Dyslexia Mode</label>
+                    <input type="checkbox" id="dyslexiaMode" onchange="toggleDyslexiaMode(this.checked)">
+                </div>
+                <div class="setting-option">
+                    <label for="highContrastMode">High-Contrast Mode</label>
+                    <input type="checkbox" id="highContrastMode" onchange="toggleHighContrastMode(this.checked)">
+                </div>
+            </div>
+            
+            <!-- Timer Settings -->
+            <div class="settings-section">
+                <h2><i class="fas fa-clock"></i> Study Timer</h2>
+                <div class="setting-group">
+                    <label for="sessionLength">Study Session Length (minutes):</label>
+                    <input type="range" id="sessionLength" min="5" max="60" value="25" onchange="updateSessionLength(this.value)" class="slider">
+                    <span id="sessionLengthValue">25 minutes</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="breakLength">Break Length (minutes):</label>
+                    <input type="range" id="breakLength" min="1" max="20" value="5" onchange="updateBreakLength(this.value)" class="slider">
+                    <span id="breakLengthValue">5 minutes</span>
+                </div>
+            </div>
+            
+            <div id="settingsMessage" class="message"></div>
+            
+            <div class="settings-actions">
+                <button class="btn btn-primary" onclick="saveAllSettings()">
+                    <i class="fas fa-save"></i> Save All Settings
+                </button>
+                <button class="btn btn-secondary" onclick="resetToDefaults()">
+                    <i class="fas fa-undo"></i> Reset to Defaults
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .settings-section h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-group {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .setting-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .preset-selector, .font-selector {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .preset-selector:focus, .font-selector:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e9ecef;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+        }
+
+        .assessment-status-card {
+            margin: 15px 0;
+        }
+
+        .status-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .status-card.completed {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .status-card.incomplete {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff9a9e 100%);
+            color: white;
+        }
+
+        .status-icon {
+            font-size: 2rem;
+            opacity: 0.9;
+        }
+
+        .status-content h4 {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+        }
+
+        .status-content p {
+            margin: 0 0 10px 0;
+            opacity: 0.9;
+        }
+
+        .retake-link, .take-assessment-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .retake-link:hover, .take-assessment-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .settings-section {
+                padding: 15px;
+            }
+            
+            .settings-actions {
+                flex-direction: column;
+            }
+            
+            .status-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+    </style>
+
+    <script src="adaptive-ui.js"></script>
+    <script src="individual-profile.js"></script>
+    <script src="adaptive-tool-ecosystem.js"></script>
+    <script src="personal-pattern-recognition.js"></script>
+    <script src="neurodivergent-support.js"></script>
+    <script src="/timer.js"></script>
+    <script src="/script.js"></script>
+    <script>
+        let settingsAdaptiveUI;
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize adaptive UI system
+            await initializeAdaptiveUI();
+            
+            // Load current settings
+            loadCurrentSettings();
+            
+            // Check assessment status
+            checkAssessmentStatus();
+        });
+        
+        async function initializeAdaptiveUI() {
+            try {
+                if (typeof AdaptiveUISystem !== 'undefined') {
+                    settingsAdaptiveUI = new AdaptiveUISystem();
+                    await settingsAdaptiveUI.initialize();
+                }
+            } catch (error) {
+                console.log('Adaptive UI system not available yet');
+            }
+        }
+        
+        function loadCurrentSettings() {
+            // Load legacy settings
+            const dyslexiaMode = localStorage.getItem('dyslexiaMode') === 'true';
+            const highContrastMode = localStorage.getItem('highContrastMode') === 'true';
+            document.getElementById('dyslexiaMode').checked = dyslexiaMode;
+            document.getElementById('highContrastMode').checked = highContrastMode;
+            
+            // Load adaptive UI settings
+            const preset = localStorage.getItem('recommendedPreset') || 'standard';
+            document.getElementById('uiPreset').value = preset;
+            
+            // Load font settings
+            const fontSize = localStorage.getItem('adaptiveFontSize') || '16';
+            document.getElementById('fontSize').value = fontSize;
+            document.getElementById('fontSizeValue').textContent = fontSize + 'px';
+            
+            const fontFamily = localStorage.getItem('adaptiveFontFamily') || '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+            document.getElementById('fontFamily').value = fontFamily;
+            
+            // Load timer settings
+            const sessionLength = localStorage.getItem('adaptiveSessionLength') || '25';
+            document.getElementById('sessionLength').value = sessionLength;
+            document.getElementById('sessionLengthValue').textContent = sessionLength + ' minutes';
+            
+            const breakLength = localStorage.getItem('adaptiveBreakLength') || '5';
+            document.getElementById('breakLength').value = breakLength;
+            document.getElementById('breakLengthValue').textContent = breakLength + ' minutes';
+            
+            // Apply current settings
+            if (dyslexiaMode) {
+                const link = document.createElement('link');
+                link.href = 'https://fonts.cdnfonts.com/css/open-dyslexic';
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+                document.body.classList.add('dyslexia-mode');
+            }
+            if (highContrastMode) document.body.classList.add('high-contrast');
+        }
+        
+        function checkAssessmentStatus() {
+            const statusCard = document.getElementById('assessmentStatus');
+            const assessmentCompleted = localStorage.getItem('assessmentCompleted') === 'true';
+            
+            if (assessmentCompleted) {
+                const preset = localStorage.getItem('recommendedPreset') || 'standard';
+                const presetNames = {
+                    'standard': 'Standard Mode',
+                    'adhd': 'ADHD Support Mode',
+                    'dyslexia': 'Dyslexia Support Mode',
+                    'autism': 'Autism Support Mode',
+                    'sensory': 'Sensory-Friendly Mode',
+                    'dyslexia-adhd': 'Combined Support Mode'
+                };
+                
+                statusCard.innerHTML = `
+                    <div class="status-card completed">
+                        <div class="status-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="status-content">
+                            <h4>Assessment Complete</h4>
+                            <p>Your recommended mode: <strong>${presetNames[preset]}</strong></p>
+                            <a href="assessment.html" class="retake-link">
+                                <i class="fas fa-redo"></i> Retake Assessment
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                statusCard.innerHTML = `
+                    <div class="status-card incomplete">
+                        <div class="status-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="status-content">
+                            <h4>Assessment Recommended</h4>
+                            <p>Take our learning assessment to get personalized settings.</p>
+                            <a href="assessment.html" class="take-assessment-link">
+                                <i class="fas fa-brain"></i> Take Assessment
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        async function changeUIPreset(preset) {
+            console.log('Changing UI preset to:', preset);
+            
+            // Apply preset through adaptive UI system
+            if (settingsAdaptiveUI) {
+                await settingsAdaptiveUI.applyPreset(preset);
+                localStorage.setItem('recommendedPreset', preset);
+                showMessage('UI preset updated to ' + preset, 'success');
+            } else {
+                // Fallback: Apply preset manually if adaptive UI not available
+                console.log('Adaptive UI not available, applying preset manually');
+                applyPresetManually(preset);
+                localStorage.setItem('recommendedPreset', preset);
+                showMessage('UI preset updated to ' + preset + ' (manual mode)', 'success');
+            }
+        }
+        
+        function applyPresetManually(preset) {
+            // Remove existing preset classes
+            document.body.classList.remove('preset-standard', 'preset-adhd', 'preset-dyslexia', 'preset-autism', 'preset-sensory', 'preset-dyslexia-adhd');
+            
+            // Add new preset class
+            document.body.classList.add('preset-' + preset);
+            
+            // Apply preset-specific CSS variables directly
+            const root = document.documentElement;
+            
+            switch(preset) {
+                case 'adhd':
+                    root.style.setProperty('--font-size-base', '20px');
+                    root.style.setProperty('--font-weight-normal', '600');
+                    root.style.setProperty('--border-width', '3px');
+                    root.style.setProperty('--primary-color', '#0056b3');
+                    root.style.setProperty('--bg-primary', '#ffffff');
+                    root.style.setProperty('--line-height-base', '1.7');
+                    root.style.setProperty('--spacing-md', '2rem');
+                    root.style.setProperty('--shadow-md', '0 0.8rem 1.5rem rgba(0, 0, 0, 0.2)');
+                    break;
+                case 'dyslexia':
+                    root.style.setProperty('--font-family-primary', 'OpenDyslexic, Arial, sans-serif');
+                    root.style.setProperty('--font-size-base', '19px');
+                    root.style.setProperty('--line-height-base', '1.9');
+                    root.style.setProperty('--bg-primary', '#fffef7');
+                    root.style.setProperty('--text-primary', '#1a1a1a');
+                    root.style.setProperty('--spacing-md', '1.8rem');
+                    root.style.setProperty('--border-width', '3px');
+                    break;
+                case 'autism':
+                    root.style.setProperty('--primary-color', '#4a90a4');
+                    root.style.setProperty('--bg-primary', '#fdfdfd');
+                    root.style.setProperty('--font-family-primary', '"Arial", sans-serif');
+                    root.style.setProperty('--transition-base', '0.1s ease');
+                    break;
+                case 'sensory':
+                    root.style.setProperty('--primary-color', '#6c7b7f');
+                    root.style.setProperty('--bg-primary', '#fafafa');
+                    root.style.setProperty('--font-family-primary', '"Verdana", Arial, sans-serif');
+                    root.style.setProperty('--line-height-base', '1.7');
+                    break;
+                case 'dyslexia-adhd':
+                    root.style.setProperty('--font-family-primary', '"Comic Neue", Arial, sans-serif');
+                    root.style.setProperty('--font-size-base', '18px');
+                    root.style.setProperty('--line-height-base', '1.8');
+                    root.style.setProperty('--bg-primary', '#fffef7');
+                    root.style.setProperty('--border-width', '2px');
+                    root.style.setProperty('--primary-color', '#0056b3');
+                    break;
+                default:
+                    // Standard preset - reset to defaults
+                    root.style.setProperty('--font-family-primary', '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif');
+                    root.style.setProperty('--font-size-base', '16px');
+                    root.style.setProperty('--line-height-base', '1.5');
+                    root.style.setProperty('--bg-primary', '#ffffff');
+                    root.style.setProperty('--text-primary', '#212529');
+                    root.style.setProperty('--primary-color', '#007bff');
+                    root.style.setProperty('--border-width', '1px');
+                    break;
+            }
+            
+            console.log('Applied preset manually:', preset);
+        }
+        
+        function updateFontSize(size) {
+            document.getElementById('fontSizeValue').textContent = size + 'px';
+            document.documentElement.style.setProperty('--font-size-base', size + 'px');
+            localStorage.setItem('adaptiveFontSize', size);
+        }
+        
+        function updateFontFamily(family) {
+            document.documentElement.style.setProperty('--font-family-primary', family);
+            localStorage.setItem('adaptiveFontFamily', family);
+        }
+        
+        function updateSessionLength(length) {
+            document.getElementById('sessionLengthValue').textContent = length + ' minutes';
+            localStorage.setItem('adaptiveSessionLength', length);
+        }
+        
+        function updateBreakLength(length) {
+            document.getElementById('breakLengthValue').textContent = length + ' minutes';
+            localStorage.setItem('adaptiveBreakLength', length);
+        }
+        
+        function saveAllSettings() {
+            // Save current form values to localStorage
+            const preset = document.getElementById('uiPreset').value;
+            const fontSize = document.getElementById('fontSize').value;
+            const fontFamily = document.getElementById('fontFamily').value;
+            const sessionLength = document.getElementById('sessionLength').value;
+            const breakLength = document.getElementById('breakLength').value;
+            const dyslexiaMode = document.getElementById('dyslexiaMode').checked;
+            const highContrastMode = document.getElementById('highContrastMode').checked;
+            
+            localStorage.setItem('recommendedPreset', preset);
+            localStorage.setItem('adaptiveFontSize', fontSize);
+            localStorage.setItem('adaptiveFontFamily', fontFamily);
+            localStorage.setItem('adaptiveSessionLength', sessionLength);
+            localStorage.setItem('adaptiveBreakLength', breakLength);
+            localStorage.setItem('dyslexiaMode', dyslexiaMode);
+            localStorage.setItem('highContrastMode', highContrastMode);
+            
+            showMessage('All settings saved successfully!', 'success');
+        }
+        
+        function resetToDefaults() {
+            customConfirm('Are you sure you want to reset all settings to defaults?<br><br>This will restore all settings to their original values.', () => {
+                // Clear adaptive settings
+                localStorage.removeItem('recommendedPreset');
+                localStorage.removeItem('adaptiveFontSize');
+                localStorage.removeItem('adaptiveFontFamily');
+                localStorage.removeItem('adaptiveSessionLength');
+                localStorage.removeItem('adaptiveBreakLength');
+                
+                // Clear legacy settings
+                localStorage.removeItem('dyslexiaMode');
+                localStorage.removeItem('highContrastMode');
+                
+                // Reload page to apply defaults
+                window.location.reload();
+            }, 'warning', 'Reset Settings?');
+        }
+        
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('settingsMessage');
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + (type || 'info');
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

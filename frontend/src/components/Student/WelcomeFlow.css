@@ -1,0 +1,223 @@
+/* Welcome Flow - Clean, engaging onboarding */
+.welcome-flow-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.welcome-flow-container {
+  max-width: 500px;
+  width: 100%;
+  animation: slideUp 0.6s ease;
+  transition: all 0.3s ease;
+}
+
+.welcome-flow-container.animating {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+
+.welcome-progress {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.progress-bar {
+  background: rgba(255, 255, 255, 0.2);
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  background: white;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  color: white;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.welcome-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.welcome-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 30px auto;
+  color: white;
+  font-size: 2rem;
+  animation: iconPulse 2s infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.welcome-content h1 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.welcome-content h2 {
+  color: #3498db;
+  font-size: 1.3rem;
+  margin: 0 0 20px 0;
+  font-weight: 600;
+}
+
+.welcome-content p {
+  color: #5a6c7d;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 0 40px 0;
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.welcome-btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.welcome-btn.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.welcome-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.welcome-btn.secondary {
+  background: transparent;
+  color: #7f8c8d;
+  border: 2px solid #e2e8f0;
+}
+
+.welcome-btn.secondary:hover {
+  background: #f8f9fa;
+  color: #2c3e50;
+  border-color: #cbd5e0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .welcome-flow-overlay {
+    padding: 15px;
+  }
+
+  .welcome-card {
+    padding: 30px 20px;
+  }
+
+  .welcome-content h1 {
+    font-size: 1.6rem;
+  }
+
+  .welcome-content h2 {
+    font-size: 1.1rem;
+  }
+
+  .welcome-content p {
+    font-size: 1rem;
+  }
+
+  .welcome-actions {
+    flex-direction: column;
+  }
+
+  .welcome-btn {
+    width: 100%;
+  }
+}
+
+/* Animation keyframes */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility improvements */
+.welcome-btn:focus {
+  outline: 3px solid #3498db;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-icon,
+  .welcome-card::before {
+    animation: none;
+  }
+  
+  .welcome-flow-container {
+    animation: none;
+  }
+}

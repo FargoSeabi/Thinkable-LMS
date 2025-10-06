@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join ThinkAble - Registration</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="registration-container">
+        <div class="registration-card">
+            <header class="registration-header">
+                <h1><i class="fas fa-graduation-cap"></i> Welcome to ThinkAble!</h1>
+                <div class="progress-indicator">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">About You</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Fun Games</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Preferences</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Learning Style</div>
+                    </div>
+                    <div class="progress-step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">All Set!</div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="registration-content">
+                <!-- Step 1: Basic Information -->
+                <div class="registration-step active" data-step="1">
+                    <div class="step-content">
+                        <h2><i class="fas fa-user-circle"></i> Tell us about yourself!</h2>
+                        <p class="step-description">We'd love to get to know you better so we can make learning fun and perfect for you!</p>
+                        
+                        <div class="form-group">
+                            <label for="fullName"><i class="fas fa-user"></i> What's your name?</label>
+                            <input type="text" id="fullName" placeholder="Enter your full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email address</label>
+                            <input type="email" id="email" placeholder="your.email@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password"><i class="fas fa-lock"></i> Create a password</label>
+                            <input type="password" id="password" placeholder="Choose a secure password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ageRange"><i class="fas fa-birthday-cake"></i> How old are you?</label>
+                            <select id="ageRange" required>
+                                <option value="">Select your age range</option>
+                                <option value="5-8">5-8 years old</option>
+                                <option value="9-12">9-12 years old</option>
+                                <option value="13-16">13-16 years old</option>
+                                <option value="17+">17 years or older</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gradeLevel"><i class="fas fa-school"></i> What grade are you in?</label>
+                            <select id="gradeLevel" required>
+                                <option value="">Select your grade</option>
+                                <option value="K">Kindergarten</option>
+                                <option value="1">1st Grade</option>
+                                <option value="2">2nd Grade</option>
+                                <option value="3">3rd Grade</option>
+                                <option value="4">4th Grade</option>
+                                <option value="5">5th Grade</option>
+                                <option value="6">6th Grade</option>
+                                <option value="7">7th Grade</option>
+                                <option value="8">8th Grade</option>
+                                <option value="9">9th Grade</option>
+                                <option value="10">10th Grade</option>
+                                <option value="11">11th Grade</option>
+                                <option value="12">12th Grade</option>
+                                <option value="college">College</option>
+                            </select>
+                        </div>
+
+                        <div class="parent-email-group" style="display: none;">
+                            <div class="form-group">
+                                <label for="parentEmail"><i class="fas fa-users"></i> Parent/Guardian Email</label>
+                                <input type="email" id="parentEmail" placeholder="parent@example.com">
+                                <small class="form-help">We'll send updates to your parent/guardian</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Fun Assessment Games -->
+                <div class="registration-step" data-step="2">
+                    <div class="step-content">
+                        <h2><i class="fas fa-gamepad"></i> Let's play some fun games!</h2>
+                        <p class="step-description">These quick games help us understand how you like to learn best.</p>
+                        
+                        <div class="games-container">
+                            <!-- Focus & Attention Game -->
+                            <div class="game-card" id="focusGame">
+                                <div class="game-header">
+                                    <i class="fas fa-bullseye"></i>
+                                    <h3>Focus Challenge</h3>
+                                    <p>Keep the moving circle in the center!</p>
+                                </div>
+                                <div class="game-area">
+                                    <canvas id="focusCanvas" width="300" height="200"></canvas>
+                                    <div class="game-controls">
+                                        <button class="game-btn" onclick="startFocusGame()">Start Game</button>
+                                    </div>
+                                </div>
+                                <div class="game-score">Score: <span id="focusScore">-</span></div>
+                            </div>
+
+                            <!-- Memory Pattern Game -->
+                            <div class="game-card" id="memoryGame">
+                                <div class="game-header">
+                                    <i class="fas fa-brain"></i>
+                                    <h3>Memory Patterns</h3>
+                                    <p>Remember the sequence of colors!</p>
+                                </div>
+                                <div class="game-area">
+                                    <div class="memory-grid" id="memoryGrid">
+                                        <div class="memory-cell" data-color="red"></div>
+                                        <div class="memory-cell" data-color="blue"></div>
+                                        <div class="memory-cell" data-color="green"></div>
+                                        <div class="memory-cell" data-color="yellow"></div>
+                                    </div>
+                                    <div class="game-controls">
+                                        <button class="game-btn" onclick="startMemoryGame()">Start Game</button>
+                                    </div>
+                                </div>
+                                <div class="game-score">Score: <span id="memoryScore">-</span></div>
+                            </div>
+
+                            <!-- Reaction Time Game -->
+                            <div class="game-card" id="reactionGame">
+                                <div class="game-header">
+                                    <i class="fas fa-clock"></i>
+                                    <h3>Quick Reactions</h3>
+                                    <p>Click when the color changes!</p>
+                                </div>
+                                <div class="game-area">
+                                    <div class="reaction-target" id="reactionTarget">
+                                        Wait for the color change...
+                                    </div>
+                                    <div class="game-controls">
+                                        <button class="game-btn" onclick="startReactionGame()">Start Game</button>
+                                    </div>
+                                </div>
+                                <div class="game-score">Score: <span id="reactionScore">-</span></div>
+                            </div>
+
+                            <!-- Executive Function Game -->
+                            <div class="game-card" id="executiveGame">
+                                <div class="game-header">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    <h3>Task Juggler</h3>
+                                    <p>Switch between different tasks quickly!</p>
+                                </div>
+                                <div class="game-area">
+                                    <div class="executive-display">
+                                        <div class="task-instruction" id="taskInstruction">Get ready...</div>
+                                        <div class="executive-grid" id="executiveGrid">
+                                            <div class="exec-item" data-type="shape" data-value="circle">⭕</div>
+                                            <div class="exec-item" data-type="shape" data-value="square">⬜</div>
+                                            <div class="exec-item" data-type="number" data-value="1">1</div>
+                                            <div class="exec-item" data-type="number" data-value="2">2</div>
+                                            <div class="exec-item" data-type="color" data-value="red">🔴</div>
+                                            <div class="exec-item" data-type="color" data-value="blue">🔵</div>
+                                        </div>
+                                    </div>
+                                    <div class="game-controls">
+                                        <button class="game-btn" onclick="startExecutiveGame()">Start Game</button>
+                                    </div>
+                                </div>
+                                <div class="game-score">Score: <span id="executiveScore">-</span></div>
+                            </div>
+
+                            <!-- Sensory Processing Game -->
+                            <div class="game-card" id="sensoryGame">
+                                <div class="game-header">
+                                    <i class="fas fa-eye"></i>
+                                    <h3>Filter Focus</h3>
+                                    <p>Find the target while distractions happen!</p>
+                                </div>
+                                <div class="game-area">
+                                    <div class="sensory-display" id="sensoryDisplay">
+                                        <div class="target-zone">
+                                            <div class="sensory-target" id="sensoryTarget">🎯</div>
+                                        </div>
+                                        <div class="distraction-zone" id="distractionZone"></div>
+                                    </div>
+                                    <div class="game-controls">
+                                        <button class="game-btn" onclick="startSensoryGame()">Start Game</button>
+                                    </div>
+                                </div>
+                                <div class="game-score">Score: <span id="sensoryScore">-</span></div>
+                            </div>
+                        </div>
+
+                        <div class="games-completion" id="gamesCompletion" style="display: none;">
+                            <div class="completion-message">
+                                <i class="fas fa-trophy"></i>
+                                <h3>Great job! All games completed!</h3>
+                                <p>You're doing amazing! Let's continue to the next step.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Learning Preferences -->
+                <div class="registration-step" data-step="3">
+                    <div class="step-content">
+                        <h2><i class="fas fa-heart"></i> What do you enjoy most?</h2>
+                        <p class="step-description">Help us understand what makes learning fun for you!</p>
+
+                        <div class="preference-section">
+                            <h3>How do you like to learn new things?</h3>
+                            <div class="preference-grid">
+                                <div class="preference-card" data-preference="visual">
+                                    <i class="fas fa-eye"></i>
+                                    <h4>Looking at Pictures</h4>
+                                    <p>I learn best with colorful images, diagrams, and videos</p>
+                                </div>
+                                <div class="preference-card" data-preference="auditory">
+                                    <i class="fas fa-headphones"></i>
+                                    <h4>Listening to Stories</h4>
+                                    <p>I love hearing explanations, music, and audio content</p>
+                                </div>
+                                <div class="preference-card" data-preference="kinesthetic">
+                                    <i class="fas fa-hand-paper"></i>
+                                    <h4>Hands-on Activities</h4>
+                                    <p>I like to touch, build, and interact with things</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preference-section">
+                            <h3>When do you focus best?</h3>
+                            <div class="time-preference">
+                                <label class="radio-card">
+                                    <input type="radio" name="studyTime" value="morning">
+                                    <div class="radio-content">
+                                        <i class="fas fa-sun"></i>
+                                        <span>Morning (8AM - 12PM)</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="studyTime" value="afternoon">
+                                    <div class="radio-content">
+                                        <i class="fas fa-cloud-sun"></i>
+                                        <span>Afternoon (12PM - 6PM)</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="studyTime" value="evening">
+                                    <div class="radio-content">
+                                        <i class="fas fa-moon"></i>
+                                        <span>Evening (6PM - 10PM)</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="preference-section">
+                            <h3>What motivates you to keep learning?</h3>
+                            <div class="motivation-grid">
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="motivation" value="badges">
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-medal"></i>
+                                        <span>Earning badges and awards</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="motivation" value="progress">
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Seeing my progress</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="motivation" value="competition">
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-trophy"></i>
+                                        <span>Friendly competitions</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="motivation" value="stories">
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-book-open"></i>
+                                        <span>Learning through stories</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Learning Assessment Introduction -->
+                <div class="registration-step" data-step="4">
+                    <div class="step-content">
+                        <h2><i class="fas fa-brain"></i> Personalize Your Learning</h2>
+                        <p class="step-description">Let's take a quick assessment to create the perfect learning environment for you!</p>
+                        
+                        <div class="assessment-intro">
+                            <div class="intro-card">
+                                <div class="intro-icon">
+                                    <i class="fas fa-magic"></i>
+                                </div>
+                                <h3>Why take the assessment?</h3>
+                                <ul class="intro-benefits">
+                                    <li><i class="fas fa-check-circle"></i> Personalized fonts and colors that work best for you</li>
+                                    <li><i class="fas fa-check-circle"></i> Study timers optimized for your attention span</li>
+                                    <li><i class="fas fa-check-circle"></i> Learning content adapted to your style</li>
+                                    <li><i class="fas fa-check-circle"></i> Recommendations tailored just for you</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="assessment-preview">
+                                <h4>What to expect:</h4>
+                                <div class="preview-steps">
+                                    <div class="preview-step">
+                                        <i class="fas fa-font"></i>
+                                        <span>Font readability test</span>
+                                    </div>
+                                    <div class="preview-step">
+                                        <i class="fas fa-questions"></i>
+                                        <span>Learning style questions</span>
+                                    </div>
+                                    <div class="preview-step">
+                                        <i class="fas fa-palette"></i>
+                                        <span>Personalized setup</span>
+                                    </div>
+                                </div>
+                                <p class="assessment-time">
+                                    <i class="fas fa-clock"></i> Takes about 5-7 minutes
+                                </p>
+                            </div>
+                            
+                            <div class="assessment-choice">
+                                <h4>Ready to personalize your experience?</h4>
+                                <div class="choice-buttons">
+                                    <button class="choice-btn primary" onclick="startAssessmentFromRegistration()">
+                                        <i class="fas fa-brain"></i> Take Assessment Now
+                                    </button>
+                                    <button class="choice-btn secondary" onclick="skipAssessment()">
+                                        <i class="fas fa-arrow-right"></i> Skip for Now
+                                    </button>
+                                </div>
+                                <p class="skip-note">You can always take the assessment later from your dashboard!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Completion -->
+                <div class="registration-step" data-step="5">
+                    <div class="step-content">
+                        <div class="completion-celebration">
+                            <div class="celebration-animation">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h2><i class="fas fa-party-horn"></i> Welcome to ThinkAble!</h2>
+                            <p class="step-description" id="completionMessage">Amazing! We've set up your perfect learning experience.</p>
+                            
+                            <div class="profile-summary">
+                                <h3>Your Learning Profile</h3>
+                                <div class="summary-grid" id="profileSummary">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="next-steps">
+                                <h3>What's next?</h3>
+                                <ul id="nextStepsList">
+                                    <li><i class="fas fa-check"></i> Explore your personalized dashboard</li>
+                                    <li><i class="fas fa-check"></i> Try lessons tailored just for you</li>
+                                    <li><i class="fas fa-check"></i> Start earning badges and tracking progress</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="registration-footer">
+                <div class="navigation-buttons">
+                    <button class="nav-btn prev-btn" onclick="previousStep()" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="nav-btn next-btn" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="nav-btn finish-btn" onclick="completeRegistration()" style="display: none;">
+                        Start Learning! <i class="fas fa-rocket"></i>
+                    </button>
+                    <button class="nav-btn assessment-btn" onclick="startAssessmentFromRegistration()" style="display: none;">
+                        Take Assessment <i class="fas fa-brain"></i>
+                    </button>
+                </div>
+                <div class="registration-message" id="registrationMessage"></div>
+            </footer>
+        </div>
+    </div>
+
+    <style>
+        /* Assessment Introduction Styles */
+        .assessment-intro {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .intro-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .intro-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .intro-card h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.5rem;
+        }
+
+        .intro-benefits {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .intro-benefits li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        .intro-benefits i {
+            color: #4ecdc4;
+            font-size: 1.2rem;
+        }
+
+        .assessment-preview {
+            background: white;
+            border: 2px solid #f1f3f4;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .assessment-preview h4 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .preview-steps {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .preview-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .preview-step i {
+            font-size: 2rem;
+            color: #667eea;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-step span {
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .assessment-time {
+            text-align: center;
+            margin: 20px 0 0 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .assessment-time i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+
+        .assessment-choice {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .assessment-choice h4 {
+            margin: 0 0 25px 0;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .choice-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .choice-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .choice-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .choice-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .choice-btn.secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .skip-note {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .preview-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .choice-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .choice-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+
+    <script src="/auth.js"></script>
+    <script src="/script.js"></script>
+    <script src="/registration-games.js"></script>
+    <script src="/registration.js"></script>
+    <script>
+        // Assessment integration functions
+        function startAssessmentFromRegistration() {
+            // Store registration completion flag
+            localStorage.setItem('registrationCompleted', 'true');
+            localStorage.setItem('proceedToAssessment', 'true');
+            
+            // Redirect to assessment
+            window.location.href = 'assessment.html';
+        }
+        
+        function skipAssessment() {
+            // Go to final step
+            currentStep = 5;
+            updateStepDisplay();
+            
+            // Update completion message
+            document.getElementById('completionMessage').textContent = 
+                "Great! You can take the learning assessment anytime from your dashboard to unlock personalized features.";
+            
+            // Add assessment reminder to next steps
+            const nextStepsList = document.getElementById('nextStepsList');
+            const assessmentStep = document.createElement('li');
+            assessmentStep.innerHTML = '<i class="fas fa-brain"></i> Take the learning assessment to personalize your experience';
+            nextStepsList.insertBefore(assessmentStep, nextStepsList.firstChild);
+        }
+    </script>
+</body>
+</html>

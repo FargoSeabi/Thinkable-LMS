@@ -1,0 +1,478 @@
+/* Study Timer - Preset-aware styling */
+
+.study-timer {
+  background: var(--background-color, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--border-radius, 12px);
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Timer Header */
+.timer-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.timer-title-section {
+  flex: 1;
+}
+
+.timer-title {
+  color: var(--text-color, #2c3e50);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.preset-info {
+  margin-top: 0.25rem;
+}
+
+.preset-label {
+  background: #f8f9fa;
+  color: #6c757d;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #dee2e6;
+}
+
+.session-count {
+  flex-shrink: 0;
+}
+
+.count-badge {
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* Simple Timer Display */
+.timer-display {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.time-text {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--text-color, #2c3e50);
+  margin-bottom: 1.5rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.progress-container {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Timer Message */
+.timer-message {
+  color: var(--text-color, #2c3e50);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+  opacity: 0.8;
+  min-height: 1.4rem;
+}
+
+/* Timer Controls */
+.timer-controls {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.active-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.timer-btn {
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  color: white;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, #2980b9, #0984e3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.secondary-btn {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.secondary-btn:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+}
+
+.danger-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.danger-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.timer-btn:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quick-action-btn {
+  padding: 0.5rem 1rem;
+  background: var(--primary-color, #2c5aa0);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quick-action-btn.secondary {
+  background: transparent;
+  color: var(--primary-color, #2c5aa0);
+  border: 1px solid var(--primary-color, #2c5aa0);
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Celebration Overlay */
+.celebration-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.95), rgba(32, 201, 151, 0.95));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  animation: celebration-appear 0.5s ease;
+}
+
+.celebration-content {
+  text-align: center;
+  color: white;
+}
+
+.celebration-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: celebration-bounce 1s ease infinite;
+}
+
+.celebration-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.celebration-content p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+@keyframes celebration-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes celebration-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Preset-Specific Styles */
+
+/* ADHD Style - Bright and Encouraging */
+.timer-adhd {
+  border: 2px solid #3498db;
+  box-shadow: 0 6px 25px rgba(52, 152, 219, 0.15);
+}
+
+.timer-adhd .preset-label {
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  color: white;
+  border: none;
+}
+
+.timer-adhd .progress-fill {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+}
+
+.timer-adhd .timer-message {
+  font-weight: 600;
+  color: #3498db;
+}
+
+/* Quiet Style - Minimal for Autism */
+.timer-quiet {
+  background: #ffffff;
+  border: 2px solid #2c3e50;
+  box-shadow: none;
+}
+
+.timer-quiet .preset-label {
+  background: #2c3e50;
+  color: white;
+  border: none;
+}
+
+.timer-quiet .progress-fill {
+  background: #2c3e50;
+  transition: width 0.3s linear;
+}
+
+.timer-quiet .timer-btn {
+  border-radius: 4px;
+  transition: none;
+  transform: none !important;
+}
+
+.timer-quiet .timer-btn:hover {
+  transform: none !important;
+  opacity: 0.9;
+}
+
+/* Calm Style - Soft for Sensory */
+.timer-calm {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.timer-calm .preset-label {
+  background: #6c757d;
+  color: white;
+  border: none;
+}
+
+.timer-calm .progress-fill {
+  background: #6c757d;
+}
+
+.timer-calm .timer-btn {
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.timer-calm .timer-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Study vs Break Mode Colors */
+.timer-study {
+  --timer-bg-color: #e3f2fd;
+  --timer-progress-color: #2196f3;
+}
+
+.timer-break {
+  --timer-bg-color: #e8f5e8;
+  --timer-progress-color: #4caf50;
+}
+
+.timer-break .timer-title {
+  color: var(--success-color, #28a745);
+}
+
+.timer-break .mode-text {
+  color: var(--success-color, #28a745);
+}
+
+/* Timer States */
+.timer-running.timer-adhd {
+  animation: gentle-glow 3s ease-in-out infinite alternate;
+}
+
+.timer-paused {
+  opacity: 0.7;
+}
+
+.timer-paused .time-text {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes gentle-glow {
+  from {
+    box-shadow: 0 6px 25px rgba(44, 90, 160, 0.15);
+  }
+  to {
+    box-shadow: 0 8px 30px rgba(44, 90, 160, 0.25);
+  }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .study-timer {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+
+  .timer-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .time-text {
+    font-size: 2.8rem;
+  }
+
+  .progress-container {
+    max-width: 100%;
+  }
+
+  .active-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timer-btn {
+    min-width: auto;
+    width: 100%;
+    padding: 1rem 1.5rem;
+  }
+
+  .quick-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .quick-action-btn {
+    width: 100%;
+  }
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  .study-timer {
+    border-width: 2px;
+  }
+  
+  .progress-bar {
+    height: 16px;
+    border: 1px solid var(--text-color, #2c3e50);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .study-timer,
+  .timer-btn,
+  .progress-fill,
+  .progress-circle circle {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .celebration-overlay {
+    animation: none !important;
+  }
+  
+  .celebration-icon {
+    animation: none !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .study-timer {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --border-color: #333;
+    --primary-color: #4a9eff;
+  }
+}

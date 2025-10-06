@@ -1,0 +1,630 @@
+package com.thinkable.backend.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thinkable.backend.controller.JwtUtil;
+import com.thinkable.backend.model.User;
+import com.thinkable.backend.model.AssessmentQuestion;
+import com.thinkable.backend.model.FontTestResult;
+import com.thinkable.backend.model.UserAssessment;
+import com.thinkable.backend.repository.UserRepository;
+import com.thinkable.backend.repository.AssessmentQuestionRepository;
+import com.thinkable.backend.repository.FontTestResultRepository;
+import com.thinkable.backend.repository.UserAssessmentRepository;
+
+@RestController
+@RequestMapping("/api/assessment")
+@CrossOrigin(origins = {"http://localhost:8081", "http://localhost:3000"}, allowCredentials = "true")
+public class AssessmentController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AssessmentController.class);
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+    
+    @Autowired
+    private AssessmentQuestionRepository assessmentQuestionRepository;
+    
+    @Autowired
+    private FontTestResultRepository fontTestResultRepository;
+    
+    @Autowired
+    private UserAssessmentRepository userAssessmentRepository;
+
+    /**
+     * Start assessment session for user
+     */
+    @PostMapping("/start/{userId}")
+    public ResponseEntity<?> startAssessment(@PathVariable Long userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found"));
+            }
+
+            // Create session ID
+            String sessionId = UUID.randomUUID().toString();
+            
+            // Load sample assessment questions (in real implementation, these would come from database)
+            List<AssessmentQuestion> questions = createSampleQuestions();
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("sessionId", sessionId);
+            response.put("userId", userId);
+            response.put("questions", questions);
+            response.put("currentStep", 0);
+            response.put("totalSteps", questions.size());
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error starting assessment for user " + userId, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Failed to start assessment: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Process font test results
+     */
+    @PostMapping("/font-test/{userId}")
+    public ResponseEntity<?> processFontTest(
+            @PathVariable Long userId,
+            @RequestBody FontTestRequest request) {
+        
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found"));
+            }
+
+            // Process each font response
+            List<String> preferredFonts = new ArrayList<>();
+            boolean serifDifficulty = false;
+            boolean dyslexiaFontPreference = false;
+
+            for (FontResponse fontResponse : request.getFontResponses()) {
+                // Save font test result
+                FontTestResult result = new FontTestResult();
+                result.setUserId(userId);
+                result.setFontName(fontResponse.getFontName());
+                result.setReadabilityRating(fontResponse.getRating());
+                result.setDifficultyReported(fontResponse.getDifficulty());
+                result.setSymptomsReported(objectMapper.writeValueAsString(fontResponse.getSymptoms()));
+                result.setTestDate(java.time.LocalDateTime.now());
+                
+                fontTestResultRepository.save(result);
+
+                // Analyze for dyslexia indicators
+                if (fontResponse.getRating() >= 4 && "easy".equals(fontResponse.getDifficulty())) {
+                    preferredFonts.add(fontResponse.getFontName());
+                }
+                
+                if (("Times New Roman".equals(fontResponse.getFontName()) || "Georgia".equals(fontResponse.getFontName()))
+                    && "hard".equals(fontResponse.getDifficulty())) {
+                    serifDifficulty = true;
+                }
+                
+                if (("Comic Neue".equals(fontResponse.getFontName()) || "OpenDyslexic".equals(fontResponse.getFontName()))
+                    && "easy".equals(fontResponse.getDifficulty()) && fontResponse.getRating() >= 4) {
+                    dyslexiaFontPreference = true;
+                }
+            }
+
+            boolean likelyDyslexia = serifDifficulty && dyslexiaFontPreference;
+
+            Map<String, Object> dyslexiaIndicators = new HashMap<>();
+            dyslexiaIndicators.put("serifDifficulty", serifDifficulty);
+            dyslexiaIndicators.put("dyslexiaFontPreference", dyslexiaFontPreference);
+            dyslexiaIndicators.put("likelyDyslexia", likelyDyslexia);
+            
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "dyslexiaIndicators", dyslexiaIndicators,
+                "preferredFonts", preferredFonts,
+                "message", "Font test completed successfully"
+            ));
+            
+        } catch (Exception e) {
+            logger.error("Error processing font test for user " + userId, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Failed to process font test: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Submit complete assessment
+     */
+    @PostMapping("/submit/{userId}")
+    public ResponseEntity<?> submitAssessment(
+            @PathVariable Long userId,
+            @RequestBody NeurodivergentAssessmentSubmission submission) {
+        
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found"));
+            }
+
+            // Calculate scores based on responses
+            AssessmentResults results = calculateNeurodivergentScores(submission);
+            
+            // Save assessment to database
+            UserAssessment assessment = new UserAssessment();
+            assessment.setUserId(userId);
+            assessment.setAssessmentDate(java.time.LocalDateTime.now());
+            assessment.setAttentionScore(results.getAttentionScore());
+            assessment.setSocialCommunicationScore(results.getSocialCommunicationScore());
+            assessment.setSensoryProcessingScore(results.getSensoryProcessingScore());
+            assessment.setReadingDifficultyScore(results.getReadingDifficultyScore());
+            assessment.setMotorSkillsScore(results.getMotorSkillsScore());
+            assessment.setRecommendedPreset(results.getRecommendedPreset());
+            assessment.setAssessmentCompleted(true);
+            
+            userAssessmentRepository.save(assessment);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("attentionScore", results.getAttentionScore());
+            response.put("socialCommunicationScore", results.getSocialCommunicationScore());
+            response.put("sensoryProcessingScore", results.getSensoryProcessingScore());
+            response.put("readingDifficultyScore", results.getReadingDifficultyScore());
+            response.put("motorSkillsScore", results.getMotorSkillsScore());
+            response.put("recommendedPreset", results.getRecommendedPreset());
+            response.put("aiRecommendations", results.getAiRecommendations());
+            response.put("message", "Assessment completed successfully");
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error submitting assessment for user " + userId, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Failed to submit assessment: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Get user learning profile
+     */
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<?> getUserProfile(@PathVariable Long userId) {
+        try {
+            UserAssessment assessment = userAssessmentRepository.findByUserId(userId);
+            
+            if (assessment == null) {
+                return ResponseEntity.ok(Map.of(
+                    "assessmentCompleted", false,
+                    "message", "No assessment found for user"
+                ));
+            }
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("assessmentCompleted", assessment.getAssessmentCompleted());
+            response.put("attentionScore", assessment.getAttentionScore());
+            response.put("socialCommunicationScore", assessment.getSocialCommunicationScore());
+            response.put("sensoryProcessingScore", assessment.getSensoryProcessingScore());
+            response.put("readingDifficultyScore", assessment.getReadingDifficultyScore());
+            response.put("motorSkillsScore", assessment.getMotorSkillsScore());
+            response.put("recommendedPreset", assessment.getRecommendedPreset());
+            
+            // Get font preferences from font test results
+            List<FontTestResult> fontResults = fontTestResultRepository.findByUserId(userId);
+            Map<String, Object> fontPreferences = new HashMap<>();
+            if (!fontResults.isEmpty()) {
+                String preferred = fontResults.stream()
+                    .filter(r -> r.getReadabilityRating() >= 4)
+                    .map(FontTestResult::getFontName)
+                    .findFirst()
+                    .orElse("Arial");
+                fontPreferences.put("preferred", preferred);
+            }
+            response.put("fontPreferences", fontPreferences);
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error getting user profile for user " + userId, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Failed to get user profile: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/save-results")
+    public ResponseEntity<?> saveAssessmentResults(@RequestHeader("Authorization") String authHeader, 
+                                                  @RequestBody AssessmentResultsRequest request) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            String email = jwtUtil.extractUsername(token);
+            
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(404).body(new ErrorResponse("User not found"));
+            }
+
+            // Process and save assessment results
+            Map<String, Object> learningProfile = processLearningAssessment(request);
+            Map<String, Object> uiPreferences = processUIPreferences(request);
+            Map<String, Object> sessionPreferences = processSessionPreferences(request);
+
+            user.setLearningProfile(objectMapper.writeValueAsString(learningProfile));
+            user.setAssessmentScores(objectMapper.writeValueAsString(request.assessmentScores));
+            user.setUiPreferences(objectMapper.writeValueAsString(uiPreferences));
+            user.setSessionPreferences(objectMapper.writeValueAsString(sessionPreferences));
+            user.setProfileCompleted(true);
+
+            userRepository.save(user);
+
+            return ResponseEntity.ok(new SuccessResponse("Assessment results saved successfully"));
+
+        } catch (Exception e) {
+            logger.error("Error saving assessment results: ", e);
+            return ResponseEntity.status(500).body(new ErrorResponse("Failed to save assessment results"));
+        }
+    }
+
+    private Map<String, Object> processLearningAssessment(AssessmentResultsRequest request) {
+        Map<String, Object> profile = new HashMap<>();
+        
+        // Analyze focus game results to determine optimal session length
+        int focusScore = request.assessmentScores.getOrDefault("focusGame", 50);
+        int optimalDuration;
+        if (focusScore >= 80) {
+            optimalDuration = 25; // Can handle longer sessions
+        } else if (focusScore >= 60) {
+            optimalDuration = 15; // Medium sessions
+        } else {
+            optimalDuration = 10; // Shorter sessions work better
+        }
+        profile.put("optimalSessionDuration", optimalDuration);
+
+        // Analyze attention patterns from memory game
+        int attentionScore = request.assessmentScores.getOrDefault("memoryGame", 50);
+        profile.put("needsFrequentBreaks", attentionScore < 60);
+        profile.put("visualProcessingStrength", attentionScore >= 70);
+
+        // Analyze processing speed from reaction time games
+        int reactionScore = request.assessmentScores.getOrDefault("reactionGame", 50);
+        String preferredPace = reactionScore >= 70 ? "FAST" : reactionScore >= 40 ? "NORMAL" : "SLOW";
+        profile.put("preferredPace", preferredPace);
+
+        // Analyze learning style preferences from activity choices
+        String preferredLearningStyle = determineLearningStyle(request.activityPreferences);
+        profile.put("learningStyle", preferredLearningStyle);
+
+        return profile;
+    }
+
+    private Map<String, Object> processUIPreferences(AssessmentResultsRequest request) {
+        Map<String, Object> uiPrefs = new HashMap<>();
+        
+        // Determine UI complexity based on performance and age
+        int averageScore = request.assessmentScores.values().stream()
+                .mapToInt(Integer::intValue).sum() / request.assessmentScores.size();
+        
+        String complexity = averageScore >= 70 ? "NORMAL" : "SIMPLE";
+        uiPrefs.put("complexity", complexity);
+        
+        // Color preferences based on visual processing
+        int visualScore = request.assessmentScores.getOrDefault("visualGame", 50);
+        uiPrefs.put("highContrast", visualScore < 60);
+        uiPrefs.put("reducedAnimations", visualScore < 50);
+        
+        return uiPrefs;
+    }
+
+    private Map<String, Object> processSessionPreferences(AssessmentResultsRequest request) {
+        Map<String, Object> sessionPrefs = new HashMap<>();
+        
+        // Based on assessment results, determine optimal study settings
+        int focusScore = request.assessmentScores.getOrDefault("focusGame", 50);
+        
+        sessionPrefs.put("reminderFrequency", focusScore < 60 ? "HIGH" : "NORMAL");
+        sessionPrefs.put("motivationalPrompts", true);
+        sessionPrefs.put("progressCelebration", focusScore < 70 ? "FREQUENT" : "MODERATE");
+        
+        return sessionPrefs;
+    }
+
+    private String determineLearningStyle(Map<String, Integer> activityPreferences) {
+        if (activityPreferences == null) return "MIXED";
+        
+        int visualScore = activityPreferences.getOrDefault("visual", 0);
+        int auditoryScore = activityPreferences.getOrDefault("auditory", 0);
+        int kinestheticScore = activityPreferences.getOrDefault("kinesthetic", 0);
+        
+        if (visualScore > auditoryScore && visualScore > kinestheticScore) {
+            return "VISUAL";
+        } else if (auditoryScore > kinestheticScore) {
+            return "AUDITORY";
+        } else {
+            return "KINESTHETIC";
+        }
+    }
+
+    public static class AssessmentResultsRequest {
+        public Map<String, Integer> assessmentScores;
+        public Map<String, Integer> activityPreferences;
+        public String ageRange;
+        public String gradeLevel;
+        public String parentEmail;
+    }
+
+    public static class SuccessResponse {
+        public String message;
+
+        public SuccessResponse(String message) {
+            this.message = message;
+        }
+    }
+
+    public static class ErrorResponse {
+        public String message;
+
+        public ErrorResponse(String message) {
+            this.message = message;
+        }
+    }
+
+    private List<AssessmentQuestion> createSampleQuestions() {
+        List<AssessmentQuestion> questions = new ArrayList<>();
+        
+        // Attention/Focus Questions (ADHD indicators)
+        questions.add(new AssessmentQuestion(1, "AttentionSupport", "Focus", 
+            "I often have trouble paying attention to details or make careless mistakes", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(2, "AttentionSupport", "Concentration", 
+            "I find it difficult to sustain attention during tasks or activities", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(3, "AttentionSupport", "Organization", 
+            "I have difficulty organizing tasks and activities", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(4, "AttentionSupport", "Following Instructions", 
+            "I often fail to finish schoolwork or chores", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(5, "AttentionSupport", "Distraction", 
+            "I am easily distracted by external stimuli", 
+            "likert", null, 1.0));
+
+        // Social Communication Questions (Autism indicators)
+        questions.add(new AssessmentQuestion(6, "SocialCommunication", "Social Interaction", 
+            "I have difficulty with back-and-forth conversation", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(7, "SocialCommunication", "Nonverbal Communication", 
+            "I have trouble understanding nonverbal communication like facial expressions", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(8, "SocialCommunication", "Relationships", 
+            "I find it difficult to develop and maintain peer relationships", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(9, "SocialCommunication", "Social Awareness", 
+            "I have difficulty understanding social situations and cues", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(10, "SocialCommunication", "Repetitive Behaviors", 
+            "I engage in repetitive motor movements or speech", 
+            "likert", null, 1.0));
+
+        // Reading Difficulty Questions (Dyslexia indicators)
+        questions.add(new AssessmentQuestion(11, "ReadingSupport", "Reading Speed", 
+            "I read more slowly than others my age", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(12, "ReadingSupport", "Word Recognition", 
+            "I have trouble recognizing words I should know", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(13, "ReadingSupport", "Spelling", 
+            "I have difficulty with spelling", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(14, "ReadingSupport", "Reading Comprehension", 
+            "I have trouble understanding what I read", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(15, "ReadingSupport", "Letter Reversal", 
+            "I sometimes confuse letters like 'b' and 'd' or 'p' and 'q'", 
+            "likert", null, 1.0));
+
+        // Sensory Processing Questions
+        questions.add(new AssessmentQuestion(16, "SensoryProcessing", "Visual Sensitivity", 
+            "I am sensitive to bright lights or visual stimuli", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(17, "SensoryProcessing", "Auditory Sensitivity", 
+            "I am bothered by loud or unexpected sounds", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(18, "SensoryProcessing", "Tactile Sensitivity", 
+            "I am sensitive to textures or touch", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(19, "SensoryProcessing", "Processing Speed", 
+            "I need extra time to process information", 
+            "likert", null, 1.0));
+        questions.add(new AssessmentQuestion(20, "SensoryProcessing", "Sensory Overload", 
+            "I become overwhelmed in busy or noisy environments", 
+            "likert", null, 1.0));
+
+        return questions;
+    }
+
+    private AssessmentResults calculateNeurodivergentScores(NeurodivergentAssessmentSubmission submission) {
+        int attentionScore = 0;
+        int socialScore = 0;
+        int sensoryScore = 0;
+        int readingScore = 0;
+        int motorScore = 0;
+
+        // Calculate scores based on responses
+        for (AssessmentResponse response : submission.getResponses()) {
+            int questionId = response.getQuestionId();
+            int responseValue = (int) response.getResponse();
+
+            // Attention questions (1-5)
+            if (questionId >= 1 && questionId <= 5) {
+                attentionScore += responseValue;
+            }
+            // Social communication questions (6-10)
+            else if (questionId >= 6 && questionId <= 10) {
+                socialScore += responseValue;
+            }
+            // Reading questions (11-15)
+            else if (questionId >= 11 && questionId <= 15) {
+                readingScore += responseValue;
+            }
+            // Sensory processing questions (16-20)
+            else if (questionId >= 16 && questionId <= 20) {
+                sensoryScore += responseValue;
+            }
+        }
+
+        // Determine recommended preset based on scores
+        String recommendedPreset = determineUIPreset(attentionScore, socialScore, sensoryScore, readingScore);
+        
+        // Generate AI recommendations
+        String aiRecommendations = generateAIRecommendations(attentionScore, socialScore, sensoryScore, readingScore);
+
+        return new AssessmentResults(attentionScore, socialScore, sensoryScore, readingScore, motorScore, 
+                                   recommendedPreset, aiRecommendations);
+    }
+
+    private String determineUIPreset(int attentionScore, int socialScore, int sensoryScore, int readingScore) {
+        // High scores indicate greater support needs
+        boolean highAttentionSupport = attentionScore >= 15;
+        boolean highSocialSupport = socialScore >= 15;
+        boolean highSensorySupport = sensoryScore >= 15;
+        boolean highReadingSupport = readingScore >= 15;
+
+        if (highAttentionSupport && highSensorySupport) {
+            return "FOCUS_CALM"; // Minimal distractions, calm colors
+        } else if (highReadingSupport && highSensorySupport) {
+            return "READING_SUPPORT"; // Dyslexia-friendly fonts, high contrast
+        } else if (highSocialSupport) {
+            return "SOCIAL_SIMPLE"; // Clear social cues, simplified interface
+        } else if (highAttentionSupport) {
+            return "FOCUS_ENHANCED"; // Reduced visual clutter, attention guides
+        } else if (highSensorySupport) {
+            return "SENSORY_CALM"; // Soft colors, reduced animations
+        } else {
+            return "STANDARD_ADAPTIVE"; // Mild accommodations
+        }
+    }
+
+    private String generateAIRecommendations(int attentionScore, int socialScore, int sensoryScore, int readingScore) {
+        StringBuilder recommendations = new StringBuilder();
+        
+        if (attentionScore >= 15) {
+            recommendations.append("• Use shorter learning sessions (10-15 minutes) with frequent breaks\n");
+            recommendations.append("• Enable focus mode to minimize distractions\n");
+            recommendations.append("• Consider using timers and progress indicators\n");
+        }
+        
+        if (readingScore >= 15) {
+            recommendations.append("• Use dyslexia-friendly fonts like OpenDyslexic or Comic Neue\n");
+            recommendations.append("• Enable text-to-speech features\n");
+            recommendations.append("• Increase line spacing and use high contrast colors\n");
+        }
+        
+        if (socialScore >= 15) {
+            recommendations.append("• Use clear, explicit instructions and social cues\n");
+            recommendations.append("• Provide structured interaction opportunities\n");
+            recommendations.append("• Consider visual schedules and routine indicators\n");
+        }
+        
+        if (sensoryScore >= 15) {
+            recommendations.append("• Reduce visual animations and transitions\n");
+            recommendations.append("• Use calming color schemes\n");
+            recommendations.append("• Provide volume controls for audio content\n");
+        }
+        
+        if (recommendations.length() == 0) {
+            recommendations.append("• Your assessment indicates you would benefit from standard learning accommodations\n");
+            recommendations.append("• Consider exploring different learning styles and preferences\n");
+        }
+        
+        return recommendations.toString();
+    }
+
+    // Data classes for assessment submission
+    public static class NeurodivergentAssessmentSubmission {
+        private List<AssessmentResponse> responses;
+        private Object fontTestResults;
+
+        public List<AssessmentResponse> getResponses() { return responses; }
+        public void setResponses(List<AssessmentResponse> responses) { this.responses = responses; }
+        public Object getFontTestResults() { return fontTestResults; }
+        public void setFontTestResults(Object fontTestResults) { this.fontTestResults = fontTestResults; }
+    }
+
+    public static class FontTestRequest {
+        private List<FontResponse> fontResponses;
+        
+        public List<FontResponse> getFontResponses() { return fontResponses; }
+        public void setFontResponses(List<FontResponse> fontResponses) { this.fontResponses = fontResponses; }
+    }
+
+    public static class FontResponse {
+        private String fontName;
+        private int rating;
+        private String difficulty;
+        private List<String> symptoms;
+
+        public String getFontName() { return fontName; }
+        public void setFontName(String fontName) { this.fontName = fontName; }
+        public int getRating() { return rating; }
+        public void setRating(int rating) { this.rating = rating; }
+        public String getDifficulty() { return difficulty; }
+        public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
+        public List<String> getSymptoms() { return symptoms; }
+        public void setSymptoms(List<String> symptoms) { this.symptoms = symptoms; }
+    }
+
+    public static class AssessmentResults {
+        private int attentionScore;
+        private int socialCommunicationScore;
+        private int sensoryProcessingScore;
+        private int readingDifficultyScore;
+        private int motorSkillsScore;
+        private String recommendedPreset;
+        private String aiRecommendations;
+
+        public AssessmentResults(int attentionScore, int socialCommunicationScore, int sensoryProcessingScore,
+                               int readingDifficultyScore, int motorSkillsScore, String recommendedPreset,
+                               String aiRecommendations) {
+            this.attentionScore = attentionScore;
+            this.socialCommunicationScore = socialCommunicationScore;
+            this.sensoryProcessingScore = sensoryProcessingScore;
+            this.readingDifficultyScore = readingDifficultyScore;
+            this.motorSkillsScore = motorSkillsScore;
+            this.recommendedPreset = recommendedPreset;
+            this.aiRecommendations = aiRecommendations;
+        }
+
+        // Getters
+        public int getAttentionScore() { return attentionScore; }
+        public int getSocialCommunicationScore() { return socialCommunicationScore; }
+        public int getSensoryProcessingScore() { return sensoryProcessingScore; }
+        public int getReadingDifficultyScore() { return readingDifficultyScore; }
+        public int getMotorSkillsScore() { return motorSkillsScore; }
+        public String getRecommendedPreset() { return recommendedPreset; }
+        public String getAiRecommendations() { return aiRecommendations; }
+    }
+}

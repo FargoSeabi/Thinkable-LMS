@@ -1,0 +1,702 @@
+/* Comprehensive Adaptive UI System */
+/* This transforms the ENTIRE application based on neurodivergent needs */
+
+/* ===== DYSLEXIA-FRIENDLY ADAPTATIONS ===== */
+/* Import OpenDyslexic font */
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap');
+
+.dyslexia-adaptive {
+  /* Global font and spacing adjustments */
+  font-family: var(--font-family) !important;
+  font-size: var(--font-size-base) !important;
+  line-height: var(--line-height-base) !important;
+  letter-spacing: var(--letter-spacing-base) !important;
+  word-spacing: var(--adaptive-word-spacing, 3px);
+  /* Distinctive background pattern for visual identification */
+  background-color: var(--background-color) !important;
+  background-image: 
+    linear-gradient(45deg, transparent 24%, rgba(44, 90, 160, 0.02) 25%, rgba(44, 90, 160, 0.02) 26%, transparent 27%, transparent 74%, rgba(44, 90, 160, 0.02) 75%, rgba(44, 90, 160, 0.02) 76%, transparent 77%);
+  background-size: 60px 60px;
+}
+
+/* Apply dyslexia font to text elements only, preserve icons */
+.dyslexia-adaptive p,
+.dyslexia-adaptive h1, .dyslexia-adaptive h2, .dyslexia-adaptive h3,
+.dyslexia-adaptive h4, .dyslexia-adaptive h5, .dyslexia-adaptive h6,
+.dyslexia-adaptive span:not(.fa):not([class*="fa-"]),
+.dyslexia-adaptive div:not(.fa):not([class*="fa-"]),
+.dyslexia-adaptive button:not(.fa):not([class*="fa-"]),
+.dyslexia-adaptive input, .dyslexia-adaptive textarea,
+.dyslexia-adaptive label, .dyslexia-adaptive a:not(.fa):not([class*="fa-"]) {
+  font-family: 'OpenDyslexic', 'Comic Neue', 'Arial', sans-serif !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+}
+
+/* Preserve Font Awesome icons */
+.dyslexia-adaptive .fa,
+.dyslexia-adaptive [class*="fa-"],
+.dyslexia-adaptive i.fas,
+.dyslexia-adaptive i.far,
+.dyslexia-adaptive i.fab,
+.dyslexia-adaptive i.fal {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome" !important;
+}
+
+.dyslexia-adaptive p,
+.dyslexia-adaptive .adaptive-text {
+  margin-bottom: var(--adaptive-paragraph-spacing, 1.5rem);
+  max-width: var(--adaptive-text-max-width, 70ch);
+}
+
+.dyslexia-adaptive h1, .dyslexia-adaptive h2, .dyslexia-adaptive h3,
+.dyslexia-adaptive h4, .dyslexia-adaptive h5, .dyslexia-adaptive h6 {
+  font-family: 'OpenDyslexic', 'Comic Neue', 'Verdana', 'Arial', sans-serif !important;
+  font-weight: 800 !important;
+  color: var(--primary-color) !important;
+  margin-bottom: var(--adaptive-heading-spacing, 2rem) !important;
+  margin-top: calc(var(--adaptive-heading-spacing, 2rem) * 1.5) !important;
+  letter-spacing: 1px !important;
+  line-height: 1.3 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+/* Enhanced readability for ALL buttons and interactive elements - DYSLEXIA FRIENDLY */
+body.dyslexia-adaptive button:not(.fa):not([class*="fa-"]),
+body.dyslexia-adaptive .adaptive-button,
+body.dyslexia-adaptive .btn,
+body.dyslexia-adaptive .auth-button,
+body.dyslexia-adaptive .start-assessment-btn,
+body.dyslexia-adaptive .continue-btn,
+body.dyslexia-adaptive .back-btn,
+body.dyslexia-adaptive .choice-btn,
+body.dyslexia-adaptive .scale-option,
+body.dyslexia-adaptive .logout-btn,
+body.dyslexia-adaptive .card-button,
+body.dyslexia-adaptive input[type="button"],
+body.dyslexia-adaptive input[type="submit"] {
+  font-family: 'OpenDyslexic', 'Comic Neue', 'Verdana', 'Arial', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: calc(var(--font-size-base) * 1.2) !important;
+  padding: 15px 25px !important;
+  min-height: 48px !important;
+  border: 2px solid var(--primary-color) !important;
+  border-radius: 12px !important;
+  letter-spacing: 1px !important;
+  text-transform: none !important;
+  line-height: 1.4 !important;
+  background: linear-gradient(135deg, var(--primary-color) 0%, color-mix(in srgb, var(--primary-color) 85%, white) 100%) !important;
+  color: white !important;
+  box-shadow: 0 3px 12px rgba(44, 90, 160, 0.25) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Transform ALL cards and containers */
+.dyslexia-adaptive .card,
+.dyslexia-adaptive .adaptive-card,
+.dyslexia-adaptive .auth-card,
+.dyslexia-adaptive .intro-card,
+.dyslexia-adaptive .question-card,
+.dyslexia-adaptive .results-card,
+.dyslexia-adaptive .test-section {
+  border: 3px solid var(--primary-color) !important;
+  border-radius: 20px !important;
+  background: var(--background-color) !important;
+  box-shadow: 0 8px 25px rgba(44, 90, 160, 0.15) !important;
+  padding: calc(var(--spacing-unit) * 2) !important;
+}
+
+/* Transform ALL inputs and forms */
+.dyslexia-adaptive input,
+.dyslexia-adaptive .adaptive-input,
+.dyslexia-adaptive textarea,
+.dyslexia-adaptive select {
+  font-family: 'OpenDyslexic', 'Comic Neue', 'Verdana', 'Arial', sans-serif !important;
+  font-size: calc(var(--font-size-base) * 1.2) !important;
+  padding: calc(var(--spacing-unit) * 1.25) !important;
+  border: 3px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  background: var(--background-color) !important;
+  letter-spacing: 0.5px !important;
+}
+
+.dyslexia-adaptive input:focus,
+.dyslexia-adaptive textarea:focus {
+  border-color: var(--focus-color) !important;
+  outline: 4px solid rgba(255, 107, 53, 0.3) !important;
+  outline-offset: 2px !important;
+}
+
+/* Reading support features */
+.dyslexia-adaptive .reading-content {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 243, 205, 0.1) 1%,
+    rgba(255, 243, 205, 0.1) 99%,
+    transparent 100%
+  );
+}
+
+/* ===== ADHD-FRIENDLY ADAPTATIONS ===== */
+.adhd-adaptive {
+  /* Reduced visual complexity */
+  --adaptive-shadow-intensity: 0.03;
+  --adaptive-background-complexity: minimal;
+}
+
+.adhd-adaptive * {
+  /* Faster transitions to reduce distraction */
+  transition-duration: calc(var(--animation-duration) * 0.7) !important;
+}
+
+/* ADHD: Transform ALL buttons with enhanced focus - CLEAR AND ENGAGING */
+body.adhd-adaptive button:not(.fa):not([class*="fa-"]),
+body.adhd-adaptive .btn,
+body.adhd-adaptive .auth-button,
+body.adhd-adaptive .start-assessment-btn,
+body.adhd-adaptive .continue-btn,
+body.adhd-adaptive .back-btn,
+body.adhd-adaptive .choice-btn,
+body.adhd-adaptive .scale-option,
+body.adhd-adaptive .logout-btn,
+body.adhd-adaptive .card-button,
+body.adhd-adaptive input[type="button"],
+body.adhd-adaptive input[type="submit"] {
+  background: linear-gradient(135deg, #4a90e2 0%, #5cb85c 100%) !important;
+  border: 3px solid #4a90e2 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+  padding: 12px 20px !important;
+  transition: all 0.2s ease !important;
+}
+
+.adhd-adaptive button:hover,
+.adhd-adaptive .btn:hover {
+  transform: scale(1.05) translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.6) !important;
+}
+
+/* ADHD: Enhanced focus indicators */
+.adhd-adaptive *:focus {
+  outline: 5px solid #ff6b35 !important;
+  outline-offset: 3px !important;
+  z-index: 999 !important;
+}
+
+/* ADHD: Simplified cards */
+.adhd-adaptive .card,
+.adhd-adaptive .auth-card,
+.adhd-adaptive .intro-card,
+.adhd-adaptive .question-card,
+.adhd-adaptive .results-card {
+  border: 2px solid #4a90e2 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2) !important;
+  background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%) !important;
+}
+
+/* Enhanced focus states */
+.adhd-adaptive *:focus {
+  outline: var(--adaptive-focus-ring-size, 4px) solid var(--focus-color) !important;
+  outline-offset: 2px !important;
+  z-index: 1000 !important;
+  position: relative !important;
+}
+
+/* Reduced distractions for non-focused elements */
+.adhd-adaptive .adaptive-card:not(:hover):not(:focus-within) {
+  opacity: 0.8;
+  filter: saturate(0.8);
+}
+
+.adhd-adaptive .adaptive-card:hover,
+.adhd-adaptive .adaptive-card:focus-within {
+  opacity: 1;
+  filter: saturate(1);
+  transform: translateY(-2px);
+  z-index: 10;
+  position: relative;
+}
+
+/* Simplified navigation */
+.adhd-adaptive .navigation,
+.adhd-adaptive nav {
+  background: var(--background-color) !important;
+  border-bottom: 2px solid var(--border-color) !important;
+  box-shadow: none !important;
+}
+
+/* ===== FOCUS-CALM ADAPTATIONS ===== */
+.focus-adaptive {
+  /* Calming animations */
+  --animation-duration: 0.6s;
+}
+
+.focus-adaptive * {
+  transition: all var(--animation-duration) ease-out !important;
+}
+
+.focus-adaptive .adaptive-button:hover {
+  transform: translateY(-1px) !important;
+}
+
+.focus-adaptive .adaptive-card {
+  border: 1px solid var(--border-color);
+  transition: all var(--animation-duration) ease-out;
+}
+
+/* ===== AUTISM-FRIENDLY ADAPTATIONS ===== */
+.autism-adaptive {
+  /* Predictable, consistent layouts */
+  --adaptive-layout-consistency: strict;
+}
+
+.autism-adaptive .adaptive-button {
+  /* Clear, explicit button styling */
+  border: 2px solid transparent !important;
+  position: relative !important;
+}
+
+.autism-adaptive .adaptive-button::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border: 2px solid var(--primary-color);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--animation-duration) ease;
+}
+
+.autism-adaptive .adaptive-button:hover::before,
+.autism-adaptive .adaptive-button:focus::before {
+  opacity: 1;
+}
+
+/* Clear section separation */
+.autism-adaptive .adaptive-card,
+.autism-adaptive section {
+  margin-bottom: var(--adaptive-section-separation, 2rem) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Explicit interactive states */
+.autism-adaptive .adaptive-button:hover {
+  background: color-mix(in srgb, var(--primary-color) 90%, white) !important;
+  transform: none !important; /* Predictable, no surprise movements */
+}
+
+/* ===== SENSORY-FRIENDLY ADAPTATIONS ===== */
+.sensory-adaptive {
+  /* Reduced sensory overload */
+  --adaptive-color-intensity: 0.7;
+  --adaptive-motion-scale: 0.3;
+}
+
+.sensory-adaptive * {
+  /* Gentle, soft transitions */
+  transition-timing-function: ease-out !important;
+  transition-duration: calc(var(--animation-duration) * 1.5) !important;
+}
+
+.sensory-adaptive .adaptive-card {
+  box-shadow: var(--adaptive-shadow-softness, 0 2px 8px rgba(0, 0, 0, 0.04)) !important;
+}
+
+.sensory-adaptive .adaptive-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Muted colors for reduced sensory impact */
+.sensory-adaptive {
+  filter: saturate(var(--adaptive-color-saturation, 0.8));
+}
+
+/* ===== UNIVERSAL ACCESSIBILITY ENHANCEMENTS ===== */
+
+/* Skip links for keyboard navigation */
+.adaptive-skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--focus-color);
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.3s ease;
+}
+
+.adaptive-skip-link:focus {
+  top: 6px;
+}
+
+/* Enhanced error and success messaging */
+.adaptive-notification {
+  position: relative !important;
+  padding: calc(var(--spacing-unit) * 1.25) !important;
+  border-radius: var(--border-radius) !important;
+  margin: var(--spacing-unit) 0 !important;
+}
+
+.adaptive-notification::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: currentColor;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+/* Loading states that respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .adaptive-loading {
+    animation: none !important;
+  }
+  
+  .adaptive-loading::after {
+    content: 'Loading...';
+  }
+}
+
+.adaptive-loading {
+  position: relative;
+  opacity: 0.7;
+}
+
+.adaptive-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: adaptive-spin 1s linear infinite;
+}
+
+@keyframes adaptive-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== RESPONSIVE ADAPTATIONS ===== */
+
+/* Touch-friendly sizing for mobile */
+@media (max-width: 768px) {
+  .adaptive-button,
+  .adaptive-input {
+    min-height: 44px !important;
+    font-size: calc(var(--font-size-base) * 1.1) !important;
+  }
+  
+  .adaptive-card {
+    padding: calc(var(--spacing-unit) * 1.5) !important;
+    margin-bottom: calc(var(--spacing-unit) * 1.25) !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .adaptive-button,
+  .adaptive-input,
+  .adaptive-card {
+    border-width: 2px !important;
+    border-color: currentColor !important;
+  }
+  
+  .adaptive-text {
+    font-weight: 500 !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01s !important;
+    animation-delay: 0.01s !important;
+    transition-duration: 0.01s !important;
+  }
+  
+  .adaptive-button:hover,
+  .adaptive-card:hover {
+    transform: none !important;
+  }
+}
+
+/* ===== COMPONENT-SPECIFIC ADAPTATIONS ===== */
+
+/* Forms */
+.adaptive-form {
+  max-width: 600px;
+}
+
+.adaptive-form .adaptive-input {
+  width: 100% !important;
+  margin-bottom: calc(var(--spacing-unit) * 1.25) !important;
+}
+
+.adaptive-form label {
+  display: block !important;
+  margin-bottom: calc(var(--spacing-unit) * 0.5) !important;
+  font-weight: 600 !important;
+  color: var(--text-color) !important;
+}
+
+/* Navigation */
+.adaptive-nav {
+  background: var(--background-color) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.adaptive-nav a {
+  color: var(--text-color) !important;
+  text-decoration: none !important;
+  padding: calc(var(--spacing-unit) * 0.75) var(--spacing-unit) !important;
+  border-radius: var(--border-radius) !important;
+  transition: all var(--animation-duration) ease !important;
+}
+
+.adaptive-nav a:hover,
+.adaptive-nav a:focus {
+  background: var(--focus-color) !important;
+  color: var(--background-color) !important;
+}
+
+/* Tables */
+.adaptive-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-bottom: calc(var(--spacing-unit) * 2) !important;
+}
+
+.adaptive-table th,
+.adaptive-table td {
+  padding: calc(var(--spacing-unit) * 0.75) var(--spacing-unit) !important;
+  border: 1px solid var(--border-color) !important;
+  text-align: left !important;
+}
+
+.adaptive-table th {
+  background: var(--primary-color) !important;
+  color: var(--background-color) !important;
+  font-weight: 600 !important;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .dyslexia-adaptive,
+  .adhd-adaptive,
+  .focus-adaptive,
+  .autism-adaptive,
+  .sensory-adaptive {
+    font-family: 'Times New Roman', serif !important;
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+  
+  .adaptive-button {
+    border: 1px solid #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+}
+
+/* ===== COMPREHENSIVE UI TRANSFORMATIONS FOR ALL APP COMPONENTS ===== */
+
+/* ===== COMPREHENSIVE TEXT STYLING FOR ALL PRESETS ===== */
+
+/* ADHD/FOCUS: Apply focus-enhanced text effects to ALL text elements */
+body.adhd-adaptive,
+body.focus-adaptive,
+body.adhd-adaptive h1, body.adhd-adaptive h2, body.adhd-adaptive h3,
+body.adhd-adaptive h4, body.adhd-adaptive h5, body.adhd-adaptive h6,
+body.focus-adaptive h1, body.focus-adaptive h2, body.focus-adaptive h3,
+body.focus-adaptive h4, body.focus-adaptive h5, body.focus-adaptive h6,
+body.adhd-adaptive p, body.adhd-adaptive span:not(.fa):not([class*="fa-"]),
+body.focus-adaptive p, body.focus-adaptive span:not(.fa):not([class*="fa-"]),
+body.adhd-adaptive div:not(.fa):not([class*="fa-"]),
+body.focus-adaptive div:not(.fa):not([class*="fa-"]),
+body.adhd-adaptive label, body.adhd-adaptive a:not(.fa):not([class*="fa-"]),
+body.focus-adaptive label, body.focus-adaptive a:not(.fa):not([class*="fa-"]),
+body.adhd-adaptive .adaptive-text, body.adhd-adaptive .adaptive-heading,
+body.focus-adaptive .adaptive-text, body.focus-adaptive .adaptive-heading {
+  font-family: var(--font-family) !important;
+  color: var(--text-color) !important;
+  letter-spacing: var(--letter-spacing-base) !important;
+  line-height: var(--line-height-base) !important;
+}
+
+body.adhd-adaptive h1, body.adhd-adaptive h2, body.adhd-adaptive h3,
+body.adhd-adaptive h4, body.adhd-adaptive h5, body.adhd-adaptive h6,
+body.focus-adaptive h1, body.focus-adaptive h2, body.focus-adaptive h3,
+body.focus-adaptive h4, body.focus-adaptive h5, body.focus-adaptive h6 {
+  color: var(--primary-color) !important;
+  font-weight: 600 !important;
+  margin-bottom: 1.5rem !important;
+  text-shadow: 0 1px 2px rgba(74, 144, 226, 0.1) !important;
+}
+
+/* AUTISM: Apply autism-friendly text effects to ALL text elements */
+body.autism-adaptive,
+body.autism-adaptive h1, body.autism-adaptive h2, body.autism-adaptive h3,
+body.autism-adaptive h4, body.autism-adaptive h5, body.autism-adaptive h6,
+body.autism-adaptive p, body.autism-adaptive span:not(.fa):not([class*="fa-"]),
+body.autism-adaptive div:not(.fa):not([class*="fa-"]),
+body.autism-adaptive label, body.autism-adaptive a:not(.fa):not([class*="fa-"]),
+body.autism-adaptive .adaptive-text, body.autism-adaptive .adaptive-heading {
+  font-family: 'Roboto', Arial, sans-serif !important;
+  color: var(--text-color) !important;
+  letter-spacing: var(--letter-spacing-base) !important;
+  line-height: var(--line-height-base) !important;
+}
+
+body.autism-adaptive h1, body.autism-adaptive h2, body.autism-adaptive h3,
+body.autism-adaptive h4, body.autism-adaptive h5, body.autism-adaptive h6 {
+  color: var(--primary-color) !important;
+  font-weight: 500 !important;
+  margin-bottom: 2rem !important;
+  text-transform: none !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* SENSORY: Transform ALL buttons and components - GENTLE AND CALMING */
+/* SENSORY: Apply calming text effects to ALL text elements */
+body.sensory-adaptive,
+body.sensory-adaptive h1, body.sensory-adaptive h2, body.sensory-adaptive h3,
+body.sensory-adaptive h4, body.sensory-adaptive h5, body.sensory-adaptive h6,
+body.sensory-adaptive p, body.sensory-adaptive span:not(.fa):not([class*="fa-"]),
+body.sensory-adaptive div:not(.fa):not([class*="fa-"]),
+body.sensory-adaptive label, body.sensory-adaptive a:not(.fa):not([class*="fa-"]),
+body.sensory-adaptive .adaptive-text, body.sensory-adaptive .adaptive-heading {
+  font-family: 'Source Sans Pro', system-ui, sans-serif !important;
+  color: var(--text-color) !important;
+  letter-spacing: 0.1px !important;
+  line-height: 1.7 !important;
+  text-shadow: 0 0.5px 1px rgba(69, 123, 157, 0.1) !important; /* Subtle soft shadow for depth */
+}
+
+body.sensory-adaptive h1, body.sensory-adaptive h2, body.sensory-adaptive h3,
+body.sensory-adaptive h4, body.sensory-adaptive h5, body.sensory-adaptive h6 {
+  color: var(--primary-color) !important;
+  font-weight: 400 !important; /* Lighter weight for calming effect */
+  text-shadow: 0 1px 2px rgba(142, 154, 175, 0.2) !important; /* More prominent shadow for headings */
+}
+
+body.sensory-adaptive button:not(.fa):not([class*="fa-"]),
+body.sensory-adaptive .btn,
+body.sensory-adaptive .auth-button,
+body.sensory-adaptive .start-assessment-btn,
+body.sensory-adaptive .continue-btn,
+body.sensory-adaptive .back-btn,
+body.sensory-adaptive .choice-btn,
+body.sensory-adaptive .scale-option,
+body.sensory-adaptive .logout-btn,
+body.sensory-adaptive .card-button,
+body.sensory-adaptive input[type="button"],
+body.sensory-adaptive input[type="submit"] {
+  background: linear-gradient(135deg, #e8f4f8 0%, #d6eaf8 100%) !important;
+  border: 1px solid #a8dadc !important;
+  border-radius: 20px !important;
+  color: #457b9d !important;
+  font-family: 'Source Sans Pro', system-ui, sans-serif !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 8px rgba(168, 218, 220, 0.15) !important;
+  transition: all 0.8s ease-out !important;
+  font-size: 16px !important;
+  padding: 12px 20px !important;
+  text-shadow: 0 0.5px 1px rgba(69, 123, 157, 0.1) !important;
+}
+
+.sensory-adaptive .card,
+.sensory-adaptive .auth-card,
+.sensory-adaptive .intro-card,
+.sensory-adaptive .question-card,
+.sensory-adaptive .results-card {
+  border: 1px solid #dde5e9 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  background: linear-gradient(145deg, #f8f8f8 0%, #ffffff 100%) !important;
+}
+
+/* AUTISM: Transform ALL buttons and components - CLEAR AND PREDICTABLE */
+body.autism-adaptive button:not(.fa):not([class*="fa-"]),
+body.autism-adaptive .btn,
+body.autism-adaptive .auth-button,
+body.autism-adaptive .start-assessment-btn,
+body.autism-adaptive .continue-btn,
+body.autism-adaptive .back-btn,
+body.autism-adaptive .choice-btn,
+body.autism-adaptive .scale-option,
+body.autism-adaptive .logout-btn,
+body.autism-adaptive .card-button,
+body.autism-adaptive input[type="button"],
+body.autism-adaptive input[type="submit"] {
+  background: linear-gradient(135deg, #5d4e75 0%, #7b68ee 100%) !important;
+  border: 2px solid #5d4e75 !important;
+  border-radius: 8px !important;
+  color: white !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  box-shadow: 0 3px 8px rgba(93, 78, 117, 0.25) !important;
+  padding: 12px 20px !important;
+  transition: all 0.3s ease !important;
+}
+
+.autism-adaptive .card,
+.autism-adaptive .auth-card,
+.autism-adaptive .intro-card,
+.autism-adaptive .question-card,
+.autism-adaptive .results-card {
+  border: 3px solid #5d4e75 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 20px rgba(93, 78, 117, 0.2) !important;
+  background: #ffffff !important;
+  position: relative !important;
+}
+
+/* FOCUS: Transform ALL buttons and components - ENHANCED FOCUS */
+body.focus-adaptive button:not(.fa):not([class*="fa-"]),
+body.focus-adaptive .btn,
+body.focus-adaptive .auth-button,
+body.focus-adaptive .start-assessment-btn,
+body.focus-adaptive .continue-btn,
+body.focus-adaptive .back-btn,
+body.focus-adaptive .choice-btn,
+body.focus-adaptive .scale-option,
+body.focus-adaptive .logout-btn,
+body.focus-adaptive .card-button,
+body.focus-adaptive input[type="button"],
+body.focus-adaptive input[type="submit"] {
+  background: linear-gradient(135deg, #6c757d 0%, #20c997 100%) !important;
+  border: 2px solid #20c997 !important;
+  border-radius: 12px !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 3px 12px rgba(32, 201, 151, 0.25) !important;
+  padding: 12px 20px !important;
+  transition: all 0.2s ease !important;
+}
+
+.focus-adaptive .card,
+.focus-adaptive .auth-card,
+.focus-adaptive .intro-card,
+.focus-adaptive .question-card,
+.focus-adaptive .results-card {
+  border: 2px solid #20c997 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(32, 201, 151, 0.15) !important;
+  background: #f1f3f4 !important;
+}

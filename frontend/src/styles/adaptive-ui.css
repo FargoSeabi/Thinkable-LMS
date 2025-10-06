@@ -1,0 +1,663 @@
+/* Adaptive UI System - Base Styles */
+
+/* Default CSS Variables - will be overridden by UI presets */
+:root {
+  /* Colors */
+  --primary-color: #2c5aa0;
+  --secondary-color: #28a745;
+  --background-color: #ffffff;
+  --text-color: #2c3e50;
+  --border-color: #e2e8f0;
+  --focus-color: #007bff;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --error-color: #dc3545;
+  
+  /* Layout */
+  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --spacing-unit: 1rem;
+  
+  /* Typography */
+  --font-family: Arial, sans-serif;
+  --font-size-base: 16px;
+  --line-height-base: 1.6;
+  --letter-spacing-base: 0;
+  
+  /* Animation & Interaction */
+  --animation-duration: 0.3s;
+  --focus-indicator-width: 2px;
+}
+
+/* Base typography using adaptive variables */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  transition: all var(--animation-duration) ease;
+}
+
+/* Adaptive focus indicators */
+*:focus {
+  outline: var(--focus-indicator-width) solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+/* Adaptive buttons */
+.adaptive-button {
+  background: var(--primary-color);
+  color: var(--background-color);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  letter-spacing: var(--letter-spacing-base);
+  cursor: pointer;
+  transition: all var(--animation-duration) ease;
+  box-shadow: var(--card-shadow);
+}
+
+.adaptive-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.adaptive-button:active {
+  transform: translateY(0);
+}
+
+.adaptive-button-secondary {
+  background: var(--secondary-color);
+}
+
+.adaptive-button-outline {
+  background: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+/* Adaptive cards */
+.adaptive-card {
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-unit);
+  margin-bottom: var(--spacing-unit);
+  box-shadow: var(--card-shadow);
+  transition: all var(--animation-duration) ease;
+}
+
+.adaptive-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Adaptive form elements */
+.adaptive-input {
+  width: 100%;
+  padding: calc(var(--spacing-unit) * 0.75);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  letter-spacing: var(--letter-spacing-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  transition: all var(--animation-duration) ease;
+}
+
+.adaptive-input:focus {
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 var(--focus-indicator-width) rgba(0, 123, 255, 0.25);
+}
+
+/* Adaptive notifications */
+.adaptive-notification {
+  padding: var(--spacing-unit);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-unit);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+}
+
+.adaptive-notification-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
+}
+
+.adaptive-notification-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: var(--warning-color);
+  border: 1px solid var(--warning-color);
+}
+
+.adaptive-notification-error {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
+}
+
+/* Adaptive text elements */
+.adaptive-heading {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  margin-bottom: calc(var(--spacing-unit) * 0.75);
+  line-height: calc(var(--line-height-base) * 0.9);
+  letter-spacing: var(--letter-spacing-base);
+}
+
+.adaptive-heading-1 {
+  font-size: calc(var(--font-size-base) * 2.5);
+  margin-bottom: var(--spacing-unit);
+}
+
+.adaptive-heading-2 {
+  font-size: calc(var(--font-size-base) * 2);
+  margin-bottom: calc(var(--spacing-unit) * 0.875);
+}
+
+.adaptive-heading-3 {
+  font-size: calc(var(--font-size-base) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 0.75);
+}
+
+.adaptive-text {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+  color: var(--text-color);
+  margin-bottom: calc(var(--spacing-unit) * 0.75);
+}
+
+/* High contrast mode adaptations */
+[data-color-scheme="high-contrast"] {
+  --border-color: #333333;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-color-scheme="high-contrast"] .adaptive-button {
+  border: 2px solid var(--text-color);
+}
+
+[data-color-scheme="high-contrast"] .adaptive-input {
+  border-width: 3px;
+}
+
+/* High contrast class implementation for accessibility toggle */
+.high-contrast {
+  --primary-color: #000000 !important;
+  --secondary-color: #000000 !important;
+  --background-color: #ffffff !important;
+  --text-color: #000000 !important;
+  --border-color: #000000 !important;
+  --focus-color: #0000ff !important;
+  --success-color: #008000 !important;
+  --warning-color: #ff8c00 !important;
+  --error-color: #ff0000 !important;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.high-contrast * {
+  border-color: #000000 !important;
+}
+
+.high-contrast .adaptive-button {
+  border: 3px solid #000000 !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.high-contrast .adaptive-button:hover {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+.high-contrast .adaptive-input {
+  border: 3px solid #000000 !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.high-contrast .adaptive-card {
+  border: 2px solid #000000 !important;
+  background: #ffffff !important;
+}
+
+.high-contrast .nav-item {
+  color: #000000 !important;
+}
+
+.high-contrast .user-greeting {
+  color: #000000 !important;
+}
+
+.high-contrast .current-page {
+  color: #000000 !important;
+}
+
+.high-contrast .brand-link {
+  color: #000000 !important;
+}
+
+/* Dark mode adaptations */
+[data-color-scheme="dark"] {
+  --background-color: #1a1a1a;
+  --text-color: #e0e0e0;
+  --border-color: #404040;
+  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01s !important;
+    transition-duration: 0.01s !important;
+  }
+  
+  .adaptive-button:hover,
+  .adaptive-card:hover {
+    transform: none;
+  }
+}
+
+/* Large text preferences */
+@media (prefers-font-size: large) {
+  :root {
+    --font-size-base: 20px;
+    --spacing-unit: 1.25rem;
+  }
+}
+
+/* High contrast preferences */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #000000;
+    --focus-indicator-width: 3px;
+  }
+  
+  .adaptive-button,
+  .adaptive-input,
+  .adaptive-card {
+    border-width: 2px;
+  }
+}
+
+/* Responsive typography scaling */
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: calc(var(--font-size-base) * 0.9);
+    --spacing-unit: calc(var(--spacing-unit) * 0.875);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-base: calc(var(--font-size-base) * 0.85);
+    --spacing-unit: calc(var(--spacing-unit) * 0.75);
+  }
+}
+
+/* Dyslexia-friendly text settings */
+.dyslexia-friendly {
+  font-family: 'OpenDyslexic', 'Comic Neue', Arial, sans-serif !important;
+  font-size: calc(var(--font-size-base) * 1.1) !important;
+  line-height: calc(var(--line-height-base) * 1.2) !important;
+  letter-spacing: 1px !important;
+  word-spacing: 2px !important;
+}
+
+/* Apply dyslexia-friendly font to all text when toggle is active, but exclude icons */
+.dyslexia-friendly *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not([class*="Icon"]) {
+  font-family: 'OpenDyslexic', 'Comic Neue', Arial, sans-serif !important;
+}
+
+.dyslexia-friendly body {
+  font-family: 'OpenDyslexic', 'Comic Neue', Arial, sans-serif !important;
+  font-size: calc(var(--font-size-base) * 1.1) !important;
+  line-height: calc(var(--line-height-base) * 1.2) !important;
+  letter-spacing: 1px !important;
+  word-spacing: 2px !important;
+}
+
+.dyslexia-friendly .nav-item,
+.dyslexia-friendly .user-greeting,
+.dyslexia-friendly .current-page,
+.dyslexia-friendly .brand-link,
+.dyslexia-friendly .adaptive-button,
+.dyslexia-friendly .adaptive-input,
+.dyslexia-friendly .adaptive-text,
+.dyslexia-friendly .adaptive-heading {
+  font-family: 'OpenDyslexic', 'Comic Neue', Arial, sans-serif !important;
+}
+
+/* ADHD-friendly focus enhancements */
+.adhd-friendly {
+  --focus-indicator-width: 4px;
+  --animation-duration: 0.2s;
+  --primary-color: #0066cc !important;
+  --secondary-color: #28a745 !important;
+  --border-color: #333333 !important;
+  --card-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.adhd-friendly .adaptive-button:focus,
+.adhd-friendly .adaptive-input:focus {
+  box-shadow: 0 0 0 var(--focus-indicator-width) var(--focus-color),
+              0 0 0 calc(var(--focus-indicator-width) + 2px) rgba(255, 255, 255, 0.5);
+}
+
+/* Reduce visual clutter for ADHD */
+.adhd-friendly .adaptive-card {
+  border: 2px solid var(--border-color) !important;
+  background: var(--background-color) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.adhd-friendly .adaptive-button {
+  border: 2px solid var(--primary-color) !important;
+  font-weight: 600 !important;
+  padding: calc(var(--spacing-unit) * 0.875) calc(var(--spacing-unit) * 1.75) !important;
+}
+
+.adhd-friendly .adaptive-button:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3) !important;
+}
+
+/* Enhanced navigation for ADHD */
+.adhd-friendly .nav-item {
+  border: 2px solid transparent !important;
+  font-weight: 600 !important;
+}
+
+.adhd-friendly .nav-item:hover,
+.adhd-friendly .nav-item:focus {
+  border-color: var(--primary-color) !important;
+  background: rgba(0, 102, 204, 0.1) !important;
+}
+
+.adhd-friendly .nav-item.active {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3) !important;
+}
+
+/* Clear text hierarchy for ADHD */
+.adhd-friendly .adaptive-heading {
+  border-left: 4px solid var(--primary-color) !important;
+  padding-left: calc(var(--spacing-unit) * 0.75) !important;
+  font-weight: 700 !important;
+}
+
+/* Minimize distractions */
+.adhd-friendly * {
+  transition-duration: 0.1s !important;
+}
+
+.adhd-friendly .adaptive-notification {
+  border-width: 3px !important;
+  font-weight: 600 !important;
+}
+
+/* Autism-friendly simplified interactions */
+.autism-friendly {
+  --animation-duration: 0.4s;
+  --border-radius: 4px;
+  --primary-color: #5d4e75 !important;
+  --secondary-color: #7b68ee !important;
+  --background-color: #ffffff !important;
+  --text-color: #2c3e50 !important;
+  --border-color: #cccccc !important;
+  --focus-color: #7b68ee !important;
+  --success-color: #32cd32 !important;
+  --warning-color: #ffa500 !important;
+  --error-color: #ff6347 !important;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.autism-friendly .adaptive-button:hover {
+  transform: none;
+  background-color: color-mix(in srgb, var(--primary-color) 90%, white);
+}
+
+/* Predictable and consistent layout for autism */
+.autism-friendly .adaptive-card {
+  border: 2px solid var(--border-color) !important;
+  background: var(--background-color) !important;
+  border-radius: 4px !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.autism-friendly .adaptive-button {
+  border: 2px solid var(--primary-color) !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5) !important;
+  transition: background-color 0.4s ease, color 0.4s ease !important;
+}
+
+.autism-friendly .adaptive-button:hover {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  transform: none !important;
+}
+
+.autism-friendly .adaptive-button:active {
+  transform: none !important;
+}
+
+/* Clear navigation structure for autism */
+.autism-friendly .nav-item {
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.4s ease, color 0.4s ease !important;
+}
+
+.autism-friendly .nav-item:hover {
+  background: rgba(123, 104, 238, 0.1) !important;
+  transform: none !important;
+}
+
+.autism-friendly .nav-item.active {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+/* Simple, clear text presentation */
+.autism-friendly .adaptive-heading {
+  font-weight: 600 !important;
+  color: var(--primary-color) !important;
+  border-bottom: 2px solid var(--border-color) !important;
+  padding-bottom: calc(var(--spacing-unit) * 0.25) !important;
+  margin-bottom: calc(var(--spacing-unit) * 0.75) !important;
+}
+
+.autism-friendly .adaptive-input {
+  border: 2px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  transition: border-color 0.4s ease !important;
+}
+
+.autism-friendly .adaptive-input:focus {
+  border-color: var(--focus-color) !important;
+  box-shadow: 0 0 0 2px rgba(123, 104, 238, 0.2) !important;
+}
+
+/* Remove unpredictable animations */
+.autism-friendly .adaptive-card:hover {
+  transform: none !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+/* Clear notification styles */
+.autism-friendly .adaptive-notification {
+  border-radius: 4px !important;
+  border-width: 2px !important;
+  font-weight: 500 !important;
+}
+
+/* Simplified color coding for status */
+.autism-friendly .adaptive-notification-success {
+  background-color: rgba(50, 205, 50, 0.1) !important;
+  border-color: var(--success-color) !important;
+  color: #228b22 !important;
+}
+
+.autism-friendly .adaptive-notification-warning {
+  background-color: rgba(255, 165, 0, 0.1) !important;
+  border-color: var(--warning-color) !important;
+  color: #e6940b !important;
+}
+
+.autism-friendly .adaptive-notification-error {
+  background-color: rgba(255, 99, 71, 0.1) !important;
+  border-color: var(--error-color) !important;
+  color: #e53e3e !important;
+}
+
+/* Sensory-friendly minimal stimulation */
+.sensory-friendly {
+  --animation-duration: 0.6s;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  --primary-color: #8e9aaf !important;
+  --secondary-color: #a8dadc !important;
+  --background-color: #f9f9f9 !important;
+  --text-color: #457b9d !important;
+  --border-color: #e8e8e8 !important;
+  --focus-color: #a8dadc !important;
+  --success-color: #b5d3b7 !important;
+  --warning-color: #f4c2a1 !important;
+  --error-color: #e8b4b8 !important;
+  --border-radius: 20px !important;
+}
+
+.sensory-friendly .adaptive-button:hover,
+.sensory-friendly .adaptive-card:hover {
+  transform: translateY(-1px);
+}
+
+/* Ultra-soft color palette for sensory processing */
+.sensory-friendly .adaptive-card {
+  background: var(--background-color) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  transition: all 0.8s ease !important;
+}
+
+.sensory-friendly .adaptive-button {
+  background: linear-gradient(145deg, #f0f0f0, #e0e0e0) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  transition: all 0.6s ease !important;
+  font-weight: 400 !important;
+}
+
+.sensory-friendly .adaptive-button:hover {
+  background: linear-gradient(145deg, #e8e8e8, #d8d8d8) !important;
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.sensory-friendly .adaptive-button:active {
+  transform: none !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Gentle navigation for sensory sensitivity */
+.sensory-friendly .nav-item {
+  background: rgba(168, 218, 220, 0.1) !important;
+  color: var(--text-color) !important;
+  border-radius: calc(var(--border-radius) * 0.7) !important;
+  transition: all 0.6s ease !important;
+  font-weight: 400 !important;
+}
+
+.sensory-friendly .nav-item:hover {
+  background: rgba(168, 218, 220, 0.2) !important;
+  transform: none !important;
+}
+
+.sensory-friendly .nav-item.active {
+  background: var(--primary-color) !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+/* Soft text presentation */
+.sensory-friendly .adaptive-heading {
+  color: var(--primary-color) !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+  border: none !important;
+  background: linear-gradient(90deg, rgba(168, 218, 220, 0.1), transparent) !important;
+  padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 0.75) !important;
+  border-radius: calc(var(--border-radius) * 0.5) !important;
+}
+
+.sensory-friendly .adaptive-input {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: calc(var(--border-radius) * 0.6) !important;
+  color: var(--text-color) !important;
+  transition: all 0.6s ease !important;
+}
+
+.sensory-friendly .adaptive-input:focus {
+  border-color: var(--focus-color) !important;
+  box-shadow: 0 0 0 3px rgba(168, 218, 220, 0.1) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Minimal shadows and effects */
+.sensory-friendly .adaptive-card:hover {
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Ultra-gentle notifications */
+.sensory-friendly .adaptive-notification {
+  border-radius: calc(var(--border-radius) * 0.7) !important;
+  border-width: 1px !important;
+  font-weight: 400 !important;
+  box-shadow: none !important;
+}
+
+.sensory-friendly .adaptive-notification-success {
+  background: linear-gradient(145deg, rgba(181, 211, 183, 0.1), rgba(181, 211, 183, 0.05)) !important;
+  border-color: rgba(181, 211, 183, 0.3) !important;
+  color: #5a8a5c !important;
+}
+
+.sensory-friendly .adaptive-notification-warning {
+  background: linear-gradient(145deg, rgba(244, 194, 161, 0.1), rgba(244, 194, 161, 0.05)) !important;
+  border-color: rgba(244, 194, 161, 0.3) !important;
+  color: #a67c52 !important;
+}
+
+.sensory-friendly .adaptive-notification-error {
+  background: linear-gradient(145deg, rgba(232, 180, 184, 0.1), rgba(232, 180, 184, 0.05)) !important;
+  border-color: rgba(232, 180, 184, 0.3) !important;
+  color: #a66b6f !important;
+}
+
+/* Remove all jarring effects */
+.sensory-friendly * {
+  transition-timing-function: ease-out !important;
+}
+
+/* Soft focus indicators */
+.sensory-friendly *:focus {
+  outline: 2px solid rgba(168, 218, 220, 0.5) !important;
+  outline-offset: 2px !important;
+}

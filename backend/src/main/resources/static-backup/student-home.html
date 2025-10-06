@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkAble Student Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="custom-modals.js"></script>
+</head>
+<body>
+    <div class="student-home-container">
+        <header class="student-header">
+            <h1><i class="fas fa-graduation-cap"></i> Welcome, <span id="studentName">Student</span>!</h1>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </header>
+
+        <!-- AI Recommendations Section -->
+        <div class="ai-recommendations" id="aiRecommendations" style="display: none;">
+            <div class="ai-header">
+                <h2><i class="fas fa-brain"></i> Your Personalized Learning Plan</h2>
+                <div class="ai-badge">AI-Powered</div>
+            </div>
+            <div class="recommendations-grid" id="recommendationsGrid">
+                <!-- AI recommendations will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Study Insights Section -->
+        <div class="study-insights" id="studyInsights" style="display: none;">
+            <h3><i class="fas fa-lightbulb"></i> Study Insights for You</h3>
+            <div class="insights-container" id="insightsContainer">
+                <!-- Study insights will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Assessment Status Banner -->
+        <div class="assessment-status-banner" id="assessmentBanner" style="display: none;">
+            <!-- Assessment banner content will be loaded here -->
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card assessment-card" id="assessmentCard" onclick="window.location.href='assessment.html'" style="display: none;">
+                <i class="fas fa-brain"></i>
+                <h3>Learning Assessment</h3>
+                <p>Personalize your learning experience with our adaptive assessment.</p>
+                <div class="card-badge new-badge">New!</div>
+            </div>
+            <div class="dashboard-card content-discovery-card" onclick="window.location.href='content-discovery.html'">
+                <i class="fas fa-search"></i>
+                <h3>Discover Content</h3>
+                <p>Find accessible learning materials tailored to your needs.</p>
+                <div class="card-badge new-badge">AI-Powered!</div>
+            </div>
+            <div class="dashboard-card tutor-discovery-card" onclick="window.location.href='tutor-discovery.html'">
+                <i class="fas fa-user-graduate"></i>
+                <h3>Find Tutors</h3>
+                <p>Connect with verified tutors who understand your learning style.</p>
+                <div class="card-badge new-badge">New!</div>
+            </div>
+            <div class="dashboard-card lesson-card" onclick="window.location.href='lessons.html'">
+                <i class="fas fa-book-open"></i>
+                <h3>Lessons</h3>
+                <p>Learn new concepts with interactive lessons and quizzes.</p>
+            </div>
+            <div class="dashboard-card progress-card" onclick="window.location.href='progress.html'">
+                <i class="fas fa-chart-line"></i>
+                <h3>Progress</h3>
+                <p>Track your learning journey.</p>
+            </div>
+            <div class="dashboard-card settings-card" onclick="window.location.href='settings.html'">
+                <i class="fas fa-cog"></i>
+                <h3>Settings</h3>
+                <p>Customize your experience.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* AI Recommendations Styling */
+        .ai-recommendations {
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .ai-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .ai-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card-content h4 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .card-content p {
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+        }
+
+        .card-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .card-content li {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+
+        .recommended-lessons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mini-lesson-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .mini-lesson-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lesson-title {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .start-timer-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-timer-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .motivation-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        /* Study Insights Styling */
+        .study-insights {
+            margin: 30px 0;
+        }
+
+        .study-insights h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .insights-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .insight-category {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .insight-text {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* Assessment Status Banner */
+        .assessment-status-banner {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .assessment-incomplete {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff9a9e 100%);
+            color: white;
+        }
+
+        .assessment-complete {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .banner-content h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .banner-content p {
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+        }
+
+        .banner-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .banner-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        /* Assessment Card Styling */
+        .assessment-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .assessment-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Content Discovery Card */
+        .content-discovery-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-discovery-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Tutor Discovery Card */
+        .tutor-discovery-card {
+            background: linear-gradient(135deg, #2d5aa0 0%, #4f8cc9 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tutor-discovery-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(45, 90, 160, 0.3);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .new-badge {
+            background: #4ecdc4;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Success Message Styling */
+        .success-message {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            animation: slideIn 0.5s ease;
+        }
+
+        .success-message h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .success-message p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ai-recommendations {
+                margin: 20px 0;
+                padding: 20px;
+            }
+
+            .ai-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .insights-container {
+                grid-template-columns: 1fr;
+            }
+
+            .assessment-status-banner {
+                margin: 15px 0;
+                padding: 15px;
+            }
+
+            .banner-content h3 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+
+    <script src="/config.js"></script>
+    <script src="/auth.js"></script>
+    <!-- Disable all scripts that have DOMContentLoaded listeners to prevent conflicts -->
+    <!--<script src="adaptive-ui.js"></script>-->
+    <!--<script src="individual-profile.js"></script>-->
+    <!--<script src="neurodivergent-support.js"></script>-->
+    <!--<script src="adaptive-tool-ecosystem.js"></script>-->
+    <!--<script src="personal-pattern-recognition.js"></script>-->
+    <script src="/timer.js"></script>
+    <!--<script src="/script.js"></script>--> <!-- Disabled: conflicts with dashboard initialization -->
+    <script>
+        // Prevent multiple initializations
+        let dashboardInitialized = false;
+        
+        // Essential utility functions from script.js
+        function toggleDyslexiaMode(enabled) {
+            if (enabled && !document.querySelector('link[href="https://fonts.cdnfonts.com/css/open-dyslexic"]')) {
+                const link = document.createElement('link');
+                link.href = 'https://fonts.cdnfonts.com/css/open-dyslexic';
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            }
+            document.body.classList.toggle('dyslexia-mode', enabled);
+            localStorage.setItem('dyslexiaMode', enabled);
+        }
+
+        function toggleHighContrastMode(enabled) {
+            document.body.classList.toggle('high-contrast', enabled);
+            localStorage.setItem('highContrastMode', enabled);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if (dashboardInitialized) {
+                console.log('Dashboard already initialized, skipping');
+                return;
+            }
+            dashboardInitialized = true;
+            
+            // Simplified auth check
+            try {
+                if (typeof isAuthenticated !== 'function' || !isAuthenticated()) {
+                    console.log('Authentication check failed, redirecting to login');
+                    window.location.href = '/index.html';
+                    return;
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                window.location.href = '/index.html';
+                return;
+            }
+
+            // Simplified initialization without complex systems
+            try {
+                loadStudentProfile();
+                checkAssessmentStatus();
+                applyAccessibilitySettings();
+                animateCards();
+                showAssessmentSuccessMessage();
+                console.log('Dashboard initialized successfully');
+            } catch (error) {
+                console.error('Dashboard initialization error:', error);
+            }
+        });
+
+        function loadStudentProfile() {
+            const email = localStorage.getItem('userEmail');
+            if (email) {
+                // Use email username as display name (no API call)
+                document.getElementById('studentName').textContent = email.split('@')[0];
+            } else {
+                document.getElementById('studentName').textContent = 'Student';
+            }
+        }
+
+        function applyAccessibilitySettings() {
+            const dyslexiaMode = localStorage.getItem('dyslexiaMode') === 'true';
+            const highContrastMode = localStorage.getItem('highContrastMode') === 'true';
+            
+            if (dyslexiaMode) {
+                if (!document.querySelector('link[href="https://fonts.cdnfonts.com/css/open-dyslexic"]')) {
+                    const link = document.createElement('link');
+                    link.href = 'https://fonts.cdnfonts.com/css/open-dyslexic';
+                    link.rel = 'stylesheet';
+                    document.head.appendChild(link);
+                }
+                document.body.classList.add('dyslexia-mode');
+            }
+            
+            if (highContrastMode) {
+                document.body.classList.add('high-contrast');
+            }
+        }
+
+        function animateCards() {
+            document.querySelectorAll('.dashboard-card').forEach((card, index) => {
+                card.style.animation = `slideIn 0.5s ease forwards ${index * 0.1}s`;
+                
+                // Add accessibility features
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                
+                // Add keyboard navigation
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        card.click();
+                    }
+                });
+                
+                // Add focus states
+                card.addEventListener('focus', function() {
+                    card.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('blur', function() {
+                    card.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        }
+
+        // Load AI-powered recommendations
+        async function loadAIRecommendations() {
+            // For now, disable AI recommendations to prevent infinite loops
+            // This would be enabled when the AI service is fully implemented
+            console.log('AI recommendations disabled for stability');
+            return;
+            
+            try {
+                const response = await authenticatedFetch('http://localhost:8081/api/ai/recommendations');
+                
+                if (!response.ok) {
+                    console.log('AI recommendations not available yet');
+                    return;
+                }
+                
+                const recommendations = await response.json();
+                displayRecommendations(recommendations);
+                
+                // Also load study insights
+                loadStudyInsights();
+                
+            } catch (error) {
+                console.error('Error loading AI recommendations:', error);
+            }
+        }
+
+        async function loadStudyInsights() {
+            // Disable study insights for now to prevent API errors
+            console.log('Study insights disabled for stability');
+            return;
+            
+            try {
+                const response = await authenticatedFetch('http://localhost:8081/api/ai/insights');
+                
+                if (!response.ok) return;
+                
+                const insights = await response.json();
+                displayStudyInsights(insights);
+                
+            } catch (error) {
+                console.error('Error loading study insights:', error);
+            }
+        }
+
+        function displayRecommendations(recommendations) {
+            const aiSection = document.getElementById('aiRecommendations');
+            const recommendationsGrid = document.getElementById('recommendationsGrid');
+            
+            if (!recommendations.recommendedLessons || recommendations.recommendedLessons.length === 0) {
+                return;
+            }
+            
+            let html = '';
+            
+            // Study Schedule
+            if (recommendations.studySchedule) {
+                html += `
+                    <div class="recommendation-card schedule-card">
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Your Optimal Study Times</h4>
+                            <p>Based on your attention patterns:</p>
+                            <ul>
+                                ${recommendations.studySchedule.optimalStudyTimes.map(time => 
+                                    `<li>${time}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Recommended Lessons
+            html += `
+                <div class="recommendation-card lessons-card">
+                    <div class="card-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="card-content">
+                        <h4>Lessons Picked Just for You</h4>
+                        <div class="recommended-lessons">
+                            ${recommendations.recommendedLessons.slice(0, 3).map(lesson => `
+                                <div class="mini-lesson-card" onclick="startRecommendedLesson(${lesson.id}, '${escapeHtml(lesson.title)}')">
+                                    <span class="lesson-title">${escapeHtml(lesson.title)}</span>
+                                    <i class="fas fa-play-circle"></i>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Break Recommendations
+            if (recommendations.recommendedBreakInterval) {
+                html += `
+                    <div class="recommendation-card break-card">
+                        <div class="card-icon">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Take Breaks Every ${recommendations.recommendedBreakInterval} Minutes</h4>
+                            <p>Short breaks help you stay focused and learn better!</p>
+                            <button class="start-timer-btn" onclick="startBreakTimer(${recommendations.recommendedBreakInterval})">
+                                Start Study Timer
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Motivational Messages
+            if (recommendations.motivationalMessages && recommendations.motivationalMessages.length > 0) {
+                const randomMessage = recommendations.motivationalMessages[
+                    Math.floor(Math.random() * recommendations.motivationalMessages.length)
+                ];
+                html += `
+                    <div class="recommendation-card motivation-card">
+                        <div class="card-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Your Daily Motivation</h4>
+                            <p class="motivation-text">${randomMessage}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            recommendationsGrid.innerHTML = html;
+            aiSection.style.display = 'block';
+            
+            // Animate cards
+            setTimeout(() => {
+                document.querySelectorAll('.recommendation-card').forEach((card, index) => {
+                    card.style.animation = `slideInUp 0.6s ease forwards ${index * 0.1}s`;
+                });
+            }, 100);
+        }
+
+        function displayStudyInsights(insights) {
+            const insightsSection = document.getElementById('studyInsights');
+            const insightsContainer = document.getElementById('insightsContainer');
+            
+            if (!insights.insights || Object.keys(insights.insights).length === 0) {
+                return;
+            }
+            
+            let html = '';
+            
+            for (const [category, insight] of Object.entries(insights.insights)) {
+                html += `
+                    <div class="insight-card">
+                        <div class="insight-category">${category}</div>
+                        <div class="insight-text">${insight}</div>
+                    </div>
+                `;
+            }
+            
+            insightsContainer.innerHTML = html;
+            insightsSection.style.display = 'block';
+        }
+
+        function startRecommendedLesson(lessonId, title) {
+            // Store recommendation context
+            localStorage.setItem('aiRecommendedLesson', 'true');
+            window.location.href = 'lessons.html';
+        }
+
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize adaptive UI system
+        async function initializeAdaptiveUI() {
+            try {
+                if (typeof AdaptiveUISystem !== 'undefined') {
+                    const adaptiveUI = new AdaptiveUISystem();
+                    await adaptiveUI.initialize();
+                }
+            } catch (error) {
+                console.log('Adaptive UI system not available yet');
+            }
+        }
+
+        // Check assessment completion status - simplified to prevent DOM manipulation issues
+        function checkAssessmentStatus() {
+            try {
+                const assessmentCompleted = localStorage.getItem('assessmentCompleted') === 'true';
+                const banner = document.getElementById('assessmentBanner');
+                const assessmentCard = document.getElementById('assessmentCard');
+                
+                if (!banner || !assessmentCard) {
+                    console.log('Assessment elements not found, skipping status check');
+                    return;
+                }
+                
+                if (!assessmentCompleted) {
+                    // Show assessment prompt for users who haven't completed it
+                    banner.className = 'assessment-status-banner assessment-incomplete';
+                    banner.innerHTML = `
+                        <div class="banner-content">
+                            <h3><i class="fas fa-brain"></i> Personalize Your Learning Experience</h3>
+                            <p>Take our quick 5-minute assessment to unlock features tailored just for you!</p>
+                            <a href="assessment.html" class="banner-btn">
+                                <i class="fas fa-magic"></i> Start Assessment
+                            </a>
+                        </div>
+                    `;
+                    banner.style.display = 'block';
+                    assessmentCard.style.display = 'block';
+                } else {
+                    // Show completion status for users who have completed it
+                    const preset = localStorage.getItem('recommendedPreset') || 'standard';
+                    const presetNames = {
+                        'standard': 'Standard Mode',
+                        'adhd': 'ADHD Support Mode',
+                        'dyslexia': 'Dyslexia Support Mode', 
+                        'autism': 'Autism Support Mode',
+                        'sensory': 'Sensory-Friendly Mode',
+                        'dyslexia-adhd': 'Combined Support Mode'
+                    };
+                    
+                    banner.className = 'assessment-status-banner assessment-complete';
+                    banner.innerHTML = `
+                        <div class="banner-content">
+                            <h3><i class="fas fa-check-circle"></i> Your Learning Profile: ${presetNames[preset]}</h3>
+                            <p>Your personalized settings are active! You can retake the assessment anytime.</p>
+                            <a href="assessment.html" class="banner-btn">
+                                <i class="fas fa-redo"></i> Retake Assessment
+                            </a>
+                        </div>
+                    `;
+                    banner.style.display = 'block';
+                    // Hide the assessment card since it's completed
+                    assessmentCard.style.display = 'none';
+                }
+                console.log('Assessment status checked successfully');
+            } catch (error) {
+                console.error('Error in checkAssessmentStatus:', error);
+            }
+        }
+
+        // Show success message after completing assessment
+        function showAssessmentSuccessMessage() {
+            if (localStorage.getItem('showAssessmentSuccess') === 'true') {
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <h3><i class="fas fa-star"></i> Assessment Complete!</h3>
+                    <p>Your learning environment has been personalized. Enjoy your optimized ThinkAble experience!</p>
+                `;
+                
+                // Insert after header
+                const header = document.querySelector('.student-header');
+                header.parentNode.insertBefore(successMessage, header.nextSibling);
+                
+                // Remove the flag and auto-hide after 5 seconds
+                localStorage.removeItem('showAssessmentSuccess');
+                setTimeout(() => {
+                    successMessage.style.animation = 'slideOut 0.5s ease';
+                    setTimeout(() => successMessage.remove(), 500);
+                }, 5000);
+            }
+        }
+
+        // Enhanced logout function
+        function logout() {
+            customConfirm('Are you sure you want to logout?', () => {
+                // Clear all auth data
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('tokenExpiry');
+                // Clear assessment data
+                localStorage.removeItem('assessmentCompleted');
+                localStorage.removeItem('recommendedPreset');
+                localStorage.removeItem('assessmentResults');
+                window.location.href = '/index.html';
+            }, 'warning', 'Confirm Logout');
+        }
+    </script>
+</body>
+</html>

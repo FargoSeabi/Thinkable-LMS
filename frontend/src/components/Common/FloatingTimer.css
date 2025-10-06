@@ -1,0 +1,404 @@
+/* Floating Timer - Persistent across pages */
+
+.floating-timer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  width: 320px;
+  z-index: 1000;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.floating-timer:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
+}
+
+/* Header */
+.floating-timer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.timer-title-section {
+  flex: 1;
+}
+
+.timer-title {
+  color: var(--text-color, #2c3e50);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.2;
+}
+
+.preset-info {
+  margin-top: 0.25rem;
+}
+
+.preset-label {
+  background: #f8f9fa;
+  color: #6c757d;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #dee2e6;
+}
+
+.timer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.count-badge {
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6c757d;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #f8f9fa;
+  color: #2c3e50;
+}
+
+/* Display */
+.floating-timer-display {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.time-text {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color, #2c3e50);
+  margin-bottom: 0.75rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.progress-container {
+  width: 100%;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Controls */
+.floating-timer-controls {
+  margin-bottom: 1rem;
+}
+
+.start-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.active-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timer-btn {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 0;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  color: white;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, #2980b9, #0984e3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.secondary-btn {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.secondary-btn:hover {
+  background: #e9ecef;
+}
+
+.danger-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.danger-btn:hover {
+  background: #c82333;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.quick-action-btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background: var(--primary-color, #3498db);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quick-action-btn.secondary {
+  background: transparent;
+  color: var(--primary-color, #3498db);
+  border: 1px solid var(--primary-color, #3498db);
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Preset-Specific Styles */
+
+/* ADHD Style - Bright and Encouraging */
+.floating-timer.timer-adhd {
+  border: 2px solid #3498db;
+  box-shadow: 0 8px 32px rgba(52, 152, 219, 0.2);
+}
+
+.floating-timer.timer-adhd .preset-label {
+  background: linear-gradient(135deg, #3498db, #74b9ff);
+  color: white;
+  border: none;
+}
+
+.floating-timer.timer-adhd .progress-fill {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+}
+
+/* Quiet Style - Minimal for Autism */
+.floating-timer.timer-quiet {
+  background: #ffffff;
+  border: 2px solid #2c3e50;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.floating-timer.timer-quiet .preset-label {
+  background: #2c3e50;
+  color: white;
+  border: none;
+}
+
+.floating-timer.timer-quiet .progress-fill {
+  background: #2c3e50;
+  transition: width 0.3s linear;
+}
+
+.floating-timer.timer-quiet .timer-btn {
+  border-radius: 4px;
+  transition: none;
+  transform: none !important;
+}
+
+.floating-timer.timer-quiet .timer-btn:hover {
+  transform: none !important;
+  opacity: 0.9;
+}
+
+/* Calm Style - Soft for Sensory */
+.floating-timer.timer-calm {
+  background: rgba(248, 249, 250, 0.95);
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.floating-timer.timer-calm .preset-label {
+  background: #6c757d;
+  color: white;
+  border: none;
+}
+
+.floating-timer.timer-calm .progress-fill {
+  background: #6c757d;
+}
+
+.floating-timer.timer-calm .timer-btn {
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.floating-timer.timer-calm:hover {
+  transform: none;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Timer States */
+.floating-timer.timer-study {
+  border-left: 4px solid #3498db;
+}
+
+.floating-timer.timer-break {
+  border-left: 4px solid #28a745;
+}
+
+.floating-timer.timer-break .timer-title {
+  color: #28a745;
+}
+
+.floating-timer.paused {
+  opacity: 0.8;
+}
+
+.floating-timer.paused .time-text {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+.floating-timer.running.timer-adhd {
+  animation: gentle-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.5; }
+}
+
+@keyframes gentle-pulse {
+  from {
+    box-shadow: 0 8px 32px rgba(52, 152, 219, 0.2);
+  }
+  to {
+    box-shadow: 0 12px 40px rgba(52, 152, 219, 0.3);
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .floating-timer {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-width: none;
+    padding: 1rem;
+  }
+
+  .floating-timer-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .timer-actions {
+    align-self: flex-end;
+  }
+
+  .time-text {
+    font-size: 1.5rem;
+  }
+
+  .active-controls {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .timer-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .quick-actions {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .floating-timer {
+    border-width: 2px;
+  }
+  
+  .progress-bar {
+    height: 8px;
+    border: 1px solid var(--text-color, #2c3e50);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .floating-timer,
+  .timer-btn,
+  .progress-fill {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .floating-timer:hover {
+    transform: none !important;
+  }
+}

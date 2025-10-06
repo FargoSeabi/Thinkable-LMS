@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - ThinkAble</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="adaptive-styles.css" rel="stylesheet">
+    <style>
+        :root {
+            --teacher-primary: #2c5aa0;
+            --teacher-secondary: #5a7cb8;
+            --teacher-accent: #ff7b7b;
+            --teacher-success: #4caf50;
+            --teacher-warning: #ff9800;
+            --teacher-light: #f8f9fc;
+            --teacher-dark: #2c3e50;
+        }
+
+        body {
+            background-color: var(--teacher-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--teacher-primary) 0%, var(--teacher-secondary) 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .sidebar {
+            background: white;
+            min-height: calc(100vh - 76px);
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            padding: 1.5rem 0;
+        }
+
+        .sidebar .nav-link {
+            color: var(--teacher-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0 25px 25px 0;
+            margin: 0.25rem 0;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: var(--teacher-primary);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-icon.students { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stats-icon.assessments { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stats-icon.accommodations { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stats-icon.completion { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .student-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--teacher-primary);
+            transition: all 0.3s ease;
+        }
+
+        .student-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .accommodation-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .accommodation-badge.minimal { background-color: #e8f5e8; color: #2e7d2e; }
+        .accommodation-badge.moderate { background-color: #fff3cd; color: #856404; }
+        .accommodation-badge.comprehensive { background-color: #f8d7da; color: #721c24; }
+        .accommodation-badge.none { background-color: #e2e6ea; color: #6c757d; }
+
+        .preset-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin: 0.125rem;
+            display: inline-block;
+        }
+
+        .preset-badge.standard { background-color: #e9ecef; color: #495057; }
+        .preset-badge.adhd { background-color: #cce5ff; color: #0056b3; }
+        .preset-badge.dyslexia { background-color: #fff2cc; color: #b8860b; }
+        .preset-badge.autism { background-color: #e1f5fe; color: #0277bd; }
+        .preset-badge.sensory { background-color: #f3e5f5; color: #7b1fa2; }
+        .preset-badge.dyslexia-adhd { background-color: #ffecb3; color: #e65100; }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendation-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--teacher-success);
+        }
+
+        .needs-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .needs-indicator.attention { background-color: #ff9800; }
+        .needs-indicator.reading { background-color: #2196f3; }
+        .needs-indicator.social { background-color: #9c27b0; }
+        .needs-indicator.sensory { background-color: #4caf50; }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--teacher-primary) 0%, var(--teacher-secondary) 100%);
+            color: white;
+        }
+
+        .tab-content {
+            padding: 1.5rem 0;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--teacher-primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .stats-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-brain"></i> ThinkAble Teacher Dashboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#" onclick="showHelp()">
+                    <i class="fas fa-question-circle"></i> Help
+                </a>
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-sign-out-alt"></i> Back to Main
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" onclick="showDashboard()">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a class="nav-link" href="#" onclick="showStudents()">
+                        <i class="fas fa-users"></i> Students
+                    </a>
+                    <a class="nav-link" href="#" onclick="showClassroomTools()">
+                        <i class="fas fa-chalkboard-teacher"></i> Classroom Tools
+                    </a>
+                    <a class="nav-link" href="#" onclick="showReports()">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </a>
+                    <a class="nav-link" href="#" onclick="showResources()">
+                        <i class="fas fa-book"></i> Resources
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div id="dashboard-content">
+                    <!-- Dashboard Overview -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2>Dashboard Overview</h2>
+                            <p class="text-muted">Monitor student accommodations and classroom accessibility</p>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row mb-4" id="stats-cards">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon students text-white">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 id="total-students">--</h3>
+                                <p class="text-muted mb-0">Total Students</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon assessments text-white">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </div>
+                                <h3 id="completed-assessments">--</h3>
+                                <p class="text-muted mb-0">Completed Assessments</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon accommodations text-white">
+                                    <i class="fas fa-universal-access"></i>
+                                </div>
+                                <h3 id="active-accommodations">--</h3>
+                                <p class="text-muted mb-0">Students with Accommodations</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon completion text-white">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <h3 id="completion-rate">--</h3>
+                                <p class="text-muted mb-0">Assessment Completion Rate</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts and Summary -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h5><i class="fas fa-chart-pie"></i> Accommodation Distribution</h5>
+                                <canvas id="accommodationChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Classroom Recommendations</h5>
+                                <div id="classroom-recommendations">
+                                    <div class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="chart-container">
+                                <h5><i class="fas fa-clock"></i> Recent Student Activity</h5>
+                                <div id="recent-activity">
+                                    <div class="loading-spinner">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students Content (Hidden by default) -->
+                <div id="students-content" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-12 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2>Student Accommodations</h2>
+                                <p class="text-muted">Manage and monitor individual student needs</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary" onclick="refreshStudents()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Students List -->
+                    <div id="students-list">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other content sections (placeholder) -->
+                <div id="classroom-tools-content" style="display: none;">
+                    <h2>Classroom Tools</h2>
+                    <p>Interactive tools and resources for inclusive classroom management.</p>
+                    <div class="empty-state">
+                        <i class="fas fa-tools"></i>
+                        <h4>Coming Soon</h4>
+                        <p>Classroom management tools are being developed.</p>
+                    </div>
+                </div>
+
+                <div id="reports-content" style="display: none;">
+                    <h2>Reports & Analytics</h2>
+                    <p>Detailed reports on student progress and accommodation effectiveness.</p>
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Coming Soon</h4>
+                        <p>Advanced reporting features are in development.</p>
+                    </div>
+                </div>
+
+                <div id="resources-content" style="display: none;">
+                    <h2>Teaching Resources</h2>
+                    <p>Evidence-based strategies and materials for inclusive education.</p>
+                    <div class="empty-state">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>Coming Soon</h4>
+                        <p>Resource library is being compiled.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="studentModalLabel">
+                        <i class="fas fa-user"></i> Student Profile
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="studentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab">
+                                <i class="fas fa-user"></i> Profile
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="accommodations-tab" data-bs-toggle="tab" data-bs-target="#accommodations" type="button" role="tab">
+                                <i class="fas fa-universal-access"></i> Accommodations
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab">
+                                <i class="fas fa-lightbulb"></i> Recommendations
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="studentTabContent">
+                        <div class="tab-pane fade show active" id="profile" role="tabpanel">
+                            <div id="student-profile-content">
+                                <div class="loading-spinner">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="accommodations" role="tabpanel">
+                            <div id="student-accommodations-content">
+                                Loading accommodations...
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="recommendations" role="tabpanel">
+                            <div id="student-recommendations-content">
+                                Loading recommendations...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveStudentNotes()">
+                        <i class="fas fa-save"></i> Save Notes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="teacher-dashboard.js"></script>
+</body>
+</html>

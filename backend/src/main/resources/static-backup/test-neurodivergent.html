@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Neurodivergent Support</title>
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="custom-modals.js"></script>
+</head>
+<body>
+    <h1>Testing Neurodivergent Support System</h1>
+    <p>This page is for testing the neurodivergent features. Look for the floating panel in the top-right corner!</p>
+    
+    <button onclick="testSystem()" style="padding: 20px; font-size: 18px; background: #667eea; color: white; border: none; border-radius: 10px; cursor: pointer; margin: 20px;">
+        Test System Status
+    </button>
+    
+    <div id="test-results" style="margin: 20px; padding: 20px; background: #f0f0f0; border-radius: 10px;">
+        <h3>Test Results:</h3>
+        <div id="results-content">Click the test button above</div>
+    </div>
+
+    <script src="neurodivergent-support.js"></script>
+    <script>
+        function testSystem() {
+            const results = document.getElementById('results-content');
+            let output = '';
+            
+            // Test if the system exists
+            if (typeof neurodivergentSupport !== 'undefined') {
+                output += '✅ Neurodivergent support system loaded<br>';
+                
+                // Test if the panel exists
+                const panel = document.getElementById('neurodivergent-support-panel');
+                if (panel) {
+                    output += '✅ Support panel created<br>';
+                    
+                    // Test if buttons exist
+                    const escapeBtn = document.getElementById('overwhelm-escape');
+                    const fidgetBtn = document.getElementById('fidget-tool');
+                    const breathingBtn = document.getElementById('breathing-tool');
+                    const energyBtn = document.getElementById('energy-check');
+                    const timerBtn = document.getElementById('break-timer');
+                    
+                    if (escapeBtn) output += '✅ Escape button found<br>';
+                    else output += '❌ Escape button missing<br>';
+                    
+                    if (fidgetBtn) output += '✅ Fidget button found<br>';
+                    else output += '❌ Fidget button missing<br>';
+                    
+                    if (breathingBtn) output += '✅ Breathing button found<br>';
+                    else output += '❌ Breathing button missing<br>';
+                    
+                    if (energyBtn) output += '✅ Energy button found<br>';
+                    else output += '❌ Energy button missing<br>';
+                    
+                    if (timerBtn) output += '✅ Timer button found<br>';
+                    else output += '❌ Timer button missing<br>';
+                    
+                } else {
+                    output += '❌ Support panel not created<br>';
+                }
+                
+                // Test initialization status
+                if (neurodivergentSupport.isInitialized) {
+                    output += '✅ System initialized<br>';
+                } else {
+                    output += '❌ System not initialized<br>';
+                }
+                
+            } else {
+                output += '❌ Neurodivergent support system not loaded<br>';
+            }
+            
+            results.innerHTML = output;
+        }
+        
+        // Test the escape hatch directly
+        function testEscapeHatch() {
+            console.log('Testing escape hatch...');
+            if (neurodivergentSupport && neurodivergentSupport.showCalmMode) {
+                neurodivergentSupport.showCalmMode();
+            } else {
+                customAlert('Neurodivergent support system not ready', 'warning', 'System Status');
+            }
+        }
+        
+        // Auto-test after page loads
+        setTimeout(() => {
+            testSystem();
+        }, 2000);
+    </script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        
+        button:hover {
+            background: #5a67d8 !important;
+        }
+    </style>
+    
+    <!-- Manual test buttons -->
+    <div style="margin: 20px;">
+        <h3>Manual Tests:</h3>
+        <button onclick="testEscapeHatch()" style="padding: 15px; margin: 5px; background: #ff6b6b; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Test Escape Hatch
+        </button>
+        
+        <button onclick="neurodivergentSupport.showSensoryTools()" style="padding: 15px; margin: 5px; background: #4ecdc4; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Test Fidget Tools
+        </button>
+        
+        <button onclick="neurodivergentSupport.showEnergyCheck()" style="padding: 15px; margin: 5px; background: #45b7d1; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Test Energy Check
+        </button>
+        
+        <button onclick="neurodivergentSupport.startFocusSession()" style="padding: 15px; margin: 5px; background: #96ceb4; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Test Focus Session
+        </button>
+    </div>
+</body>
+</html>

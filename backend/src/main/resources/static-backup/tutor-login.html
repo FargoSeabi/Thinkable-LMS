@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Login - ThinkAble</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --tutor-primary: #2c5aa0;
+            --tutor-secondary: #5a7cb8;
+            --tutor-accent: #ff7b7b;
+            --tutor-light: #f8f9fc;
+            --tutor-dark: #2c3e50;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--tutor-primary) 0%, var(--tutor-secondary) 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--tutor-primary) 0%, var(--tutor-secondary) 100%);
+            color: white;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .login-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .login-body {
+            padding: 3rem;
+        }
+
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--tutor-primary);
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        }
+
+        .btn-tutor-primary {
+            background: linear-gradient(135deg, var(--tutor-primary) 0%, var(--tutor-secondary) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-tutor-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(44, 90, 160, 0.3);
+            color: white;
+        }
+
+        .tutor-features {
+            background: var(--tutor-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 0.75rem 0;
+        }
+
+        .feature-icon {
+            background: var(--tutor-primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .register-link a {
+            color: var(--tutor-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .student-portal-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .student-portal-link:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="/index.html" class="student-portal-link">
+        <i class="fas fa-arrow-left"></i> Student Portal
+    </a>
+
+    <div class="container-fluid login-container">
+        <div class="login-card">
+            <div class="row g-0">
+                <div class="col-md-6">
+                    <div class="login-header">
+                        <i class="fas fa-graduation-cap fa-3x mb-3"></i>
+                        <h1>Tutor Portal</h1>
+                        <p>Share your expertise with learners who need it most</p>
+                    </div>
+                    
+                    <div class="tutor-features">
+                        <h5 class="mb-3">Why join ThinkAble?</h5>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <strong>Make a difference</strong><br>
+                                <small class="text-muted">Help neurodivergent students learn effectively</small>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <strong>Privacy-first approach</strong><br>
+                                <small class="text-muted">Students contact you first, ensuring safe interactions</small>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <strong>Track your impact</strong><br>
+                                <small class="text-muted">See how your content helps students succeed</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="login-body">
+                        <h3 class="text-center mb-4">Welcome Back</h3>
+                        
+                        <div id="alertContainer"></div>
+                        
+                        <form id="tutorLoginForm">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                                <label for="email">Email address</label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                <label for="password">Password</label>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button class="btn btn-tutor-primary" type="submit" id="loginBtn">
+                                    <i class="fas fa-sign-in-alt"></i> Sign In
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="register-link">
+                            <p>New to ThinkAble? <a href="/tutor-register.html">Create a tutor account</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('tutorLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const alertContainer = document.getElementById('alertContainer');
+            
+            // Clear previous alerts
+            alertContainer.innerHTML = '';
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            
+            try {
+                const response = await fetch('http://localhost:8081/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Check if user is actually a tutor
+                    if (data.role !== 'TUTOR') {
+                        throw new Error('This account is not registered as a tutor. Please use the student portal or create a tutor account.');
+                    }
+                    
+                    // Store authentication data
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userRole', data.role);
+                    localStorage.setItem('userEmail', data.email);
+                    localStorage.setItem('tokenExpiry', (Date.now() + (data.expiresIn || 24 * 60 * 60 * 1000)).toString());
+                    
+                    // Show success message
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> Login successful! Redirecting to dashboard...
+                        </div>`;
+                    
+                    // Redirect to tutor dashboard
+                    setTimeout(() => {
+                        window.location.href = '/tutor-dashboard.html';
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alertContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> ${error.message}
+                    </div>`;
+            } finally {
+                // Reset button state
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            }
+        });
+
+        // Check if already logged in as tutor
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('authToken');
+            const role = localStorage.getItem('userRole');
+            const expiry = localStorage.getItem('tokenExpiry');
+            
+            if (token && role === 'TUTOR' && Date.now() < parseInt(expiry)) {
+                window.location.href = '/tutor-dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

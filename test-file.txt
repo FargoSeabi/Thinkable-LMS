@@ -1,0 +1,10 @@
+ aThis is a test file for verifying the file upload functionality.
+It contains some test content that should be extractable by the text extraction service.
+
+This file will help us verify that:
+1. Files are properly uploaded and stored to disk
+2. File paths are correctly saved to the database
+3. Files can be served back to users
+4. Text extraction works for accessible learning
+
+Test completed successfully if you can read this content!

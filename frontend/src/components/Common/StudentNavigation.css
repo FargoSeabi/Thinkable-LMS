@@ -1,0 +1,376 @@
+/* Student Navigation - Clean, accessible navigation */
+.student-navigation {
+  background: var(--background-color, #ffffff);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all var(--animation-duration, 0.3s) ease;
+}
+
+.nav-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--primary-color, #3498db);
+  font-size: 1.5rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.brand-link:hover {
+  color: var(--accent-color, #2980b9);
+  text-decoration: none;
+  transform: scale(1.05);
+}
+
+.brand-link i {
+  font-size: 1.8rem;
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.current-page {
+  color: var(--text-color, #2c3e50);
+  font-size: 1.1rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.preset-indicator {
+  background: var(--accent-color, #3498db);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: gentle-pulse 3s infinite;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: var(--text-color, #5a6c7d);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.nav-item:hover::before {
+  left: 100%;
+}
+
+.nav-item:hover {
+  background: var(--hover-color, #f8f9fa);
+  color: var(--primary-color, #3498db);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.nav-item.active {
+  background: var(--primary-color, #3498db);
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.nav-item.active:hover {
+  background: var(--accent-color, #2980b9);
+  color: white;
+}
+
+.nav-item i {
+  font-size: 1rem;
+  min-width: 16px;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-greeting {
+  color: var(--text-color, #2c3e50);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-logout {
+  background: none;
+  border: 2px solid var(--border-color, #e2e8f0);
+  color: var(--text-color, #7f8c8d);
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logout:hover {
+  background: #fee;
+  border-color: #e74c3c;
+  color: #e74c3c;
+  transform: scale(1.1);
+}
+
+.nav-logout:focus {
+  outline: 2px solid var(--primary-color, #3498db);
+  outline-offset: 2px;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .nav-status .current-page {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .student-navigation {
+    padding: 0 15px;
+    height: 60px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .nav-header {
+    gap: 20px;
+  }
+
+  .brand-link span {
+    display: none;
+  }
+
+  .nav-items {
+    gap: 5px;
+  }
+
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 8px;
+    min-width: 40px;
+    justify-content: center;
+  }
+
+  .user-greeting span {
+    display: none;
+  }
+
+  .preset-indicator {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-navigation {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    height: 60px;
+    border-top: 1px solid var(--border-color, #e2e8f0);
+    border-bottom: none;
+    padding: 0 10px;
+  }
+
+  .nav-header {
+    display: none;
+  }
+
+  .nav-items {
+    flex: 1;
+    justify-content: space-around;
+  }
+
+  .nav-user {
+    gap: 10px;
+  }
+}
+
+/* Preset-specific adaptations */
+body.standard-adaptive .student-navigation {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+}
+
+body.standard-adaptive .nav-item {
+  color: var(--text-color);
+}
+
+body.standard-adaptive .user-greeting {
+  color: var(--text-color);
+}
+
+body.standard-adaptive .current-page {
+  color: var(--text-color);
+}
+
+body.standard-adaptive .brand-link {
+  color: var(--primary-color);
+}
+
+body.standard-adaptive .nav-logout {
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+body.adhd-adaptive .student-navigation {
+  border-bottom-width: 3px;
+  border-bottom-color: var(--focus-indicator-color, #3498db);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+}
+
+body.adhd-adaptive .nav-item {
+  color: var(--text-color);
+}
+
+body.adhd-adaptive .user-greeting {
+  color: var(--text-color);
+}
+
+body.adhd-adaptive .current-page {
+  color: var(--text-color);
+}
+
+body.adhd-adaptive .brand-link {
+  color: var(--primary-color);
+}
+
+body.dyslexia-adaptive .student-navigation {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+}
+
+body.dyslexia-adaptive .nav-item {
+  color: var(--text-color);
+}
+
+body.dyslexia-adaptive .user-greeting {
+  color: var(--text-color);
+}
+
+body.dyslexia-adaptive .current-page {
+  color: var(--text-color);
+}
+
+body.dyslexia-adaptive .brand-link {
+  color: var(--primary-color);
+}
+
+body.autism-adaptive .student-navigation {
+  box-shadow: none;
+  border-bottom: 2px solid var(--border-color, #e2e8f0);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+}
+
+body.autism-adaptive .nav-item {
+  color: var(--text-color);
+}
+
+body.autism-adaptive .user-greeting {
+  color: var(--text-color);
+}
+
+body.autism-adaptive .current-page {
+  color: var(--text-color);
+}
+
+body.autism-adaptive .brand-link {
+  color: var(--primary-color);
+}
+
+body.sensory-adaptive .student-navigation {
+  background: var(--background-color, #f9f9f9);
+  border-bottom-color: var(--border-color, #ddd);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-base);
+}
+
+body.sensory-adaptive .nav-item {
+  color: var(--text-color);
+}
+
+body.sensory-adaptive .user-greeting {
+  color: var(--text-color);
+}
+
+body.sensory-adaptive .current-page {
+  color: var(--text-color);
+}
+
+body.sensory-adaptive .brand-link {
+  color: var(--primary-color);
+}

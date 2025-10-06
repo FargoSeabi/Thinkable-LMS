@@ -1,0 +1,3065 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    line-height: var(--line-height-base, 1.6);
+    font-size: var(--font-size-base, 16px);
+    color: var(--text-primary, #212529);
+    /* BACKGROUND COLOR - Main page background */
+    background-color: var(--bg-primary, #ffffff);
+    transition: all var(--transition-base, 0.3s ease);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Login Page Specific */
+.login-card {
+    background: var(--bg-card, white);
+    padding: var(--spacing-lg, 30px);
+    border-radius: var(--border-radius, 10px);
+    /* CARD SHADOW - Login card shadow color */
+    box-shadow: var(--shadow-lg, 0 4px 20px rgba(0,0,0,0.1));
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    color: var(--text-primary, #2c3e50);
+    border: var(--border-width, 1px) solid var(--light-color, transparent);
+    transition: all var(--transition-base, 0.3s ease);
+}
+
+.login-card h1 {
+    /* HEADER COLOR - Login header text color */
+    color: var(--text-primary, #2c3e50);
+    margin-bottom: var(--spacing-md, 20px);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    font-size: var(--font-size-h1, 2.5rem);
+    font-weight: var(--font-weight-bold, 700);
+}
+
+.accessibility-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.accessibility-btn {
+    /* BUTTON COLOR - Accessibility button background */
+    background: var(--primary-color, #3498db);
+    color: var(--text-white, white);
+    border: var(--border-width, 1px) solid var(--primary-color, #3498db);
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 12px);
+    border-radius: var(--border-radius, 5px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs, 5px);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    font-size: var(--font-size-base, 16px);
+    font-weight: var(--font-weight-normal, 400);
+    transition: all var(--transition-base, 0.3s ease);
+}
+
+.accessibility-btn:hover {
+    /* BUTTON HOVER - Accessibility button hover state */
+    background: var(--primary-color, #2980b9);
+    opacity: var(--hover-opacity, 0.8);
+    transform: translateY(-1px);
+}
+
+.accessibility-btn:focus {
+    outline: none;
+    box-shadow: var(--focus-ring, 0 0 0 0.2rem rgba(0, 123, 255, 0.25));
+}
+
+/* Fixed accessibility controls for student pages */
+.fixed-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.fixed-controls .accessibility-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-controls .accessibility-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.login-form {
+    display: grid;
+    gap: 15px;
+}
+
+.form-group {
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs, 5px);
+    /* LABEL COLOR - Form label text color */
+    color: var(--text-primary, #2c3e50);
+    font-weight: var(--font-weight-bold, 600);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    font-size: var(--font-size-base, 16px);
+}
+
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: var(--spacing-sm, 10px);
+    border: var(--border-width, 1px) solid var(--secondary-color, #ddd);
+    border-radius: var(--border-radius, 5px);
+    font-size: var(--font-size-base, 16px);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    background-color: var(--bg-primary, white);
+    color: var(--text-primary, #333);
+    transition: all var(--transition-base, 0.3s ease);
+}
+
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color, #007bff);
+    box-shadow: var(--focus-ring, 0 0 0 0.2rem rgba(0, 123, 255, 0.25));
+}
+
+.login-btn, .submit-btn {
+    /* SUBMIT BUTTON - Login/submit button color */
+    background: var(--success-color, #2ecc71);
+    color: var(--text-white, white);
+    border: var(--border-width, 1px) solid var(--success-color, #2ecc71);
+    padding: var(--spacing-md, 12px);
+    border-radius: var(--border-radius, 5px);
+    cursor: pointer;
+    font-size: var(--font-size-base, 16px);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    font-weight: var(--font-weight-normal, 400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs, 5px);
+    transition: all var(--transition-base, 0.3s ease);
+}
+
+.login-btn:hover, .submit-btn:hover {
+    /* SUBMIT HOVER - Login/submit button hover state */
+    background: var(--success-color, #27ae60);
+    opacity: var(--hover-opacity, 0.8);
+    transform: translateY(-1px);
+}
+
+.login-btn:focus, .submit-btn:focus {
+    outline: none;
+    box-shadow: var(--focus-ring, 0 0 0 0.2rem rgba(46, 204, 113, 0.25));
+}
+
+.error-message {
+    /* ERROR COLOR - Error message text color */
+    color: var(--danger-color, #e74c3c);
+    margin-top: var(--spacing-sm, 10px);
+    min-height: 20px;
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    font-size: var(--font-size-base, 16px);
+}
+
+/* Admin Specific Styles */
+.admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);
+    color: white;
+}
+
+.admin-header h1 {
+    margin: 0;
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logout-btn {
+    background: rgba(231, 76, 60, 0.8);
+    color: white;
+    border: 2px solid rgba(231, 76, 60, 0.6);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logout-btn:hover {
+    background: rgba(231, 76, 60, 1);
+    border-color: rgba(231, 76, 60, 0.8);
+    transform: translateY(-2px);
+}
+
+.admin-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+}
+
+.add-student-section, .student-list-section, .add-lesson-section, .lesson-list-section, .add-quiz-section, .add-book-section, .book-list-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    /* ADMIN CARD SHADOW - Admin section shadow */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.student-form {
+    display: grid;
+    gap: 15px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    /* ACTION BUTTON - General action button color */
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    /* TABLE HEADER - Table header background */
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    height: 8px;
+    /* PROGRESS BAR - Progress bar color */
+    background-color: #2ecc71;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-btn, .delete-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+.edit-btn {
+    /* EDIT BUTTON - Edit button color */
+    background-color: #f39c12;
+}
+
+.delete-btn {
+    /* DELETE BUTTON - Delete button color */
+    background-color: #e74c3c;
+}
+
+.message {
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+}
+
+.message.success {
+    /* SUCCESS MESSAGE - Success message background/text */
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    /* ERROR MESSAGE - Error message background/text */
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Student Dashboard */
+.student-home-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    /* STUDENT BG GRADIENT - Student dashboard background */
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+}
+
+/* Standardized Header Styles */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    color: white;
+}
+
+.app-header h1 {
+    margin: 0;
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-header h1 i {
+    font-size: 1.8rem;
+    opacity: 0.9;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.header-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.header-btn.logout {
+    background: rgba(231, 76, 60, 0.8);
+    border-color: rgba(231, 76, 60, 0.6);
+}
+
+.header-btn.logout:hover {
+    background: rgba(231, 76, 60, 1);
+    border-color: rgba(231, 76, 60, 0.8);
+}
+
+.user-info {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Legacy support - keep existing styles for compatibility */
+.student-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl, 30px);
+    padding: var(--spacing-lg, 20px);
+    background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, #764ba2 100%);
+    border-radius: var(--border-radius, 12px);
+    box-shadow: var(--shadow-lg, 0 6px 20px rgba(102, 126, 234, 0.3));
+    color: var(--text-white, white);
+    transition: all var(--transition-base, 0.3s ease);
+}
+
+.student-header h1 {
+    margin: 0;
+    color: var(--text-white, white);
+    font-size: var(--font-size-h1, 2rem);
+    font-weight: var(--font-weight-bold, 600);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md, 12px);
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text-white, white);
+    border: var(--border-width, 2px) solid rgba(255, 255, 255, 0.3);
+    padding: var(--spacing-sm, 10px) var(--spacing-lg, 18px);
+    border-radius: var(--border-radius, 8px);
+    cursor: pointer;
+    font-weight: var(--font-weight-normal, 500);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    font-size: var(--font-size-base, 16px);
+    transition: all var(--transition-base, 0.3s ease);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* DASHBOARD CARDS - Base styles for dashboard cards */
+.dashboard-card {
+    /* Removed default white background to prevent override */
+    background: var(--bg-card, white);
+    padding: var(--spacing-lg, 20px);
+    border-radius: var(--border-radius, 12px);
+    border: var(--border-width, 1px) solid var(--light-color, transparent);
+    /* CARD SHADOW - Dashboard card shadow */
+    box-shadow: var(--shadow-md, 0 4px 15px rgba(0,0,0,0.15));
+    text-align: center;
+    cursor: pointer;
+    transition: transform var(--transition-base, 0.3s), box-shadow var(--transition-base, 0.3s), opacity 0.2s;
+    width: 220px;
+    position: relative;
+    overflow: hidden;
+    color: var(--text-primary, #2c3e50);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px) rotate(2deg);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.dashboard-card:active {
+    opacity: 0.7;
+}
+
+.dashboard-card i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.dashboard-card h3 {
+    color: var(--text-primary, #2c3e50);
+    margin-bottom: var(--spacing-sm, 10px);
+    font-size: var(--font-size-h3, 1.2rem);
+    font-family: var(--font-family-primary, Arial, sans-serif);
+    font-weight: var(--font-weight-bold, 700);
+}
+
+/* CARD COLORS - Each card type has its own gradient */
+.lesson-card {
+    /* LESSON CARD - Green gradient for Lessons card */
+    background: linear-gradient(135deg, #4caf50, #81c784) !important;
+    color: rgb(227, 19, 19) !important;
+}
+
+.lesson-card i, .lesson-card h3, .lesson-card p {
+    /* LESSON CARD TEXT - White text for readability */
+    color: rgb(255, 255, 255) !important;
+}
+
+
+.progress-card {
+    /* PROGRESS CARD - Purple gradient for Progress card */
+    background: linear-gradient(135deg, #9c27b0, #ba68c8) !important;
+    color: white !important;
+}
+
+.progress-card i, .progress-card h3, .progress-card p {
+    /* PROGRESS CARD TEXT - White text for readability */
+    color: white !important;
+}
+
+.settings-card {
+    /* SETTINGS CARD - Brown gradient for Settings card */
+    background: linear-gradient(135deg, #795548, #a1887f) !important;
+    color: white !important;
+}
+
+.settings-card i, .settings-card h3, .settings-card p {
+    /* SETTINGS CARD TEXT - White text for readability */
+    color: white !important;
+}
+
+.lesson-list, .book-list, .progress-container, .settings-container {
+    /* LIST BACKGROUND - Lesson/book list background */
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* LESSON CARDS - Styles for cards in lesson lists */
+.lesson-card {
+    background: #5442da;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.lesson-card button {
+    /* CARD BUTTON - Lesson card button */
+    background: #2ecc71;
+    /* CARD BUTTON TEXT - Lesson card button text */
+    color: rgb(206, 21, 21); /* Updated to white for consistency */
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.lesson-card button:hover {
+    /* CARD BUTTON HOVER - Lesson card button hover */
+    background: #27ae60;
+}
+
+.video-container {
+    margin: 20px 0;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.quiz-section {
+    margin-top: 20px;
+}
+
+.quiz-question {
+    margin-bottom: 15px;
+}
+
+.quiz-question label {
+    display: block;
+    margin: 5px 0;
+}
+
+.pdf-viewer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 1000;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+}
+
+.pdf-viewer iframe {
+    border: none;
+}
+
+.pdf-viewer button {
+    /* PDF CLOSE - PDF viewer close button */
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.pdf-viewer button:hover {
+    /* PDF CLOSE HOVER - PDF viewer close button hover */
+    background: #c0392b;
+}
+
+.quiz-question-group {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.quiz-question-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.quiz-question-group input {
+    margin-bottom: 10px;
+}
+
+.setting-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.setting-option label {
+    flex-grow: 1;
+}
+
+/* Accessibility Modes */
+/* ENHANCED DYSLEXIA MODE - Comprehensive dyslexia support */
+.dyslexia-mode {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive, sans-serif !important;
+    background: linear-gradient(135deg, #f9f7e8 0%, #fefbf0 100%) !important;
+    line-height: 2.2 !important;
+    letter-spacing: 0.1em !important;
+    word-spacing: 0.3em !important;
+    color: #2c3e50 !important;
+    text-rendering: optimizeLegibility !important;
+}
+
+.dyslexia-mode * {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive, sans-serif !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+}
+
+/* PRESERVE ICONS IN DYSLEXIA MODE - Critical for usability */
+.dyslexia-mode i,
+.dyslexia-mode .fas,
+.dyslexia-mode .far,
+.dyslexia-mode .fab,
+.dyslexia-mode .fal {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', FontAwesome !important;
+    font-style: normal !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-rendering: auto !important;
+    display: inline-block !important;
+    font-size: 1.2em !important;
+    color: #2c3e50 !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+/* Enhanced icon visibility in dyslexia mode */
+.dyslexia-mode .control-btn i,
+.dyslexia-mode .accessibility-btn i,
+.dyslexia-mode button i {
+    font-size: 1.3em !important;
+    margin-right: 8px !important;
+    color: #27ae60 !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+/* Make emoji icons larger and clearer */
+.dyslexia-mode .control-btn-small span,
+.dyslexia-mode .dyslexia-icon {
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif !important;
+    font-size: 1.4em !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    display: inline-block !important;
+    margin-right: 6px !important;
+}
+
+.dyslexia-mode input,
+.dyslexia-mode select,
+.dyslexia-mode button,
+.dyslexia-mode textarea {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive, sans-serif !important;
+    font-size: 1.1em !important;
+    padding: 12px 16px !important;
+    border: 2px solid #3498db !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    color: #2c3e50 !important;
+}
+
+.dyslexia-mode h1,
+.dyslexia-mode h2,
+.dyslexia-mode h3,
+.dyslexia-mode h4,
+.dyslexia-mode h5,
+.dyslexia-mode h6 {
+    font-weight: bold !important;
+    color: #27ae60 !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+    margin: 1.5em 0 1em 0 !important;
+}
+
+.dyslexia-mode p {
+    margin-bottom: 1.5em !important;
+    text-align: left !important;
+    hyphens: none !important;
+}
+
+.dyslexia-mode button {
+    font-weight: bold !important;
+    text-shadow: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.dyslexia-mode button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+/* HIGH CONTRAST - All high contrast mode styles */
+.high-contrast {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+.high-contrast input,
+.high-contrast select,
+.high-contrast button,
+.high-contrast textarea {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: 1px solid #fff !important;
+}
+
+.high-contrast .student-home-container,
+.high-contrast .lesson-list,
+.high-contrast .book-list,
+.high-contrast .progress-container,
+.high-contrast .settings-container {
+    background: #111 !important;
+}
+
+.high-contrast .dashboard-card {
+    /* HIGH CONTRAST DASHBOARD - Base style for dashboard cards in high-contrast mode */
+    background: #222 !important;
+    color: #fff !important;
+}
+
+/* HIGH CONTRAST CARD SPECIFIC - Preserve gradients in high-contrast mode */
+.high-contrast .lesson-card {
+    background: linear-gradient(135deg, #4caf50, #81c784) !important;
+    color: #fff !important;
+}
+
+.high-contrast .lesson-card i, .high-contrast .lesson-card h3, .high-contrast .lesson-card p {
+    color: #fff !important;
+}
+
+
+.high-contrast .progress-card {
+    background: linear-gradient(135deg, #9c27b0, #ba68c8) !important;
+    color: #fff !important;
+}
+
+.high-contrast .progress-card i, .high-contrast .progress-card h3, .high-contrast .progress-card p {
+    color: #fff !important;
+}
+
+.high-contrast .settings-card {
+    background: linear-gradient(135deg, #795548, #a1887f) !important;
+    color: #fff !important;
+}
+
+.high-contrast .settings-card i, .high-contrast .settings-card h3, .high-contrast .settings-card p {
+    color: #fff !important;
+}
+
+/* Animation for Cards */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .login-card {
+        margin: 20px;
+    }
+
+    .dashboard-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dashboard-card {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .video-container iframe {
+        height: 200px;
+    }
+}
+
+/* Loading and Interactive States */
+.login-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.login-btn.loading {
+    background-color: #95a5a6 !important;
+    cursor: not-allowed;
+}
+
+.accessibility-btn.reading {
+    background-color: #e74c3c !important;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Focus indicators for accessibility */
+.accessibility-btn:focus,
+.login-btn:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Registration Wizard Styles */
+.registration-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.registration-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 100%;
+    overflow: hidden;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.registration-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.registration-header h1 {
+    margin: 0 0 20px 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.progress-step.completed {
+    opacity: 1;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.progress-step.active .step-number {
+    background: white;
+    color: #667eea;
+    border-color: white;
+}
+
+.progress-step.completed .step-number {
+    background: #2ecc71;
+    border-color: #2ecc71;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.registration-content {
+    padding: 40px;
+    min-height: 500px;
+}
+
+.registration-step {
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.registration-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.step-content h2 {
+    color: #333;
+    margin: 0 0 15px 0;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.step-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.parent-email-group {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    border-left: 4px solid #667eea;
+}
+
+/* Games Styles */
+.games-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.game-card {
+    background: white;
+    border: 2px solid #e1e5e9;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.game-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.game-header {
+    margin-bottom: 20px;
+}
+
+.game-header i {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.game-header h3 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 1.3rem;
+}
+
+.game-header p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.game-area {
+    margin: 20px 0;
+}
+
+#focusCanvas {
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    cursor: crosshair;
+}
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.memory-cell {
+    width: 80px;
+    height: 80px;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.memory-cell:hover {
+    transform: scale(1.05);
+    border-color: #3498db;
+}
+
+/* Executive Function Game Styles */
+.executive-display {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.task-instruction {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #3498db;
+}
+
+.executive-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.exec-item {
+    width: 80px;
+    height: 80px;
+    background: #ffffff;
+    border: 2px solid #ddd;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.exec-item:hover {
+    transform: scale(1.1);
+    border-color: #3498db;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.exec-item:active {
+    transform: scale(0.95);
+}
+
+/* Sensory Processing Game Styles */
+.sensory-display {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: #f8f9fa;
+    border: 2px solid #ddd;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.target-zone {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.sensory-target {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #2ecc71;
+    border: 3px solid #27ae60;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.sensory-target:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+}
+
+.distraction-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.visual-distraction {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Animations for distractions and games */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-2deg); }
+    75% { transform: rotate(2deg); }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Game completion styles */
+.games-completion {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.completion-message i {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #f1c40f;
+}
+
+.completion-message h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.completion-message p {
+    font-size: 16px;
+    opacity: 0.9;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.memory-cell:hover {
+    border-color: #667eea;
+}
+
+.reaction-target {
+    width: 200px;
+    height: 100px;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.game-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.game-btn:hover {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+}
+
+.game-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.game-score {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.games-completion {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    border-radius: 15px;
+    color: white;
+    margin-top: 30px;
+}
+
+.completion-message i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.completion-message h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+}
+
+/* Preference Cards */
+.preference-section {
+    margin: 30px 0;
+}
+
+.preference-section h3 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.preference-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.preference-card {
+    background: white;
+    border: 2px solid #e1e5e9;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.preference-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.preference-card.selected {
+    border-color: #2ecc71;
+    background: #f8fff9;
+}
+
+.preference-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #2ecc71;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.preference-card i {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.preference-card.selected i {
+    color: #2ecc71;
+}
+
+.preference-card h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.preference-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.time-preference,
+.motivation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.radio-card,
+.checkbox-card {
+    display: block;
+    cursor: pointer;
+}
+
+.radio-card input,
+.checkbox-card input {
+    display: none;
+}
+
+.radio-content,
+.checkbox-content {
+    background: white;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.radio-card:hover .radio-content,
+.checkbox-card:hover .checkbox-content {
+    border-color: #667eea;
+}
+
+.radio-card input:checked + .radio-content,
+.checkbox-card input:checked + .checkbox-content {
+    border-color: #2ecc71;
+    background: #f8fff9;
+}
+
+.radio-content i,
+.checkbox-content i {
+    font-size: 1.5rem;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.radio-card input:checked + .radio-content i,
+.checkbox-card input:checked + .checkbox-content i {
+    color: #2ecc71;
+}
+
+/* Navigation */
+.registration-footer {
+    background: #f8f9fa;
+    padding: 25px 40px;
+    border-top: 1px solid #e1e5e9;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-btn:hover {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.prev-btn {
+    background: #6c757d;
+}
+
+.prev-btn:hover {
+    background: #5a6268;
+}
+
+.finish-btn {
+    background: #2ecc71;
+}
+
+.finish-btn:hover {
+    background: #27ae60;
+}
+
+/* PDF Text Overlay Styles */
+.text-overlay {
+    position: absolute;
+    top: 0;
+    right: -400px;
+    width: 380px;
+    height: 100%;
+    background: white;
+    border-left: 1px solid #e0e0e0;
+    transition: right 0.3s ease;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+}
+
+.text-overlay.open {
+    right: 0;
+}
+
+.text-overlay-header {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.text-overlay-header h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.text-controls {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.control-btn-small {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s;
+}
+
+.control-btn-small:hover {
+    background: #5a6268;
+}
+
+.control-btn-small.active {
+    background: #28a745;
+}
+
+.close-text-overlay {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.close-text-overlay:hover {
+    background: #c82333;
+}
+
+.text-overlay-content {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: white;
+}
+
+.text-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.text-loading i {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.extracted-text {
+    line-height: 1.6;
+    color: #2c3e50;
+    font-size: 16px;
+    text-align: justify;
+}
+
+.extracted-text.dyslexia-friendly {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive, sans-serif !important;
+    background: linear-gradient(145deg, #f0f8ff 0%, #e6f3ff 50%, #f0f8ff 100%) !important;
+    padding: 30px !important;
+    border-radius: 15px !important;
+    line-height: 2.8 !important;
+    letter-spacing: 0.15em !important;
+    word-spacing: 0.4em !important;
+    font-weight: 500 !important;
+    color: #1a1a1a !important;
+    font-size: 18px !important;
+    border: 3px solid #4CAF50 !important;
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2) !important;
+    text-rendering: optimizeLegibility !important;
+    position: relative !important;
+}
+
+.extracted-text.dyslexia-friendly::before {
+    content: "🔤 Dyslexia-Friendly Mode";
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: normal;
+    word-spacing: normal;
+}
+
+.extracted-text.dyslexia-friendly p {
+    margin-bottom: 2em !important;
+    text-indent: 0 !important;
+}
+
+.extracted-text.dyslexia-friendly strong,
+.extracted-text.dyslexia-friendly b {
+    color: #e74c3c !important;
+    font-weight: bold !important;
+    background: rgba(231, 76, 60, 0.1) !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+}
+
+.dyslexia-notice {
+    background: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-size: 14px;
+    border-left: 4px solid #28a745;
+}
+
+.dyslexia-notice i {
+    margin-right: 8px;
+}
+
+.text-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: #dc3545;
+}
+
+.text-error i {
+    font-size: 32px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.text-error h4 {
+    margin-bottom: 10px;
+    color: #dc3545;
+}
+
+.text-error p {
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+/* Enhanced PDF Modal Styles */
+.pdf-modal.enhanced-viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.pdf-modal-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.book-title-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.book-title-section h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.reading-progress {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.progress-text {
+    font-size: 14px;
+    color: #6c757d;
+    min-width: 120px;
+}
+
+.progress-bar {
+    width: 200px;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #28a745;
+    transition: width 0.3s ease;
+}
+
+.book-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.reading-controls,
+.accessibility-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.control-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 14px;
+}
+
+.control-btn:hover {
+    background: #5a6268;
+}
+
+.control-btn.active {
+    background: #28a745;
+}
+
+.control-btn.reading {
+    background: #dc3545;
+}
+
+.zoom-level {
+    font-size: 14px;
+    color: #6c757d;
+    min-width: 45px;
+    text-align: center;
+}
+
+.close-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.close-btn:hover {
+    background: #c82333;
+}
+
+.pdf-modal-content {
+    flex: 1;
+    position: relative;
+    background: #f8f9fa;
+}
+
+.pdf-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #6c757d;
+}
+
+.pdf-loading i {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+/* Bookmarks Sidebar */
+.bookmarks-sidebar {
+    position: absolute;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100%;
+    background: white;
+    border-right: 1px solid #e0e0e0;
+    transition: left 0.3s ease;
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.bookmarks-sidebar.open {
+    left: 0;
+}
+
+.bookmarks-header {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bookmarks-header h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.close-sidebar {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.close-sidebar:hover {
+    background: #c82333;
+}
+
+.bookmarks-list {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.bookmark-item {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    transition: background 0.3s;
+    position: relative;
+}
+
+.bookmark-item:hover {
+    background: #e9ecef;
+}
+
+.bookmark-page {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.bookmark-note {
+    color: #6c757d;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.bookmark-date {
+    color: #adb5bd;
+    font-size: 12px;
+}
+
+.delete-bookmark {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 3px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.delete-bookmark:hover {
+    background: #c82333;
+}
+
+.no-bookmarks {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 40px 20px;
+}
+
+/* Enhanced Dyslexia Features */
+.word-highlight {
+    transition: all 0.3s ease;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+.current-highlight {
+    background: linear-gradient(45deg, #FFD700, #FFA500) !important;
+    color: #1a1a1a !important;
+    font-weight: bold !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4) !important;
+    border-radius: 4px !important;
+    padding: 2px 4px !important;
+    animation: highlight-pulse 0.8s ease-in-out !important;
+}
+
+@keyframes highlight-pulse {
+    0%, 100% { transform: scale(1.05); }
+    50% { transform: scale(1.1); }
+}
+
+.extra-spacing-mode {
+    word-spacing: 0.5em !important;
+    line-height: 2.5 !important;
+    letter-spacing: 0.1em !important;
+}
+
+.extra-spacing-mode p {
+    margin-bottom: 2.5em !important;
+}
+
+.word-highlight-mode .word-highlight:hover {
+    background: rgba(255, 215, 0, 0.3) !important;
+    cursor: pointer !important;
+}
+
+.control-btn-small.active {
+    background: #4CAF50 !important;
+    color: white !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3) !important;
+}
+
+.dyslexia-toggle.active .dyslexia-icon {
+    animation: dyslexia-bounce 1s ease-in-out infinite alternate !important;
+}
+
+@keyframes dyslexia-bounce {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.2); }
+}
+
+.reading-tools-notice {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    border: 1px solid #2196F3;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.reading-tools-notice p {
+    margin: 0 0 10px 0;
+    color: #1976D2;
+    font-weight: bold;
+}
+
+.reading-tools-notice ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #424242;
+}
+
+.reading-tools-notice li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.text-overlay.dyslexia-mode {
+    background: linear-gradient(135deg, #f9f7e8 0%, #fefbf0 100%) !important;
+}
+
+.text-overlay.dyslexia-mode .text-overlay-header {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%) !important;
+    border-bottom: 2px solid #4CAF50 !important;
+}
+
+.text-overlay.dyslexia-mode h4 {
+    color: #2e7d32 !important;
+    font-weight: bold !important;
+}
+
+/* Global Dyslexia Mode Improvements */
+.dyslexia-mode .lesson-card,
+.dyslexia-mode .progress-card {
+    border: 3px solid #4CAF50 !important;
+    box-shadow: 0 6px 16px rgba(76, 175, 80, 0.2) !important;
+    transform: none !important;
+}
+
+.dyslexia-mode .lesson-card:hover,
+.dyslexia-mode .progress-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3) !important;
+}
+
+.dyslexia-mode .btn,
+.dyslexia-mode .button,
+.dyslexia-mode .control-btn,
+.dyslexia-mode .control-btn-small,
+.dyslexia-mode .accessibility-btn {
+    font-size: 1.1em !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    border: 3px solid #4CAF50 !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #2c3e50 !important;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2) !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.dyslexia-mode .control-btn-small {
+    min-width: 50px !important;
+    padding: 8px 12px !important;
+    font-size: 1em !important;
+}
+
+.dyslexia-mode .btn:hover,
+.dyslexia-mode .button:hover,
+.dyslexia-mode .control-btn:hover,
+.dyslexia-mode .control-btn-small:hover,
+.dyslexia-mode .accessibility-btn:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4) !important;
+    border-color: #27ae60 !important;
+    background: rgba(255, 255, 255, 1) !important;
+}
+
+.dyslexia-mode .control-btn-small.active {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A) !important;
+    color: white !important;
+    border-color: #388E3C !important;
+    transform: scale(1.1) !important;
+}
+
+.dyslexia-mode .control-btn-small.active span,
+.dyslexia-mode .control-btn-small.active i {
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
+}
+
+/* Special styling for text overlay buttons in dyslexia mode */
+.dyslexia-mode .text-controls {
+    gap: 10px !important;
+    margin: 10px 0 !important;
+}
+
+.dyslexia-mode .text-controls .control-btn-small {
+    border-radius: 25px !important;
+    min-width: 80px !important;
+    font-weight: bold !important;
+    flex-direction: column !important;
+    padding: 10px 8px !important;
+    gap: 4px !important;
+}
+
+/* Button labels for better clarity */
+.btn-label {
+    font-size: 10px !important;
+    font-weight: bold !important;
+    opacity: 0.8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+.dyslexia-mode .btn-label {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive, sans-serif !important;
+    font-size: 11px !important;
+    opacity: 1 !important;
+    color: #2c3e50 !important;
+    font-weight: bold !important;
+}
+
+.dyslexia-mode .control-btn-small.active .btn-label {
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5) !important;
+}
+
+/* Make sure emoji and icons are large enough */
+.control-btn-small span {
+    font-size: 1.2em !important;
+    line-height: 1 !important;
+}
+
+.dyslexia-mode .control-btn-small span {
+    font-size: 1.4em !important;
+    margin-bottom: 2px !important;
+}
+
+/* Enhanced visibility for all icons in controls */
+.dyslexia-mode .book-controls .control-btn i {
+    font-size: 1.4em !important;
+    margin-right: 8px !important;
+    color: #2c3e50 !important;
+}
+
+.dyslexia-mode .accessibility-controls .control-btn i {
+    font-size: 1.4em !important;
+    margin-right: 8px !important;
+    color: #2c3e50 !important;
+}
+
+.dyslexia-mode .reading-controls .control-btn i {
+    font-size: 1.4em !important;
+    margin-right: 8px !important;
+    color: #2c3e50 !important;
+}
+
+/* Dyslexia Mode Indicator */
+.dyslexia-mode-indicator {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 10000;
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.2);
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive, sans-serif;
+    font-size: 0.85em;
+    animation: slideInRight 0.3s ease-out;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.dyslexia-mode-indicator.fade-out {
+    opacity: 0;
+    transform: translateX(100px);
+}
+
+.dyslexia-indicator-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dyslexia-icon {
+    font-size: 16px;
+}
+
+.dyslexia-text {
+    font-weight: normal;
+    font-size: 12px;
+}
+
+.toggle-global-dyslexia {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.toggle-global-dyslexia:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .text-overlay {
+        right: -100vw;
+        width: 100vw;
+    }
+    
+    .bookmarks-sidebar {
+        left: -100vw;
+        width: 100vw;
+    }
+    
+    .pdf-modal-header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .book-title-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .reading-controls,
+    .accessibility-controls {
+        flex-wrap: wrap;
+    }
+}
+
+/* Enhanced Responsive Design for Mobile */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .login-card {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .student-header, .admin-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .student-header h1, .admin-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+    
+    .header-btn, .back-btn, .logout-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .admin-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .dashboard-grid {
+        flex-direction: column;
+    }
+    
+    .dashboard-card {
+        width: 100%;
+    }
+    
+    .book-grid, .lesson-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .accessibility-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .accessibility-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Tablet responsive design */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .admin-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .dashboard-grid {
+        justify-content: center;
+    }
+}
+
+/* High contrast mode improvements for mobile */
+@media (max-width: 768px) {
+    body.high-contrast .student-header,
+    body.high-contrast .admin-header {
+        background: #000000 !important;
+        border: 2px solid #ffffff !important;
+    }
+    
+    body.high-contrast .header-btn,
+    body.high-contrast .back-btn,
+    body.high-contrast .logout-btn {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 2px solid #000000 !important;
+    }
+}
+
+/* Modern Login Page Styles */
+.login-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated Background Elements */
+.background-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.floating-shape {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 20s infinite linear;
+}
+
+.shape-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 120px;
+    height: 120px;
+    top: 70%;
+    left: 80%;
+    animation-delay: 5s;
+}
+
+.shape-3 {
+    width: 60px;
+    height: 60px;
+    top: 30%;
+    right: 20%;
+    animation-delay: 10s;
+}
+
+.shape-4 {
+    width: 100px;
+    height: 100px;
+    bottom: 20%;
+    left: 70%;
+    animation-delay: 15s;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+    50% { transform: translateY(-20px) rotate(180deg); opacity: 0.3; }
+    100% { transform: translateY(0px) rotate(360deg); opacity: 0.7; }
+}
+
+/* Login Container */
+.login-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* Modern Login Card */
+.login-page .login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    padding: 0;
+    overflow: visible;
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Login Header */
+.login-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+}
+
+.logo-section {
+    position: relative;
+    z-index: 1;
+}
+
+.logo-section i {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.logo-section h1 {
+    margin: 0 0 8px 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.tagline {
+    margin: 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* Modern Accessibility Controls */
+.accessibility-controls-modern {
+    padding: 25px 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.accessibility-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #666;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.accessibility-title i {
+    color: #667eea;
+}
+
+.accessibility-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.accessibility-btn-modern {
+    flex: 1;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 12px 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.accessibility-btn-modern:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.accessibility-btn-modern.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.accessibility-btn-modern i {
+    font-size: 1.2rem;
+}
+
+/* Modern Form Styles */
+.login-form-modern {
+    padding: 30px;
+}
+
+.form-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-section h2 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.form-subtitle {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.form-group-modern {
+    margin-bottom: 20px;
+}
+
+.input-wrapper {
+    position: relative;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper.focused {
+    background: white;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-wrapper.filled label,
+.input-wrapper.focused label {
+    top: -12px;
+    transform: translateY(0) scale(0.85);
+    color: #667eea;
+    background: white;
+    padding: 0 8px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.input-wrapper.focused .input-icon {
+    color: #667eea;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 16px 16px 16px 50px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #2c3e50;
+    outline: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+}
+
+.input-wrapper input::placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+.input-wrapper.focused input::placeholder,
+.input-wrapper.filled input::placeholder {
+    color: transparent;
+}
+
+.input-wrapper label {
+    position: absolute;
+    left: 50px;
+    top: -12px;
+    transform: translateY(0) scale(0.85);
+    color: #667eea;
+    background: white;
+    padding: 0 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #667eea;
+}
+
+/* Modern Login Button */
+.login-btn-modern {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px 24px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.login-btn-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s;
+}
+
+.login-btn-modern:hover::before {
+    left: 100%;
+}
+
+.login-btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.login-btn-modern:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-text, .btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Form Messages */
+.form-messages {
+    min-height: 30px;
+    margin-bottom: 20px;
+}
+
+.error-message-modern {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0;
+    padding: 8px 12px;
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.success-message-modern {
+    color: #27ae60;
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0;
+    padding: 8px 12px;
+    background: rgba(39, 174, 96, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+/* Register Section */
+.register-section {
+    padding: 20px 30px 30px;
+    margin-top: 20px;
+}
+
+.divider {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e9ecef;
+}
+
+.divider span {
+    background: white;
+    padding: 0 20px;
+    color: #666;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.register-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: #667eea;
+    color: white;
+    border: 2px solid #667eea;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+    background: #5a67d8;
+    border-color: #5a67d8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive Design for Login */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 15px;
+        min-height: 100vh;
+        align-items: center;
+    }
+    
+    .login-page .login-card {
+        border-radius: 16px;
+        max-width: 100%;
+        min-width: 280px;
+        margin: 0 auto;
+    }
+    
+    .login-header {
+        padding: 25px 15px;
+    }
+    
+    .logo-section h1 {
+        font-size: 1.8rem;
+    }
+    
+    .login-form-modern {
+        padding: 20px;
+    }
+    
+    .accessibility-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .accessibility-btn-modern {
+        flex-direction: row;
+        justify-content: center;
+        padding: 10px 16px;
+    }
+    
+    .register-section {
+        padding: 15px 20px 25px;
+        margin-top: 15px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 10px;
+    }
+    
+    .login-page .login-card {
+        max-width: 100%;
+        min-width: 280px;
+        border-radius: 12px;
+    }
+    
+    .login-header {
+        padding: 20px 10px;
+    }
+    
+    .logo-section h1 {
+        font-size: 1.6rem;
+    }
+    
+    .tagline {
+        font-size: 0.85rem;
+    }
+    
+    .login-form-modern {
+        padding: 15px;
+    }
+    
+    .form-section h2 {
+        font-size: 1.4rem;
+    }
+    
+    .register-section {
+        padding: 15px;
+        margin-top: 15px;
+    }
+    
+    .register-btn {
+        font-size: 0.9rem;
+        padding: 12px 16px;
+    }
+}
+
+/* High Contrast Mode for Login */
+body.high-contrast.login-page {
+    background: #000000 !important;
+}
+
+body.high-contrast .login-card {
+    background: #ffffff !important;
+    border: 3px solid #000000 !important;
+}
+
+body.high-contrast .login-header {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+body.high-contrast .accessibility-btn-modern {
+    background: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+}
+
+body.high-contrast .accessibility-btn-modern:hover,
+body.high-contrast .accessibility-btn-modern.active {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* Dyslexia Mode for Login */
+body.dyslexia-mode.login-page .login-card {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', cursive, sans-serif !important;
+}
+
+body.dyslexia-mode .login-header {
+    background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%) !important;
+}
+
+body.dyslexia-mode .form-section h2,
+body.dyslexia-mode .tagline,
+body.dyslexia-mode .form-subtitle {
+    line-height: 1.8 !important;
+    letter-spacing: 0.1em !important;
+}
+
+body.dyslexia-mode.login-page {
+    background: linear-gradient(135deg, #81C784 0%, #4CAF50 50%, #66BB6A 100%) !important;
+}
+
+body.dyslexia-mode.login-page .login-card {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 2px solid #4CAF50 !important;
+}
+
+body.dyslexia-mode .register-section {
+    background: rgba(76, 175, 80, 0.1) !important;
+    border-radius: 12px !important;
+    margin-top: 20px !important;
+    border: 2px solid #4CAF50 !important;
+    padding: 20px 30px 30px !important;
+}
+
+body.dyslexia-mode .divider span {
+    line-height: 1.8 !important;
+    letter-spacing: 0.05em !important;
+    font-size: 1em !important;
+    color: #2E7D32 !important;
+    font-weight: 600 !important;
+}
+
+body.dyslexia-mode .register-btn {
+    background: #4CAF50 !important;
+    color: white !important;
+    font-weight: bold !important;
+    border: 2px solid #2E7D32 !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0.05em !important;
+    font-size: 1em !important;
+    padding: 14px 24px !important;
+    border-radius: 12px !important;
+}
+
+body.dyslexia-mode .register-btn:hover {
+    background: #45a049 !important;
+    border-color: #1B5E20 !important;
+    transform: translateY(-2px) !important;
+}

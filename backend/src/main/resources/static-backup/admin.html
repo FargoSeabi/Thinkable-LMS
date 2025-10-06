@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkAble Admin Dashboard</title>
+    <link rel="stylesheet" href="/admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h2>ThinkAble</h2>
+                </div>
+                <p class="admin-subtitle">Admin Dashboard</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#students" class="nav-item" data-section="students">
+                    <i class="fas fa-users"></i>
+                    <span>Students</span>
+                </a>
+                <a href="#lessons" class="nav-item" data-section="lessons">
+                    <i class="fas fa-book-open"></i>
+                    <span>Lessons</span>
+                </a>
+                <a href="#books" class="nav-item" data-section="books">
+                    <i class="fas fa-book"></i>
+                    <span>Books</span>
+                </a>
+                <a href="#quizzes" class="nav-item" data-section="quizzes">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Quizzes</span>
+                </a>
+                <a href="#system" class="nav-item" data-section="system">
+                    <i class="fas fa-cogs"></i>
+                    <span>System</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="admin-info">
+                        <i class="fas fa-user-shield"></i>
+                        <span class="admin-name">Administrator</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="content-section active">
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon students">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalStudents">0</h3>
+                                <p>Total Students</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon lessons">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalLessons">0</h3>
+                                <p>Total Lessons</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon books">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalBooks">0</h3>
+                                <p>Total Books</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon quizzes">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalQuizzes">0</h3>
+                                <p>Total Quizzes</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-content">
+                        <div class="welcome-card">
+                            <h2>Welcome to ThinkAble Admin Dashboard</h2>
+                            <p>Manage students, lessons, books, and quizzes from this centralized dashboard. Use the navigation menu to access different sections.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Students Section -->
+                <section id="students-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Student Management</h2>
+                        <button class="primary-btn" onclick="openModal('addStudentModal')">
+                            <i class="fas fa-plus"></i> Add Student
+                        </button>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-controls">
+                                <button class="secondary-btn" onclick="bulkActions('delete')" id="deleteSelectedBtn" style="display: none;">
+                                    <i class="fas fa-trash"></i> Delete Selected
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="studentTable" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th class="checkbox-col">
+                                            <input type="checkbox" id="selectAllStudents">
+                                        </th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Progress</th>
+                                        <th>Last Active</th>
+                                        <th class="actions-col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Lessons Section -->
+                <section id="lessons-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Lesson Management</h2>
+                        <button class="primary-btn" onclick="openModal('addLessonModal')">
+                            <i class="fas fa-plus"></i> Add Lesson
+                        </button>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="table-container">
+                            <table id="lessonTable" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>YouTube URL</th>
+                                        <th class="actions-col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Books Section -->
+                <section id="books-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Book Management</h2>
+                        <button class="primary-btn" onclick="openModal('addBookModal')">
+                            <i class="fas fa-plus"></i> Add Book
+                        </button>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="table-container">
+                            <table id="bookTable" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th class="actions-col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quizzes Section -->
+                <section id="quizzes-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Quiz Management</h2>
+                        <button class="primary-btn" onclick="openModal('addQuizModal')">
+                            <i class="fas fa-plus"></i> Add Quiz
+                        </button>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="table-container">
+                            <table id="quizTable" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Lesson</th>
+                                        <th>Questions</th>
+                                        <th class="actions-col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- System Management Section -->
+                <section id="system-section" class="content-section">
+                    <div class="section-header">
+                        <h2>System Management</h2>
+                        <p class="section-description">Manage system-wide settings and perform maintenance operations</p>
+                    </div>
+                    
+                    <div class="dashboard-content">
+                        <div class="system-cards">
+                            <div class="system-card danger-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Clear All Discovery Learning Content</h3>
+                                    <p>⚠️ <strong>DANGER:</strong> This will permanently delete ALL discovery learning content including:</p>
+                                    <ul>
+                                        <li>All tutor-uploaded learning content</li>
+                                        <li>All uploaded files from storage</li>
+                                        <li>All related quizzes</li>
+                                        <li>All student interactions and progress</li>
+                                        <li>All accessibility tags and metadata</li>
+                                    </ul>
+                                    <p class="warning-text">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <strong>This action cannot be undone!</strong>
+                                    </p>
+                                    <button id="clearContentBtn" class="danger-btn" onclick="confirmClearAllContent()">
+                                        <i class="fas fa-trash-alt"></i>
+                                        Clear All Discovery Content
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="system-card info-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>System Information</h3>
+                                    <p>Use the "Clear All Discovery Content" button above when you want to:</p>
+                                    <ul>
+                                        <li>Start fresh with a clean system</li>
+                                        <li>Remove all test data</li>
+                                        <li>Reset the discovery learning platform</li>
+                                        <li>Clear storage space</li>
+                                    </ul>
+                                    <p><strong>Note:</strong> Admin accounts, lessons, and books are NOT affected by this operation.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Add New Student</h3>
+                <button class="modal-close" onclick="closeModal('addStudentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addStudentForm" class="modal-form">
+                <div class="form-group">
+                    <label for="studentName">Full Name</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail">Email Address</label>
+                    <input type="email" id="studentEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentPassword">Password</label>
+                    <input type="password" id="studentPassword" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" onclick="closeModal('addStudentModal')">Cancel</button>
+                    <button type="submit" class="primary-btn">
+                        <i class="fas fa-save"></i> Add Student
+                    </button>
+                </div>
+            </form>
+            <div id="studentMessage" class="form-message"></div>
+        </div>
+    </div>
+
+    <!-- Add Lesson Modal -->
+    <div id="addLessonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-book-open"></i> Add New Lesson</h3>
+                <button class="modal-close" onclick="closeModal('addLessonModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addLessonForm" class="modal-form">
+                <div class="form-group">
+                    <label for="lessonTitle">Lesson Title</label>
+                    <input type="text" id="lessonTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="lessonDescription">Description</label>
+                    <textarea id="lessonDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="youtubeUrl">YouTube URL</label>
+                    <input type="url" id="youtubeUrl" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" onclick="closeModal('addLessonModal')">Cancel</button>
+                    <button type="submit" class="primary-btn">
+                        <i class="fas fa-save"></i> Add Lesson
+                    </button>
+                </div>
+            </form>
+            <div id="lessonMessage" class="form-message"></div>
+        </div>
+    </div>
+
+    <!-- Add Book Modal -->
+    <div id="addBookModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-book"></i> Add New Book</h3>
+                <button class="modal-close" onclick="closeModal('addBookModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addBookForm" class="modal-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="bookTitle">Book Title</label>
+                    <input type="text" id="bookTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookAuthor">Author</label>
+                    <input type="text" id="bookAuthor" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookPdf">Upload PDF</label>
+                    <input type="file" id="bookPdf" accept="application/pdf" required>
+                    <small>Maximum file size: 20MB</small>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" onclick="closeModal('addBookModal')">Cancel</button>
+                    <button type="submit" class="primary-btn">
+                        <i class="fas fa-save"></i> Add Book
+                    </button>
+                </div>
+            </form>
+            <div id="bookMessage" class="form-message"></div>
+        </div>
+    </div>
+
+    <!-- Add Quiz Modal -->
+    <div id="addQuizModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3><i class="fas fa-question-circle"></i> Add New Quiz</h3>
+                <button class="modal-close" onclick="closeModal('addQuizModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addQuizForm" class="modal-form">
+                <div class="form-group">
+                    <label for="quizType">Create Quiz For</label>
+                    <select id="quizType" required onchange="toggleQuizTarget()">
+                        <option value="">Choose type...</option>
+                        <option value="lesson">Lesson</option>
+                        <option value="book">Book</option>
+                    </select>
+                </div>
+                <div class="form-group" id="lessonSelection" style="display: none;">
+                    <label for="quizLessonId">Select Lesson</label>
+                    <select id="quizLessonId">
+                        <option value="">Choose a lesson...</option>
+                    </select>
+                </div>
+                <div class="form-group" id="bookSelection" style="display: none;">
+                    <label for="quizBookId">Select Book</label>
+                    <select id="quizBookId">
+                        <option value="">Choose a book...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quizTitle">Quiz Title</label>
+                    <input type="text" id="quizTitle" required>
+                </div>
+                
+                <div class="quiz-questions-section">
+                    <div class="questions-header">
+                        <h4>Quiz Questions</h4>
+                        <button type="button" class="secondary-btn" onclick="addQuizQuestion()">
+                            <i class="fas fa-plus"></i> Add Question
+                        </button>
+                    </div>
+                    <div id="quizQuestions">
+                        <div class="quiz-question-group">
+                            <div class="question-header">
+                                <h5>Question 1</h5>
+                                <button type="button" class="remove-question" onclick="removeQuizQuestion(this)" style="display: none;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>Question Text</label>
+                                <input type="text" class="question-text" required>
+                            </div>
+                            <div class="options-grid">
+                                <div class="form-group">
+                                    <label>Option 1</label>
+                                    <input type="text" class="option" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Option 2</label>
+                                    <input type="text" class="option" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Option 3</label>
+                                    <input type="text" class="option" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Option 4</label>
+                                    <input type="text" class="option" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Correct Answer (1-4)</label>
+                                <select class="correct-option" required>
+                                    <option value="">Select correct option</option>
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                    <option value="4">Option 4</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" onclick="closeModal('addQuizModal')">Cancel</button>
+                    <button type="submit" class="primary-btn">
+                        <i class="fas fa-save"></i> Add Quiz
+                    </button>
+                </div>
+            </form>
+            <div id="quizMessage" class="form-message"></div>
+        </div>
+    </div>
+
+    <script src="/admin-scripts.js"></script>
+</body>
+</html>

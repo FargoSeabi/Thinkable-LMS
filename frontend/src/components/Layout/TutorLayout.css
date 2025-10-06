@@ -1,0 +1,18 @@
+/* Tutor Layout Styles */
+.tutor-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+}
+
+.tutor-content {
+  flex: 1;
+  padding: 0;
+  background: #f8f9fa;
+}
+
+/* Remove any default padding from content area for pages that manage their own spacing */
+.tutor-content > * {
+  width: 100%;
+}

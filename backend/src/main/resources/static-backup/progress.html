@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkAble Progress</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="custom-modals.js"></script>
+</head>
+<body>
+    <div class="student-home-container">
+        <header class="student-header">
+            <h1><i class="fas fa-chart-line"></i> Learning Progress</h1>
+            <div class="header-actions">
+                <span class="user-info"></span>
+                <button class="back-btn" onclick="goBack()" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button class="logout-btn" onclick="logout()" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="progress-header">
+                <h2>Your Learning Journey</h2>
+                <div class="main-progress-bar">
+                    <div id="progressBar" class="progress-fill"></div>
+                    <span id="progressText" class="progress-percentage">0%</span>
+                </div>
+            </div>
+            
+            <div id="progressMessage" class="message"></div>
+            <div id="progressDetails">
+                <!-- Progress details will be loaded here -->
+            </div>
+        </main>
+
+        <!-- Accessibility controls -->
+        <div class="accessibility-controls fixed-controls">
+            <button id="dyslexiaToggle" class="accessibility-btn" title="Toggle dyslexia-friendly mode">
+                <i class="fas fa-universal-access"></i>
+            </button>
+            <button id="highContrastToggle" class="accessibility-btn" title="Toggle high contrast mode">
+                <i class="fas fa-adjust"></i>
+            </button>
+            <button id="readPage" class="accessibility-btn" title="Read page content aloud">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="/auth.js"></script>
+    <script src="adaptive-ui.js"></script>
+    <script src="individual-profile.js"></script>
+    <script src="adaptive-tool-ecosystem.js"></script>
+    <script src="personal-pattern-recognition.js"></script>
+    <script src="neurodivergent-support.js"></script>
+    <script src="/timer.js"></script>
+    <script src="/progress.js"></script>
+    <script>
+        // Simple auth check for student pages
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!isAuthenticated()) {
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            const userRole = localStorage.getItem('userRole');
+            if (userRole !== 'STUDENT') {
+                customAlert('Access denied: Student access required', 'warning', 'Access Denied');
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            // Initialize adaptive UI system
+            await initializeAdaptiveUI();
+        });
+        
+        async function initializeAdaptiveUI() {
+            try {
+                if (typeof AdaptiveUISystem !== 'undefined') {
+                    const adaptiveUI = new AdaptiveUISystem();
+                    await adaptiveUI.initialize();
+                }
+            } catch (error) {
+                console.log('Adaptive UI system not available yet');
+            }
+        }
+        
+        // Back button functionality
+        function goBack() {
+            window.location.href = '/student-home.html';
+        }
+        
+        // Accessibility functions (copied from script.js)
+        function toggleDyslexiaMode(enabled) {
+            if (enabled && !document.querySelector('link[href="https://fonts.cdnfonts.com/css/open-dyslexic"]')) {
+                const link = document.createElement('link');
+                link.href = 'https://fonts.cdnfonts.com/css/open-dyslexic';
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            }
+            document.body.classList.toggle('dyslexia-mode', enabled);
+            localStorage.setItem('dyslexiaMode', enabled);
+        }
+
+        function toggleHighContrastMode(enabled) {
+            document.body.classList.toggle('high-contrast', enabled);
+            localStorage.setItem('highContrastMode', enabled);
+        }
+
+        // Accessibility event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const dyslexiaToggle = document.getElementById('dyslexiaToggle');
+            if (dyslexiaToggle) {
+                dyslexiaToggle.addEventListener('click', function() {
+                    const currentMode = document.body.classList.contains('dyslexia-mode');
+                    toggleDyslexiaMode(!currentMode);
+                });
+            }
+
+            const highContrastToggle = document.getElementById('highContrastToggle');
+            if (highContrastToggle) {
+                highContrastToggle.addEventListener('click', function() {
+                    const currentMode = document.body.classList.contains('high-contrast');
+                    toggleHighContrastMode(!currentMode);
+                });
+            }
+
+            const readPageBtn = document.getElementById('readPage');
+            if (readPageBtn) {
+                readPageBtn.addEventListener('click', function() {
+                    window.speechSynthesis.cancel();
+                    const mainContent = document.querySelector('.main-content') || document.body;
+                    const text = mainContent.innerText;
+                    
+                    if (!text.trim()) return;
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.8;
+                    utterance.pitch = 1.0;
+                    
+                    utterance.onstart = () => {
+                        readPageBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Reading';
+                        readPageBtn.classList.add('reading');
+                    };
+                    
+                    utterance.onend = () => {
+                        readPageBtn.innerHTML = '<i class="fas fa-volume-up"></i> Read Page';
+                        readPageBtn.classList.remove('reading');
+                    };
+                    
+                    window.speechSynthesis.speak(utterance);
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .progress-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .main-progress-bar {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 20px;
+            margin: 20px auto;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            border-radius: 20px;
+            transition: width 1s ease-in-out;
+            position: relative;
+            width: 0%;
+        }
+        
+        .progress-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+        
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-card:nth-child(1) .stat-icon {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .stat-card:nth-child(2) .stat-icon {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        
+        .stat-card:nth-child(3) .stat-icon {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .stat-card:nth-child(4) .stat-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .stat-content h3 {
+            margin: 0;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        .stat-content p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .progress-achievements, .progress-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-achievements h3, .progress-chart h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .achievement-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .achievement-card.earned {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #b8daff;
+        }
+        
+        .achievement-card.locked {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            opacity: 0.6;
+        }
+        
+        .achievement-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .achievement-card.locked .achievement-icon {
+            background: #6c757d;
+        }
+        
+        .achievement-content h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .achievement-content p {
+            margin: 0;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .chart-placeholder {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+        }
+        
+        .mock-bar-chart {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+            gap: 10px;
+            height: 150px;
+            margin-top: 20px;
+        }
+        
+        .chart-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .bar {
+            width: 30px;
+            background: linear-gradient(to top, #3498db, #2980b9);
+            border-radius: 4px 4px 0 0;
+            min-height: 10px;
+            transition: height 0.5s ease;
+        }
+        
+        .bar-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-progress-bar {
+                height: 35px;
+            }
+            
+            .progress-percentage {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>

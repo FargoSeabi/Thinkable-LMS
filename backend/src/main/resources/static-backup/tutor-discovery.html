@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Tutors - ThinkAble</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="adaptive-styles.css">
+    <link rel="stylesheet" href="neurodivergent-support.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="custom-modals.js"></script>
+</head>
+<body>
+    <div class="tutor-discovery-container">
+        <header class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-user-graduate"></i> Find Expert Tutors</h1>
+                <p>Connect with verified tutors who specialize in neurodivergent learning support</p>
+            </div>
+            <nav class="header-nav">
+                <a href="student-home.html" class="nav-btn"><i class="fas fa-home"></i> Home</a>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </nav>
+        </header>
+
+        <!-- Specialization Quick Filters -->
+        <div class="quick-filters">
+            <h2><i class="fas fa-filter"></i> Find Specialists</h2>
+            <div class="quick-filter-buttons">
+                <button onclick="filterBySpecialization('dyslexia')" class="quick-filter-btn dyslexia">
+                    <i class="fas fa-eye"></i> Dyslexia Specialists
+                </button>
+                <button onclick="filterBySpecialization('adhd')" class="quick-filter-btn adhd">
+                    <i class="fas fa-bolt"></i> ADHD Experts
+                </button>
+                <button onclick="filterBySpecialization('autism')" class="quick-filter-btn autism">
+                    <i class="fas fa-puzzle-piece"></i> Autism Specialists
+                </button>
+                <button onclick="loadTopRated()" class="quick-filter-btn top-rated">
+                    <i class="fas fa-star"></i> Top Rated
+                </button>
+            </div>
+        </div>
+
+        <!-- Advanced Search -->
+        <div class="search-section">
+            <div class="search-grid">
+                <div class="search-group">
+                    <label>Subject Expertise</label>
+                    <select id="subjectFilter" class="filter-select">
+                        <option value="">All Subjects</option>
+                        <option value="mathematics">Mathematics</option>
+                        <option value="science">Science</option>
+                        <option value="english">English</option>
+                        <option value="history">History</option>
+                        <option value="chemistry">Chemistry</option>
+                        <option value="physics">Physics</option>
+                        <option value="biology">Biology</option>
+                    </select>
+                </div>
+                
+                <div class="search-group">
+                    <label>Minimum Rating</label>
+                    <select id="ratingFilter" class="filter-select">
+                        <option value="">Any Rating</option>
+                        <option value="4.5">4.5+ Stars</option>
+                        <option value="4.0">4.0+ Stars</option>
+                        <option value="3.5">3.5+ Stars</option>
+                    </select>
+                </div>
+                
+                <div class="search-group">
+                    <label>Experience Level</label>
+                    <select id="experienceFilter" class="filter-select">
+                        <option value="">Any Experience</option>
+                        <option value="5">5+ Years</option>
+                        <option value="3">3+ Years</option>
+                        <option value="1">1+ Years</option>
+                    </select>
+                </div>
+                
+                <div class="search-group">
+                    <label>Accessibility Expertise</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="hasAccessibilityExpertise">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">Accessibility Certified</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-actions">
+                <button onclick="searchTutors()" class="search-btn primary">
+                    <i class="fas fa-search"></i> Search Tutors
+                </button>
+                <button onclick="clearFilters()" class="search-btn secondary">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <div class="results-header">
+                <h2 id="resultsTitle">Verified Tutors</h2>
+                <div class="results-info">
+                    <span id="resultsCount">Loading...</span>
+                </div>
+            </div>
+            
+            <div id="tutorGrid" class="tutor-grid">
+                <!-- Tutor cards will be loaded here -->
+            </div>
+            
+            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Loading tutors...
+            </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <i class="fas fa-user-graduate"></i>
+                <h3>No tutors found</h3>
+                <p>Try adjusting your search criteria</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tutor-discovery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #2d5aa0 0%, #4f8cc9 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .header-content p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-filters {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .quick-filters h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        .quick-filter-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-filter-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .quick-filter-btn.dyslexia {
+            background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
+        }
+
+        .quick-filter-btn.adhd {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+        }
+
+        .quick-filter-btn.autism {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+
+        .quick-filter-btn.top-rated {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+        }
+
+        .quick-filter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #2d5aa0;
+        }
+
+        .checkbox-group {
+            margin-top: 8px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-right: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background: #2d5aa0;
+        }
+
+        .checkbox-container input:checked ~ .checkmark::after {
+            content: '\2713';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .search-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn.primary {
+            background: #2d5aa0;
+            color: white;
+        }
+
+        .search-btn.primary:hover {
+            background: #1a4480;
+            transform: translateY(-2px);
+        }
+
+        .search-btn.secondary {
+            background: #e0e0e0;
+            color: #555;
+        }
+
+        .search-btn.secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .results-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .results-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .results-info {
+            color: #888;
+        }
+
+        .tutor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .tutor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tutor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .tutor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .tutor-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2d5aa0 0%, #4f8cc9 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .tutor-info h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .tutor-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffa500;
+            font-weight: 500;
+        }
+
+        .verification-badge {
+            background: #4ecdc4;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .tutor-bio {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .tutor-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .tutor-specializations {
+            margin-bottom: 15px;
+        }
+
+        .specialization-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .specialization-tag {
+            background: #e8f4f8;
+            color: #2d5aa0;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .tutor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn.primary {
+            background: #2d5aa0;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #1a4480;
+        }
+
+        .action-btn.secondary {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .action-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .quick-filter-buttons {
+                justify-content: center;
+            }
+
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tutor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+
+    <script src="/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isAuthenticated || !isAuthenticated()) {
+                window.location.href = '/index.html';
+                return;
+            }
+
+            loadVerifiedTutors();
+        });
+
+        async function loadVerifiedTutors() {
+            showLoading(true);
+            
+            try {
+                const response = await authenticatedFetch('http://localhost:8081/api/tutor/profile/verified');
+                const data = await response.json();
+                
+                displayTutors(data.tutors || [], 'Verified Tutors');
+                document.getElementById('resultsCount').textContent = `${data.count || 0} verified tutors`;
+                
+            } catch (error) {
+                console.error('Error loading tutors:', error);
+                showNoResults('Error loading tutors. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function filterBySpecialization(specialization) {
+            showLoading(true);
+            
+            try {
+                const response = await authenticatedFetch(`http://localhost:8081/api/tutor/profile/specialists/${specialization}`);
+                const data = await response.json();
+                
+                const title = `${specialization.charAt(0).toUpperCase() + specialization.slice(1)} Specialists`;
+                displayTutors(data.tutors || [], title);
+                document.getElementById('resultsCount').textContent = `${data.count || 0} ${specialization} specialists`;
+                
+            } catch (error) {
+                console.error('Error loading specialists:', error);
+                showNoResults('Error loading specialists. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function loadTopRated() {
+            showLoading(true);
+            
+            try {
+                const response = await authenticatedFetch('http://localhost:8081/api/tutor/profile/top-rated?minRating=4.5');
+                const data = await response.json();
+                
+                displayTutors(data.tutors || [], 'Top Rated Tutors');
+                document.getElementById('resultsCount').textContent = `${data.count || 0} top-rated tutors`;
+                
+            } catch (error) {
+                console.error('Error loading top-rated tutors:', error);
+                showNoResults('Error loading top-rated tutors. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function searchTutors() {
+            showLoading(true);
+            
+            const params = new URLSearchParams();
+            
+            const subject = document.getElementById('subjectFilter').value;
+            const minRating = document.getElementById('ratingFilter').value;
+            const minExperience = document.getElementById('experienceFilter').value;
+            const hasAccessibilityExpertise = document.getElementById('hasAccessibilityExpertise').checked;
+            
+            if (subject) params.append('subject', subject);
+            if (minRating) params.append('minRating', minRating);
+            if (minExperience) params.append('minExperience', minExperience);
+            if (hasAccessibilityExpertise) params.append('hasAccessibilityExpertise', 'true');
+            
+            try {
+                const response = await authenticatedFetch(`http://localhost:8081/api/tutor/profile/search?${params.toString()}`);
+                const data = await response.json();
+                
+                displayTutors(data.tutors || [], 'Search Results');
+                document.getElementById('resultsCount').textContent = `${data.count || 0} tutors found`;
+                
+            } catch (error) {
+                console.error('Error searching tutors:', error);
+                showNoResults('Error searching tutors. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayTutors(tutors, title) {
+            document.getElementById('resultsTitle').textContent = title;
+            const tutorGrid = document.getElementById('tutorGrid');
+            
+            if (!tutors || tutors.length === 0) {
+                showNoResults();
+                return;
+            }
+            
+            let html = '';
+            
+            for (const tutor of tutors) {
+                const specializations = [];
+                
+                // Parse JSON specializations (simplified for demo)
+                if (tutor.neurodivergentSpecialization) {
+                    try {
+                        const parsed = JSON.parse(tutor.neurodivergentSpecialization);
+                        specializations.push(...parsed.slice(0, 3)); // Show first 3
+                    } catch (e) {
+                        // Fallback
+                        specializations.push('Accessibility Expert');
+                    }
+                }
+                
+                const subjects = [];
+                if (tutor.subjectExpertise) {
+                    try {
+                        const parsed = JSON.parse(tutor.subjectExpertise);
+                        subjects.push(...parsed.slice(0, 2)); // Show first 2
+                    } catch (e) {
+                        subjects.push('Multiple Subjects');
+                    }
+                }
+                
+                html += `
+                    <div class="tutor-card" onclick="viewTutorProfile(${tutor.userId || tutor.id})">
+                        <div class="tutor-header">
+                            <div class="tutor-avatar">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="tutor-info">
+                                <h3>${escapeHtml(tutor.displayName)}
+                                    ${tutor.verificationStatus === 'verified' ? '<span class="verification-badge">Verified</span>' : ''}
+                                </h3>
+                                <div class="tutor-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>${tutor.ratingAverage ? tutor.ratingAverage.toFixed(1) : 'New'}</span>
+                                    <span>(${tutor.totalStudents || 0} students)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="tutor-bio">${escapeHtml(tutor.bio || 'Experienced tutor specializing in neurodivergent learning support.')}</p>
+                        
+                        <div class="tutor-stats">
+                            <span><i class="fas fa-clock"></i> ${tutor.teachingExperienceYears || 0} years exp.</span>
+                            <span><i class="fas fa-book"></i> ${tutor.contentCount || 0} resources</span>
+                        </div>
+                        
+                        ${subjects.length > 0 ? `
+                            <div class="tutor-specializations">
+                                <strong>Subjects:</strong>
+                                <div class="specialization-tags">
+                                    ${subjects.map(subject => `<span class="specialization-tag">${escapeHtml(subject)}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${specializations.length > 0 ? `
+                            <div class="tutor-specializations">
+                                <strong>Specializations:</strong>
+                                <div class="specialization-tags">
+                                    ${specializations.map(spec => `<span class="specialization-tag">${escapeHtml(spec)}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="tutor-actions">
+                            <button class="action-btn primary" onclick="event.stopPropagation(); viewTutorContent(${tutor.userId || tutor.id})">
+                                <i class="fas fa-play"></i> View Content
+                            </button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); contactTutor(${tutor.userId || tutor.id})">
+                                <i class="fas fa-message"></i> Contact
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            tutorGrid.innerHTML = html;
+            showNoResults(false);
+        }
+
+        async function viewTutorContent(tutorId) {
+            try {
+                const response = await authenticatedFetch(`http://localhost:8081/api/tutor/content/tutor/${tutorId}/published`);
+                const data = await response.json();
+                
+                if (data.content && data.content.length > 0) {
+                    // Store tutor content data and navigate
+                    localStorage.setItem('tutorContent', JSON.stringify(data));
+                    window.location.href = 'content-discovery.html';
+                } else {
+                    customAlert('This tutor has not published any content yet.', 'info', 'No Content Available');
+                }
+                
+            } catch (error) {
+                console.error('Error loading tutor content:', error);
+                customAlert('Error loading tutor content. Please try again.', 'danger', 'Content Loading Error');
+            }
+        }
+
+        function contactTutor(tutorId) {
+            // In a real app, this would open a messaging system
+            customAlert(`Contact tutor ${tutorId}. This would open a messaging interface in a real application.`, 'info', 'Contact Tutor');
+        }
+
+        function viewTutorProfile(tutorId) {
+            // Navigate to detailed tutor profile
+            customAlert(`View full profile for tutor ${tutorId}. This would show detailed information, reviews, and content portfolio.`, 'info', 'Tutor Profile');
+        }
+
+        function clearFilters() {
+            document.getElementById('subjectFilter').value = '';
+            document.getElementById('ratingFilter').value = '';
+            document.getElementById('experienceFilter').value = '';
+            document.getElementById('hasAccessibilityExpertise').checked = false;
+            
+            loadVerifiedTutors();
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+            document.getElementById('tutorGrid').style.display = show ? 'none' : 'grid';
+        }
+
+        function showNoResults(show = true, message = 'No tutors found matching your criteria.') {
+            const noResults = document.getElementById('noResults');
+            if (show) {
+                noResults.querySelector('p').textContent = message;
+                noResults.style.display = 'block';
+                document.getElementById('tutorGrid').style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                document.getElementById('tutorGrid').style.display = 'grid';
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userEmail');
+                window.location.href = '/index.html';
+            }
+        }
+    </script>
+</body>
+</html>
