@@ -1,21 +1,21 @@
 /* Adaptive UI System - Base Styles */
 
-/* Default CSS Variables - will be overridden by UI presets */
+/* Default CSS Variables - LMS Theme */
 :root {
   /* Colors */
-  --primary-color: #2c5aa0;
-  --secondary-color: #28a745;
+  --primary-color: #1e3a8a;
+  --secondary-color: #059669;
   --background-color: #ffffff;
-  --text-color: #2c3e50;
-  --border-color: #e2e8f0;
-  --focus-color: #007bff;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --error-color: #dc3545;
+  --text-color: #1e3a8a;
+  --border-color: rgba(59, 130, 246, 0.1);
+  --focus-color: #3b82f6;
+  --success-color: #059669;
+  --warning-color: #f59e0b;
+  --error-color: #dc2626;
   
   /* Layout */
-  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
+  --card-shadow: 0 8px 32px rgba(30, 58, 138, 0.08);
+  --border-radius: 12px;
   --spacing-unit: 1rem;
   
   /* Typography */
@@ -343,10 +343,10 @@ body {
 .adhd-friendly {
   --focus-indicator-width: 4px;
   --animation-duration: 0.2s;
-  --primary-color: #0066cc !important;
-  --secondary-color: #28a745 !important;
-  --border-color: #333333 !important;
-  --card-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+  --primary-color: #1e40af !important;
+  --secondary-color: #059669 !important;
+  --border-color: #1e3a8a !important;
+  --card-shadow: 0 8px 32px rgba(30, 58, 138, 0.15) !important;
 }
 
 .adhd-friendly .adaptive-button:focus,
@@ -370,7 +370,7 @@ body {
 
 .adhd-friendly .adaptive-button:hover {
   transform: scale(1.05) !important;
-  box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3) !important;
 }
 
 /* Enhanced navigation for ADHD */
@@ -382,12 +382,12 @@ body {
 .adhd-friendly .nav-item:hover,
 .adhd-friendly .nav-item:focus {
   border-color: var(--primary-color) !important;
-  background: rgba(0, 102, 204, 0.1) !important;
+  background: rgba(30, 64, 175, 0.1) !important;
 }
 
 .adhd-friendly .nav-item.active {
   border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3) !important;
+  box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.3) !important;
 }
 
 /* Clear text hierarchy for ADHD */
@@ -410,14 +410,14 @@ body {
 /* Autism-friendly simplified interactions */
 .autism-friendly {
   --animation-duration: 0.4s;
-  --border-radius: 4px;
-  --primary-color: #5d4e75 !important;
-  --secondary-color: #7b68ee !important;
+  --border-radius: 8px;
+  --primary-color: #6366f1 !important;
+  --secondary-color: #059669 !important;
   --background-color: #ffffff !important;
-  --text-color: #2c3e50 !important;
-  --border-color: #cccccc !important;
-  --focus-color: #7b68ee !important;
-  --success-color: #32cd32 !important;
+  --text-color: #1e3a8a !important;
+  --border-color: rgba(99, 102, 241, 0.2) !important;
+  --focus-color: #6366f1 !important;
+  --success-color: #059669 !important;
   --warning-color: #ffa500 !important;
   --error-color: #ff6347 !important;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
