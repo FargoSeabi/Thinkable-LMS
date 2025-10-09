@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useAdaptiveUI } from '../../contexts/AdaptiveUIContext';
 import TimerIndicator from './TimerIndicator';
@@ -9,6 +9,7 @@ const StudentNavigation: React.FC = () => {
   const { user, logout } = useAuth();
   const { currentPreset } = useAdaptiveUI();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { path: '/student', label: 'Dashboard', icon: 'fas fa-home' },
@@ -76,7 +77,13 @@ const StudentNavigation: React.FC = () => {
           <span>Hi, {user?.firstName}!</span>
         </div>
         <button 
-          onClick={() => logout()} 
+          onClick={() => {
+            console.log('StudentNavigation: Logout clicked');
+            logout(() => {
+              console.log('StudentNavigation: Navigation callback executing');
+              navigate('/');
+            });
+          }} 
           className="nav-logout"
           title="Logout"
         >

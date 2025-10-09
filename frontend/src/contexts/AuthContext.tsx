@@ -17,7 +17,7 @@ interface AuthContextType {
   token: string | null;
   login: (email: string, password: string) => Promise<boolean>;
   register: (firstName: string, lastName: string, email: string, password: string, role: string, ageRange?: string) => Promise<boolean>;
-  logout: () => void;
+  logout: (navigateCallback?: () => void) => void;
   isAuthenticated: boolean;
   hasRole: (role: string) => boolean;
 }
@@ -122,12 +122,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = (navigateCallback?: () => void) => {
+    console.log('AuthContext: logout() called');
+    console.log('AuthContext: Current user:', user);
+    console.log('AuthContext: Current token:', token);
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
     delete axios.defaults.headers.common['Authorization'];
+    console.log('AuthContext: logout() completed - user and token cleared');
+    
+    // Execute navigation callback after state is cleared
+    if (navigateCallback) {
+      console.log('AuthContext: Executing navigation callback');
+      navigateCallback();
+    }
   };
 
   const isAuthenticated = !!user && !!token;

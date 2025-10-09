@@ -8,8 +8,13 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    console.log('AdminDashboard: Logout clicked');
+    console.log('AdminDashboard: Calling logout() with navigation callback');
+    logout(() => {
+      console.log('AdminDashboard: Navigation callback executing');
+      navigate('/');
+    });
+    console.log('AdminDashboard: Logout initiated');
   };
 
   return (

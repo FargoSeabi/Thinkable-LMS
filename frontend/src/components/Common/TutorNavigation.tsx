@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './TutorNavigation.css';
 
 const TutorNavigation: React.FC = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { path: '/tutor', label: 'Dashboard', icon: 'fas fa-home' },
@@ -57,7 +58,13 @@ const TutorNavigation: React.FC = () => {
           <span>Hi, {user?.firstName}!</span>
         </div>
         <button
-          onClick={() => logout()}
+          onClick={() => {
+            console.log('TutorNavigation: Logout clicked');
+            logout(() => {
+              console.log('TutorNavigation: Navigation callback executing');
+              navigate('/');
+            });
+          }}
           className="nav-logout"
           title="Logout"
         >

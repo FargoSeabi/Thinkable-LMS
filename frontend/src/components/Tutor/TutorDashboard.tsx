@@ -39,8 +39,11 @@ const TutorDashboard: React.FC = () => {
   };
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    console.log('TutorDashboard: Logout clicked');
+    logout(() => {
+      console.log('TutorDashboard: Navigation callback executing');
+      navigate('/');
+    });
   };
 
   return (
