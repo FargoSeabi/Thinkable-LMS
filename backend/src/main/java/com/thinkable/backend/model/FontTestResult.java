@@ -127,17 +127,17 @@ public class FontTestResult {
 
     public boolean hasMovementSymptoms() {
         if (symptomsReported == null) return false;
-        return symptomsReported.has("lettersMove") && symptomsReported.get("lettersMove").asBoolean();
+        return symptomsReported.contains("lettersMove");
     }
 
     public boolean hasEyeStrain() {
         if (symptomsReported == null) return false;
-        return symptomsReported.has("eyeStrain") && symptomsReported.get("eyeStrain").asBoolean();
+        return symptomsReported.contains("eyeStrain");
     }
 
     public boolean hasSlowReading() {
         if (symptomsReported == null) return false;
-        return symptomsReported.has("slowReading") && symptomsReported.get("slowReading").asBoolean();
+        return symptomsReported.contains("slowReading");
     }
 
     @PrePersist

@@ -1,0 +1,53 @@
+/* Dashboard Home Button Styling */
+.dashboard-home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #2c5aa0;
+  border: 2px solid #2c5aa0;
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(44, 90, 160, 0.15);
+  z-index: 100;
+  cursor: pointer;
+}
+
+.dashboard-home-button:hover {
+  background: #2c5aa0;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(44, 90, 160, 0.25);
+  text-decoration: none;
+}
+
+.dashboard-home-button i {
+  font-size: 1rem;
+}
+
+/* Responsive adjustments for dashboard home button */
+@media (max-width: 768px) {
+  .dashboard-home-button {
+    top: 15px;
+    left: 15px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-home-button {
+    top: 10px;
+    left: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}

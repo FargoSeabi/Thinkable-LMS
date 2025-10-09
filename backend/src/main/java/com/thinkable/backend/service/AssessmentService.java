@@ -113,7 +113,7 @@ public class AssessmentService {
             if (response.getSymptoms() != null) {
                 ObjectNode symptomsNode = objectMapper.createObjectNode();
                 response.getSymptoms().forEach(symptomsNode::put);
-                result.setSymptomsReported(symptomsNode);
+                result.setSymptomsReported(symptomsNode.toString());
             }
             
             FontTestResult savedResult = fontTestResultRepository.save(result);
@@ -215,7 +215,7 @@ public class AssessmentService {
         adaptationsNode.put("intelligentAnalysis", true);
         adaptationsNode.put("fontTestConsidered", fontTestResults != null && !fontTestResults.isEmpty());
         adaptationsNode.set("traits", createTraitsNode(assessment));
-        assessment.setUiAdaptations(adaptationsNode);
+        assessment.setUiAdaptations(adaptationsNode.toString());
         
         UserAssessment savedAssessment = userAssessmentRepository.save(assessment);
         
@@ -280,12 +280,19 @@ public class AssessmentService {
     public void updateAIRecommendations(Long userId, String recommendations) {
         UserAssessment assessment = getLatestAssessment(userId);
         if (assessment != null) {
-            ObjectNode adaptationsNode = (ObjectNode) assessment.getUiAdaptations();
-            if (adaptationsNode == null) {
+            ObjectNode adaptationsNode;
+            try {
+                String existingAdaptations = assessment.getUiAdaptations();
+                if (existingAdaptations != null && !existingAdaptations.trim().isEmpty()) {
+                    adaptationsNode = (ObjectNode) objectMapper.readTree(existingAdaptations);
+                } else {
+                    adaptationsNode = objectMapper.createObjectNode();
+                }
+            } catch (Exception e) {
                 adaptationsNode = objectMapper.createObjectNode();
             }
             adaptationsNode.put("aiRecommendations", recommendations);
-            assessment.setUiAdaptations(adaptationsNode);
+            assessment.setUiAdaptations(adaptationsNode.toString());
             userAssessmentRepository.save(assessment);
         }
     }

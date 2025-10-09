@@ -48,6 +48,16 @@ const TutorDashboard: React.FC = () => {
 
   return (
     <div className="dashboard-container">
+      <header className="dashboard-header">
+        <div className="header-content">
+          <h1>ThinkAble - Tutor Dashboard</h1>
+          <div className="user-info">
+            <span>Welcome, {user?.firstName} {user?.lastName}</span>
+            <button onClick={handleLogout} className="logout-btn">Logout</button>
+          </div>
+        </div>
+      </header>
+
       <main className="dashboard-main">
         <div className="dashboard-grid">
           <div className="dashboard-card">

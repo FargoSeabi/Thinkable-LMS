@@ -71,6 +71,10 @@ const Register: React.FC = () => {
 
   return (
     <div className="auth-container">
+      <Link to="/" className="home-button">
+        <i className="fas fa-home"></i>
+        Home
+      </Link>
       <div className="auth-card">
         <div className="auth-header">
           <h1>ThinkAble</h1>

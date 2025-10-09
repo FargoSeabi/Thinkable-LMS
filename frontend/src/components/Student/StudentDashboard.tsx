@@ -7,6 +7,7 @@ import { studentAPI } from '../../services/api';
 import WelcomeFlow from './WelcomeFlow';
 import PageTransition from '../Common/PageTransition';
 import './Dashboard.css';
+import '../Dashboard/Dashboard.css';
 
 const StudentDashboard: React.FC = () => {
   const { user, logout } = useAuth();

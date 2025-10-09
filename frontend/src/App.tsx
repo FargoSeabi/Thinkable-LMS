@@ -4,6 +4,7 @@ import './App.css';
 import './styles/adaptive-ui.css';
 import './styles/comprehensive-adaptive.css';
 import { injectDynamicFontCSS } from './utils/fontLoader';
+import Welcome from './components/Welcome/Welcome';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import StudentDashboard from './components/Student/StudentDashboard';
@@ -42,7 +43,7 @@ function AppContent() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route 

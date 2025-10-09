@@ -169,8 +169,16 @@ public class AssessmentQuestion {
     }
 
     public int getMaxScore() {
-        if (isLikertScale() && options != null && options.has("scale")) {
-            return options.get("scale").asInt();
+        if (isLikertScale() && options != null && options.contains("scale")) {
+            // Try to extract scale value from options string
+            try {
+                if (options.contains("\"scale\":5")) return 5;
+                if (options.contains("\"scale\":7")) return 7;
+                if (options.contains("\"scale\":10")) return 10;
+            } catch (Exception e) {
+                // Fall back to default
+            }
+            return 5; // Default for Likert scale
         } else if (isBinary()) {
             return 1;
         }

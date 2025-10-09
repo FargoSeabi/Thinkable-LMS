@@ -1,0 +1,43 @@
+services:
+  # Backend Spring Boot Service
+  - type: web
+    name: thinkable-backend
+    env: java
+    buildCommand: cd backend && mvn clean package -DskipTests
+    startCommand: cd backend && java -jar target/backend-0.0.1-SNAPSHOT.jar
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: SERVER_PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: thinkable-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  # Frontend React Service
+  - type: web
+    name: thinkable-frontend
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://thinkable-backend.onrender.com
+
+  # PostgreSQL Database
+databases:
+  - name: thinkable-db
+    databaseName: thinkable
+    user: thinkable_user
+    plan: free

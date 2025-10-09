@@ -76,6 +76,8 @@ public class IntelligentAssessmentService {
 
         double dyslexiaFontPreference = 0.0;
         double readingDifficultySymptoms = 0.0;
+        double attentionSymptoms = 0.0;
+        double visualStressSymptoms = 0.0;
         int totalFontTests = fontTestResults.size();
 
         for (FontTestResult result : fontTestResults) {
