@@ -119,8 +119,3 @@ Thinkable-LMS/
 
 Contributions are welcome! Please fork the repo, make your changes, and submit a pull request.
 
----
-
-## License
-
-This projec
